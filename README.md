@@ -1,14 +1,15 @@
-LaTeX-шаблон для русской кандидатской диссертации и её автореферата.
+LaTeX-шаблон для русской кандидатской диссертации и её автореферата (под требования [СПбГУ](https://spbu.ru/openuniversity/documents/o-poryadke-prisuzhdeniya-uchenyh-stepeney-v-spbgu))
 
 ## Особенности
 * Кодировка: UTF-8.
 * Стандарт: ГОСТ Р 7.0.11-2011.
-* Поддерживаемые движки: pdfTeX, XeTeX, LuaTeX.
-* Поддерживаемые реализации библиографии: встроенная на движке BibTeX, BibLaTeX
-на движке Biber.
+* Поддерживаемые движки: <!--pdfTeX, XeTeX,--> **LuaTeX** (рекоммендуется для сборки).
+* Поддерживаемые реализации библиографии: встроенная на движке BibTeX, **BibLaTeX
+на движке Biber** (рекоммендуется для сборки).
 
+<!--
 [**Примеры компиляции шаблона**](https://github.com/AndreyAkinshin/Russian-Phd-LaTeX-Dissertation-Template/releases/latest).
-
+-->
 [**Установка программного обеспечения и сборка диссертации в файлы PDF**](Readme/Installation.md).
 
 [**Как писать диссертацию на GitHub?**](Readme/github.md)
@@ -99,11 +100,10 @@ BibTeX под UTF-8.
 * Большое спасибо Юлии Мартыновой за [оригинальный вариант шаблона](http://alessia-lano.livejournal.com/4267.html).
 * Большое спасибо [dustalov](https://github.com/dustalov),
 [Lenchik](https://github.com/Lenchik), [tonkonogov](https://github.com/tonkonogov)
-за значительный вклад и обсуждения.
-* Спасибо [storkvist](https://github.com/storkvist), [kshmirko](https://github.com/kshmirko),
+за значительный вклад и  [storkvist](https://github.com/storkvist), [kshmirko](https://github.com/kshmirko),
 [ZoomRmc](https://github.com/ZoomRmc), [tonytonov](https://github.com/tonytonov),
 [Thibak](https://github.com/Thibak), [eximius8](https://github.com/eximius8),
-[Nizky](https://github.com/Nizky) за полезные правки и замечания.
+[Nizky](https://github.com/Nizky) за полезные правки и замечания по [шаблону](https://github.com/AndreyAkinshin/Russian-Phd-LaTeX-Dissertation-Template), ставшим исходником данной редакции под требования СПбГУ.
 
 ## Лицензия
 
