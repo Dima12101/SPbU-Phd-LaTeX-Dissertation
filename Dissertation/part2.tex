@@ -1,1 +1,46 @@
 \chapter{ОПИСАНИЕ АЛГОРИТМОВ}\label{ch:ch2}
+
+\section{Формализация задачи распределения ресурсов}\label{sec:ch2/sec1}
+
+\subsection{Система как граф}\label{sec:ch2/sec1/subsec1}
+
+Систему управления ресурсами можно представить как граф:
+
+\begin{equation}
+	G = (V, E), \quad V = N \cup D, \quad N = \{n_1, n_2, \ldots, n_k\}, \quad D = \{d_1, d_2, \ldots, d_m\}
+\end{equation}
+
+где:
+\begin{itemize}
+	\item $N$ -- множество edge-узлов (поставщиков вычислительных ресурсов);
+	\item $D$ -- множество IoT-устройств (потребителей ресурсов);
+	\item $E$ -- множество рёбер сетевой топологии;
+	\item вес каждого ребра $w(d_i, n_j)$ отражает сетевую задержку между устройством и узлом.
+\end{itemize}
+
+Такая графовая модель позволяет естественным образом представить иерархическую структуру облачно-граничной системы, где различные edge-узлы могут быть на разных уровнях иерархии.
+
+\subsection{Характеристики ресурсов и требования задач}\label{sec:ch2/sec1/subsec2}
+
+Каждый edge-узел $n_j \in N$ характеризуется вектором доступных ресурсов:
+
+\begin{equation}
+	\text{Cap}_j = (\text{CPU}_j, \text{MEM}_j, \text{Bandwidth}_j, \text{Storage}_j)
+\end{equation}
+
+и текущей загрузкой:
+
+\begin{equation}
+	\text{Load}_j(t) = (\text{CPU}_{\text{avail}}(t), \text{MEM}_{\text{avail}}(t), \ldots)
+\end{equation}
+
+которая меняется со временем в зависимости от уже выполняемых задач.
+
+Каждое устройство $d_i \in D$ генерирует вычислительные задачи из множества $T_i(t)$ в момент времени $t$, где каждая задача $\tau$ характеризуется:
+\begin{itemize}
+	\item \textbf{Требования к ресурсам:} $(\text{CPU}(\tau), \text{MEM}(\tau), \text{Bandwidth}(\tau))$;
+	\item \textbf{Объём данных:} $\text{DataSize}(\tau)$;
+	\item \textbf{Временной дедлайн:} $\text{Deadline}(\tau)$;
+	\item \textbf{Приоритет:} $\text{Priority}(\tau) \in [0, 1]$;
+	\item \textbf{Тип задачи:} $\text{Type}(\tau)$ (интерактивная, batch, критическая и т.д.).
+\end{itemize}
