@@ -1,0 +1,88 @@
+\section{Метрики оценки эффективности системы}\label{ch:ch3/sec2}
+
+Метрики оценки эффективности системы сгруппированы по четырём основным категориям: производительность, справедливость, оптимальность и сходимость обучения.
+
+\begin{table}[h]
+	\centering
+	\caption{Метрики оценки эффективности системы}
+	\label{tab:evaluation_metrics_1}
+	\small
+	\begin{tabular}{p{2.5cm}p{4cm}p{7.5cm}}
+		\toprule
+		\multicolumn{2}{l}{\textbf{Метрика}} & \textbf{Формула и интерпретация} \\
+		\midrule
+		\multicolumn{3}{l}{\textbf{Производительность}} \\
+		\midrule
+		Средняя задержка & 
+		AvgLatency & 
+		$\text{AvgLatency} = \frac{1}{T} \sum_{t=1}^{T} \text{Latency}(t)$ \\
+		& & \textit{Среднее время от прихода задачи до завершения;} \\
+		& & \textit{Меньше -- лучше (цель: $<150$ мс)} \\
+		\midrule
+		Процент принятых задач & 
+		AcceptanceRate & 
+		$\text{AcceptanceRate} = \frac{N_{\text{accepted}}}{N_{\text{total}}} \cdot 100\%$ \\
+		& & \textit{Доля задач, принятых системой; важен при высокой нагрузке;} \\
+		& & \textit{Выше -- лучше (цель: $>90\%$)} \\
+		\midrule
+		Утилизация узла $i$ & 
+		ResourceUtilization$_i$ & 
+		$\text{ResourceUtilization}_i = \frac{\sum_{t=1}^{T} \text{Load}_i(t)}{T \cdot \text{Capacity}_i}$ \\
+		& & \textit{Средняя утилизация вычислительных ресурсов узла $i$;} \\
+		& & \textit{Оптимально: $0.8$--$0.9$} \\
+		\midrule
+		\multicolumn{3}{l}{\textbf{Справедливость}} \\
+		\midrule
+		Джини платежей & 
+		Gini$(p)$ & 
+		$\text{Gini}(p) = \frac{\sum_{i=1}^{m} \sum_{j=1}^{m} |p_i - p_j|}{2 m^2 \bar{p}}$ \\
+		& & 
+		\textit{Справедливо: $<0.3$} \\
+		\midrule
+		Индекс справедливости (alloc) & 
+		FairnessIndex & 
+		$\text{FairnessIndex} = \frac{(\sum_{i=1}^{n} x_i)^2}{n \sum_{i=1}^{n} x_i^2}$ \\
+		& & \textit{Известный индекс Джини для распределения нагрузки или ресурсов между узлами;} \\
+		& & \textit{Справедливо: $>0.85$} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\caption{Метрики оценки эффективности системы (продолжение)}
+	\label{tab:evaluation_metrics_2}
+	\small
+	\begin{tabular}{p{2.5cm}p{4cm}p{7.5cm}}
+		\toprule
+		\multicolumn{2}{l}{\textbf{Метрика}} & \textbf{Формула и интерпретация} \\
+		\midrule
+		\multicolumn{3}{l}{\textbf{Оптимальность}} \\
+		\midrule
+		Социальное благосостояние & 
+		SW$(t)$ & 
+		$\text{SW}(t) = \sum_{d_i \in D} U_i(\tau, x(t)) - \sum_{n_j \in N} C_j(\tau, x(t))$ \\
+		& & \textit{Разность суммарной полезности и суммарных затрат; Основной целевой функционал;} \\
+		& & \textit{Выше -- лучше} \\
+		\midrule
+		Доля от оптимума & 
+		Optimality$\%$ & 
+		$\text{Optimality\%} = \frac{\text{SW}_{\text{достигнутое}}}{\text{SW}_{\text{оптимальное}}} \cdot 100\%$ \\
+		& & \textit{Насколько достигнутое благосостояние близко к теоретическому оптимуму (в процентах);} \\
+		& & \textit{Цель: $>90\%$} \\
+		\midrule
+		\multicolumn{3}{l}{\textbf{Сходимость / обучение}} \\
+		\midrule
+		TD-ошибка & 
+		TD-Error$(t)$ & 
+		$\text{TD-Error}(t) = \bigl| r(t) + \gamma \max_{a'} Q_{\text{target}}(s', a') - Q_{\text{current}}(s, a) \bigr|$ \\
+		& & \textit{Убывание показывает сходимость обучения} \\
+		\midrule
+		Дисперсия вознаграждения & 
+		RewardVariance & 
+		$\text{RewardVariance} = \mathrm{Var}\bigl(r_{\text{global}}(t)\bigr)$ \\
+		& & \textit{Изменчивость глобального вознаграждения;} \\
+		& & \textit{Малая дисперсия = стабильный режим работы} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
