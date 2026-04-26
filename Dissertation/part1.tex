@@ -139,7 +139,7 @@
 
 Однако для рассматриваемой задачи аукционных схем в чистом виде недостаточно.
 
-Во-первых, значительная часть литературы по-прежнему рассматривает аукцион как \textbf{однораундовый} или слабо связанный по времени механизм. Даже повторяющиеся модели чаще всего оптимизируют локальные правила ценообразования и matching, но не формируют полноценную обучаемую последовательную политику управления в частично наблюдаемой среде \cite{habiba_2024_repeated_auction,wang_2024_truthful_auction,wu_2025_PRATO}.
+Во-первых, значительная часть литературы по-прежнему рассматривает аукцион как \textbf{однораундовый} или слабо связанный по времени механизм. Даже повторяющиеся модели чаще всего оптимизируют локальные правила ценообразования и matching, но не формируют полноценную обучаемую последовательную политику управления в частично наблюдаемой среде \cite{habiba_2024_repeated_auction,wang_2024_truthful_auction,liu_2024_truthful_mechanism,wu_2025_PRATO}.
 
 Во-вторых, строгие свойства VCG и близких truthful-механизмов обычно опираются на точное решение задачи выбора победителей и на достаточно сильные предположения о моделях полезности. В сложной edge-среде с многомерными ресурсами, сетевыми ограничениями и стохастической динамикой это резко повышает вычислительную стоимость и затрудняет практическую реализацию \cite{qiu_2022_auction_survey,chen_2022_end_to_end_auction}.
 
@@ -149,7 +149,7 @@
 
 \subsection{Методы RL и DRL для управления ресурсами}\label{sec:ch1/sec2/subsec3}
 
-Распространение методов обучения с подкреплением (Reinforcement Learning, RL) и DRL (Deep Reinforcement Learning) в edge computing стало реакцией на ограничения статических моделей. Обзорные работы последних лет показывают, что reinforcement learning всё чаще используется для computation offloading, content caching, autoscaling, admission control и joint resource management \cite{djigal_2022_MLMEC_survey,hortelano_2023_RL_offloading_survey,hazra_2024_drl_edge_challenges,ismail_2025_DRL_MEC_survey}. 
+Распространение методов обучения с подкреплением (Reinforcement Learning, RL) и DRL (Deep Reinforcement Learning) в edge computing стало реакцией на ограничения статических моделей. Обзорные работы последних лет показывают, что reinforcement learning всё чаще используется для computation offloading, content caching, autoscaling, admission control и joint resource management \cite{djigal_2022_MLMEC_survey,hortelano_2023_RL_offloading_survey,hazra_2024_drl_edge_challenges,ismail_2025_DRL_MEC_survey,peng_2024_DRL_offloading_survey}. 
 
 \textbf{Главная идея}: вместо предположения о полной информации, система учится из опыта, взаимодействуя с окружением (через действия и награды) (см. рис. \ref{img:arch-rl}).
 \begin{figure}[h]
