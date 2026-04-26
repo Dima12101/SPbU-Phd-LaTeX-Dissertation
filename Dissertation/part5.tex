@@ -2,64 +2,55 @@
 
 \section{Назначение прототипа}
 
-Разработанный программный прототип предназначен для проверки гибридного метода управления ресурсами в edge-системе. Метод объединяет два класса механизмов:
+Разработанный программный прототип предназначен для экспериментальной проверки гибридного метода управления ресурсами в распределённой edge-среде. Его задача состоит не в воспроизведении промышленной платформы исполнения задач, а в построении исследовательской симуляционной среды, в которой могут быть реализованы и сопоставлены все ключевые элементы модели, введённой в главах~2--4: поток задач от устройств, сеть периферийных узлов, аукционное распределение, VCG-платежи, локальные действия агентов и обучение координированной политики.
+
+Прототип реализует двухконтурную архитектуру метода MA--VCG--QMIX. Первый контур отвечает за экономически интерпретируемое распределение задач на основе максимизации социального благосостояния в отдельном раунде. Второй контур реализует многоагентную адаптивную политику, которая использует аукционный контекст при выборе локальных действий и обучается в условиях изменяющейся нагрузки, неоднородности ресурсов и возможных отказов узлов.
+
+\section{Архитектура программной реализации}
+
+Программная реализация построена модульно и разделена на несколько логических подсистем:
 \begin{itemize}
-	\item экономический механизм \textbf{MA-VCG}\cite{patent_ma_vcg}, отвечающий за распределение поступающих задач между edge-узлами с учетом полезности, стоимости и ресурсных ограничений;
-	\item многоагентное обучение с подкреплением \textbf{QMIX}, отвечающее за адаптивный выбор локальных действий edge-узлов в условиях изменяющейся нагрузки.
-\end{itemize}
-
-Прототип реализует не промышленную систему исполнения задач, а исследовательскую симуляционную среду. Его задача состоит в том, чтобы воспроизвести основные элементы формальной модели: устройства, edge-узлы, сетевую топологию, поток задач, аукционное распределение, VCG-платежи, reward-сигнал и обучение координированной политики.
-
-\section{Общая архитектура}
-
-Структурно проект разделен на несколько логических подсистем:
-\begin{itemize}
-	\item \texttt{src/environment} --- модель edge-среды: устройства, задачи, узлы и основной симулятор;
-	\item \texttt{src/mechanisms} --- аукционный слой: оценка полезности и стоимости, распределение задач, расчет VCG-платежей;
-	\item \texttt{src/agents} --- нейросетевые компоненты QMIX и буфер опыта;
-	\item \texttt{src/learning} --- цикл обучения, менеджер вознаграждений, запуск симуляции и benchmark-сценарии;
-	\item \texttt{experiments} --- сценарии вычислительных экспериментов;
-	\item \texttt{visualization} --- построение таблиц и графиков по результатам;
+	\item \texttt{src/environment} --- симуляционная среда: устройства, задачи, edge-узлы и основной класс среды;
+	\item \texttt{src/mechanisms} --- аукционный слой: функции полезности и стоимости, вычисление распределения и VCG-платежей;
+	\item \texttt{src/agents} --- нейросетевые компоненты QMIX;
+	\item \texttt{src/learning} --- обучение, формирование вознаграждения, запуск симуляции и benchmark-сценарии;
+	\item \texttt{experiments} --- сценарии и точки входа для вычислительных экспериментов;
+	\item \texttt{visualization} --- построение таблиц и графиков по сохранённым результатам;
 	\item \texttt{tests} --- модульные и интеграционные тесты.
 \end{itemize}
 
-Такое разделение позволяет независимо модифицировать среду, аукционный механизм и обучаемую политику. Например, изменение формулы стоимости задачи не требует изменения архитектуры QMIX, а изменение параметров обучения не затрагивает модель сетевой топологии.
+Такое разделение соответствует структуре самого метода. Среда отвечает за динамику состояния, аукционный модуль --- за статическое распределение задач в пределах одного слота, а обучаемый контур --- за последовательное принятие решений. В результате отдельные части системы могут анализироваться и модифицироваться независимо, что особенно важно для экспериментальной валидации.
 
 \begin{table}[htbp]
 	\centering
 	\caption{Основные компоненты программного прототипа}
 	\label{tab:prototype-components}
-	\begin{tabular}{|p{0.25\textwidth}|p{0.68\textwidth}|}
+	\begin{tabular}{|p{0.28\textwidth}|p{0.65\textwidth}|}
 		\hline
 		\textbf{Компонент} & \textbf{Назначение} \\
 		\hline
-		\texttt{EdgeSystem} & Центральная симуляционная среда. Генерирует задачи, строит матрицы полезности и стоимости, вызывает аукцион, применяет действия агентов и собирает метрики. \\
+		\texttt{EdgeSystem} & Центральная симуляционная среда. Генерирует задачи, рассчитывает матрицы полезности и стоимости, запускает аукционный раунд, строит расширенные наблюдения и собирает метрики. \\
 		\hline
-		\texttt{Device}, \texttt{Task}, \texttt{EdgeNode} & Доменная модель: устройство-источник задачи, вычислительная задача и edge-узел с ресурсами, очередью и состоянием отказа. \\
+		\texttt{Device}, \texttt{Task}, \texttt{EdgeNode} & Доменная модель: источник задач, вычислительная задача и периферийный узел с ресурсами, очередью, выполняемыми задачами и состоянием отказа. \\
 		\hline
-		\texttt{VCGAuctioneer} & Выполняет распределение задач по узлам и рассчитывает VCG-платежи. \\
+		\texttt{VCGAuctioneer} & Реализует распределение задач по критерию максимизации социального благосостояния и рассчитывает VCG-платежи. \\
 		\hline
-		\texttt{GRUAgent}, \texttt{MixingNetwork} & Нейросетевые блоки QMIX: локальные Q-функции агентов и монотонное смешивание в глобальную Q-функцию. \\
+		\texttt{GRUAgent}, \texttt{MixingNetwork} & Нейросетевые блоки QMIX: локальные рекуррентные Q-сети агентов и mixing network для построения глобальной функции $Q_{tot}$. \\
 		\hline
-		\texttt{QMIXTrainer} & Реализует выбор действий, replay buffer, TD-обновление, целевые сети и снижение $\varepsilon$ в $\varepsilon$-жадной стратегии. \\
+		\texttt{QMIXTrainer} & Выбор действий, replay buffer, TD-обновление, целевые сети и $\varepsilon$-жадная стратегия с учётом масок допустимых действий. \\
 		\hline
-		\texttt{RewardManager} & Формирует гибридное вознаграждение: локальный reward, VCG-компонента, глобальный сигнал социального благосостояния и штрафы за несправедливость. \\
+		\texttt{RewardManager} & Формирование общего командного вознаграждения на основе социального благосостояния, штрафов за нарушения и аукционного сигнала. \\
 		\hline
-		\texttt{BenchmarkRunner} & Запускает сравнимые сценарии для методов MA-VCG, QMIX и MA-VCG-QMIX и сохраняет результаты. \\
+		\texttt{BenchmarkRunner} & Запуск сравнимых сценариев для методов MA--VCG, QMIX и MA--VCG--QMIX с сохранением метрик в CSV-файлы. \\
 		\hline
 	\end{tabular}
 \end{table}
 
 \section{Модель предметной области}
 
-Базовой сущностью симуляции является задача \texttt{Task}. Она содержит идентификатор устройства, требования к вычислительным ресурсам, объем данных, дедлайн, приоритет и показатель важности устройства. Приоритет влияет на полезность задачи, а дедлайн используется при оценке задержки и SLA-штрафа.
+Базовой сущностью симуляции является задача \texttt{Task}. Она содержит идентификатор устройства-источника, требования к CPU и памяти, объём входных данных, дедлайн, приоритет и важность устройства. В актуальной реализации в задаче дополнительно хранятся коэффициенты базовой ценности, а также служебные поля, заполняемые в аукционном контуре: назначенный узел, рассчитанный платёж, вклад в социальное благосостояние и оценка сетевой задержки.
 
 \begin{lstlisting}[language=Python,caption={Модель вычислительной задачи},label={lst:task-model}]
-class TaskPriority(Enum):
-    LOW = 0.5
-    MEDIUM = 0.75
-    HIGH = 1.0
-
 @dataclasses.dataclass
 class Task:
     id: int
@@ -67,20 +58,24 @@ class Task:
     cpu_required: int
     memory_required: int
     data_size: int
+
+    arrival_time: int = 0
     priority: TaskPriority = TaskPriority.MEDIUM
     deadline: int = 5000
     importance: float = 1.0
-    arrival_time: int = 0
+    utility_scale: float = 1.0
+    utility_cpu_weight: float = 1.0
+    utility_memory_weight: float = 1.0
 
-    def processing_time_ms(self, cpu_capacity: int) -> float:
-        if cpu_capacity <= 0:
-            return float("inf")
-        return max(1.0, 1000.0 * self.cpu_required / cpu_capacity)
+    assigned_node_id: Optional[int] = None
+    allocated_payment: float = 0.0
+    welfare_contribution: float = 0.0
+    allocation_latency_ms: float = 0.0
 \end{lstlisting}
 
-\texttt{EdgeNode} хранит доступные ресурсы, очередь задач, список выполняемых задач и состояние отказа. В каждый момент времени узел сначала обновляет выполнение уже запущенных задач, затем выбирает из очереди новые задачи с учетом приоритета и дедлайна.
+Периферийный узел \texttt{EdgeNode} хранит доступные ресурсы, очередь ожидающих задач, множество исполняемых задач и состояние отказа. На каждом шаге узел сначала обновляет время выполнения уже запущенных задач, освобождает ресурсы для завершённых задач, а затем выбирает из очереди новые задачи в порядке приоритета и дедлайна.
 
-\begin{lstlisting}[language=Python,caption={Выполнение задач на edge-узле},label={lst:edge-node-step}]
+\begin{lstlisting}[language=Python,caption={Обновление состояния edge-узла},label={lst:edge-node-step}]
 def step(self, current_time: int, step_duration_ms: int):
     self.update_failure_state(current_time)
     if self.is_failed:
@@ -114,25 +109,14 @@ def step(self, current_time: int, step_duration_ms: int):
 
 \section{Симуляционная среда}
 
-Центральным классом прототипа является \texttt{EdgeSystem}. При инициализации он создает множество устройств, множество edge-узлов и граф сетевой топологии. В графе присутствуют два типа вершин: устройства и вычислительные узлы. Вес ребра интерпретируется как сетевая задержка.
+Центральным классом прототипа является \texttt{EdgeSystem}. При инициализации он создаёт множество устройств, множество edge-узлов и граф сетевой топологии. В графе присутствуют вершины двух типов --- устройства и вычислительные узлы --- а веса рёбер интерпретируются как сетевые задержки. Задачи генерируются по пуассоновскому потоку, интенсивность которого может дополнительно модулироваться во времени и усиливаться кратковременными всплесками.
 
-На каждом \textbf{шаге симуляции} среда выполняет следующую последовательность действий:
-\begin{enumerate}
-	\item обновляет состояние отказов узлов;
-	\item генерирует новые задачи по пуассоновскому потоку;
-	\item рассчитывает матрицы полезности и стоимости для всех пар <<задача--узел>>;
-	\item запускает VCG-аукцион и получает предварительное распределение;
-	\item применяет действия QMIX-агентов;
-	\item рассчитывает reward для каждого edge-узла;
-	\item исполняет задачи и обновляет метрики.
-\end{enumerate}
+Важной особенностью текущей реализации является двухфазная организация одного шага симуляции. Сначала среда подготавливает аукционный раунд: обновляет состояние отказов, формирует пул задач, вычисляет матрицы полезности и стоимости, запускает MA--VCG и строит расширенные наблюдения агентов вместе с масками допустимых действий. Только после этого агенты выбирают действия, и среда применяет их к уже подготовленному раунду.
 
-Ключевая логика шага симуляции приведена в листинге~\ref{lst:environment-step}.
-
-\begin{lstlisting}[language=Python,caption={Основной шаг симуляционной среды},label={lst:environment-step}]
-def step(self, actions: List[int]):
-    if len(actions) != len(self.nodes):
-        raise ValueError("Invalid number of actions.")
+\begin{lstlisting}[language=Python,caption={Подготовка аукционного раунда},label={lst:prepare-round}]
+def _ensure_round_prepared(self):
+    if self._pending_round is not None:
+        return
 
     self.current_time += 1
     self._update_node_failures()
@@ -140,58 +124,75 @@ def step(self, actions: List[int]):
 
     self._generate_tasks()
     utility_matrix, cost_matrix = self._evaluate_tasks()
+    task_vector = self._build_task_vector()
 
     auction_result = self.auctioneer.run_auction(
         utility_matrix,
         cost_matrix,
-        tasks=self._build_task_vector(),
+        tasks=task_vector,
         nodes=self.nodes,
     )
-    accepted_tasks, rejected_tasks, assignments, realized_allocation, realized_payments = \
-        self._distribute_tasks(
-            auction_result.allocation,
-            auction_result.payments,
-            actions,
-        )
+    action_masks = self._build_action_masks(auction_result.allocation)
+    auction_features = self._build_auction_features(
+        allocation=auction_result.allocation,
+        payments=auction_result.payments,
+    )
+    observations = self._compose_observations(
+        action_masks,
+        auction_features,
+    )
+\end{lstlisting}
 
-    rewards = self._compute_rewards(
-        assignments,
-        realized_payments,
-        utility_matrix,
-        cost_matrix,
-        realized_allocation,
+После выбора действий агентами среда исполняет шаг: задачи либо принимаются к исполнению, либо отклоняются, затем обновляются очереди, фиксируются завершённые задачи и рассчитываются итоговые метрики.
+
+\begin{lstlisting}[language=Python,caption={Основной шаг симуляционной среды},label={lst:environment-step}]
+def step(self, actions: List[int]):
+    self._ensure_round_prepared()
+    pending_round = self._pending_round
+
+    accepted_tasks, rejected_tasks, assignments, \
+    realized_allocation, realized_payments = self._distribute_tasks(
+        pending_round["auction_result"].allocation,
+        pending_round["auction_result"].payments,
+        pending_round["utility_matrix"],
+        pending_round["cost_matrix"],
+        actions,
     )
 
     completed_tasks, latencies = self._execute_tasks()
-\end{lstlisting}
-
-\textbf{Локальное наблюдение} каждого агента включает пять признаков: долю доступного CPU, долю доступной памяти, нормированную длину очереди, среднюю загрузку соседних узлов и бинарный индикатор отказа. \textbf{Набор действий} включает четыре варианта: принять задачу, отклонить задачу, повысить приоритет и понизить приоритет.
-
-\begin{lstlisting}[language=Python,caption={Формирование локальных наблюдений},label={lst:observations}]
-obs = [
-    node.cpu_available / node.cpu_capacity,
-    node.memory_available / node.memory_capacity,
-    min(len(node.task_queue) / 10.0, 1.0),
-    neighbor_load,
-    1.0 if node.is_failed else 0.0,
-]
+    rewards = self._compute_rewards(
+        accepted_tasks=accepted_tasks,
+        rejected_tasks=rejected_tasks,
+        completed_tasks=completed_tasks,
+        realized_payments=realized_payments,
+        utility_matrix=pending_round["utility_matrix"],
+        cost_matrix=pending_round["cost_matrix"],
+        realized_allocation=realized_allocation,
+    )
 \end{lstlisting}
 
 \section{Оценка полезности и стоимости}
 
-Перед запуском аукциона среда строит две матрицы: матрицу полезности $U$ и матрицу стоимости $C$. Элемент $U_{ij}$ описывает выгоду от выполнения задачи устройства $i$ на узле $j$, а элемент $C_{ij}$ --- затраты узла на выполнение этой задачи.
+Для каждой допустимой пары <<задача--узел>> среда строит две матрицы: матрицу полезности $U$ и матрицу стоимости $C$. Полезность рассчитывается как базовая ценность задачи, умноженная на дисконт по задержке, за вычетом затрат энергии на передачу данных. Базовая ценность представлена как взвешенная линейная функция требований к CPU и памяти, умноженная на приоритет и важность устройства. Задержка учитывает как ожидаемое время обработки на узле, так и сетевой путь между устройством и узлом.
 
-Полезность зависит от приоритета задачи, требуемых ресурсов, важности устройства, расчетного времени обработки и сетевой задержки. Стоимость включает вычислительные затраты, сетевые затраты и штраф за перегрузку узла.
+Стоимость узла складывается из трёх частей: вычислительной стоимости, коммуникационной стоимости и нелинейной перегрузочной компоненты. Последняя отражает рост издержек при приближении узла к насыщению по CPU и памяти и реализована в квадратичной форме.
 
-\begin{lstlisting}[language=Python,caption={Расчет полезности и стоимости задачи},label={lst:evaluation}]
+\begin{lstlisting}[language=Python,caption={Расчёт полезности и стоимости задачи},label={lst:evaluation}]
 def evaluate_utility(task, edge_node, network_latency_ms=0.0):
-    base = task.priority.value * (
-        task.cpu_required + task.memory_required
-    ) * task.importance
+    weighted_demand = (
+        task.utility_cpu_weight * task.cpu_required
+        + task.utility_memory_weight * task.memory_required
+    )
+    base = (
+        task.utility_scale
+        * task.priority.value
+        * task.importance
+        * weighted_demand
+    )
 
     estimated_time_ms = (
         task.processing_time_ms(edge_node.cpu_capacity)
-        + network_latency_ms
+        + max(network_latency_ms, 0.0)
     )
     time_penalty = math.exp(
         -edge_node.delay_sensitivity
@@ -201,7 +202,7 @@ def evaluate_utility(task, edge_node, network_latency_ms=0.0):
 
     energy_cost = (
         task.data_size
-        * network_latency_ms
+        * max(network_latency_ms, 0.0)
         * edge_node.transmission_energy_coeff
     )
     return max(base * time_penalty - energy_cost, 0.0)
@@ -218,81 +219,55 @@ def evaluate_cost(task, edge_node, network_latency_ms=0.0, direct_connection=Tru
         * edge_node.base_price["NET"]
         * path_penalty
     )
-    overload_cost = computation_cost * (1 + edge_node.load ** 2)
+    overload_cost = (
+        edge_node.overload_cpu_weight
+        * (
+            (edge_node.cpu_used + task.cpu_required)
+            / (edge_node.cpu_capacity + edge_node.overload_epsilon)
+        ) ** 2
+        + edge_node.overload_memory_weight
+        * (
+            (edge_node.memory_used + task.memory_required)
+            / (edge_node.memory_capacity + edge_node.overload_epsilon)
+        ) ** 2
+    )
     return computation_cost + communication_cost + overload_cost
 \end{lstlisting}
 
-\section{Аукционный механизм MA-VCG}
+\section{Аукционный механизм MA--VCG}
 
-Аукционный слой реализован классом \texttt{VCGAuctioneer}. На вход он получает матрицы полезности и стоимости, а также информацию о задачах и доступных ресурсах узлов. На выходе формируются:
-\begin{itemize}
-	\item бинарная матрица распределения задач между узлами;
-	\item вектор VCG-платежей;
-	\item значение социального благосостояния.
-\end{itemize}
+Аукционный слой реализован классом \texttt{VCGAuctioneer}. На вход он получает матрицы полезности и стоимости, а также состояние задач и доступных ресурсов узлов. На выходе формируются бинарная матрица распределения, вектор платежей и значение социального благосостояния.
 
-В текущем прототипе глобальное распределение строится жадной процедурой: сначала формируются все пары <<устройство--узел>> с положительной разницей $U_{ij}-C_{ij}$, затем пары сортируются по убыванию выигрыша, после чего задачи назначаются с учетом ограничений CPU и памяти.
+В актуальной версии прототипа распределение задач строится не жадной эвристикой, а точной процедурой поиска типа branch-and-bound, дополненной кэшированием промежуточных состояний. Такой выбор важен для исследовательских сценариев малой и средней размерности, поскольку позволяет сделать программную реализацию согласованной с теоретическими утверждениями главы~2 о статической эффективности раунда при точном решении задачи выбора победителей.
 
-\begin{lstlisting}[language=Python,caption={Запуск VCG-аукциона},label={lst:run-auction}]
-def run_auction(self, utilities, costs, tasks=None, nodes=None):
-    allocation = self._compute_optimal_allocation(
-        utilities,
-        costs,
-        tasks,
-        nodes,
-    )
-    social_welfare = self.compute_social_welfare(
-        utilities,
-        costs,
-        allocation,
-    )
-    payments = self._compute_vcg_payments(
-        allocation,
-        utilities,
-        costs,
-        tasks,
-        nodes,
-        social_welfare,
-    )
-    return AuctionResult(
-        allocation=allocation,
-        payments=payments,
-        social_welfare=social_welfare,
-    )
+\begin{lstlisting}[language=Python,caption={Точное распределение задач с ограничениями ресурсов},label={lst:exact-allocation}]
+@lru_cache(maxsize=None)
+def best_value(idx, cpu_state, memory_state):
+    if idx >= len(ordered_devices):
+        return 0.0
+
+    best = best_value(idx + 1, cpu_state, memory_state)
+    device_id = ordered_devices[idx]
+    for node_id, net_value, cpu_req, mem_req in device_options[device_id]:
+        if cpu_state[node_id] < cpu_req or memory_state[node_id] < mem_req:
+            continue
+        new_cpu_state = list(cpu_state)
+        new_memory_state = list(memory_state)
+        new_cpu_state[node_id] -= cpu_req
+        new_memory_state[node_id] -= mem_req
+        candidate = net_value + best_value(
+            idx + 1,
+            tuple(new_cpu_state),
+            tuple(new_memory_state),
+        )
+        if candidate > best:
+            best = candidate
+    return best
 \end{lstlisting}
 
-\begin{lstlisting}[language=Python,caption={Жадное распределение задач с учетом ресурсов},label={lst:greedy-allocation}]
-candidates = []
-for device_id in range(m):
-    if tasks is not None and tasks[device_id] is None:
-        continue
-    for node_id in range(n):
-        profit = float(utilities[device_id, node_id] - costs[device_id, node_id])
-        if np.isfinite(profit) and profit > 0:
-            candidates.append(
-                (profit, float(utilities[device_id, node_id]), device_id, node_id)
-            )
+VCG-платёж интерпретируется как внешний эффект присутствия участника на остальных агентах системы. 
 
-candidates.sort(reverse=True)
-assigned_devices = set()
-for _, _, device_id, node_id in candidates:
-    if device_id in assigned_devices:
-        continue
-    if tasks is not None and nodes is not None:
-        task = tasks[device_id]
-        if remaining_cpu[node_id] < task.cpu_required:
-            continue
-        if remaining_memory[node_id] < task.memory_required:
-            continue
-        remaining_cpu[node_id] -= task.cpu_required
-        remaining_memory[node_id] -= task.memory_required
-    allocation[device_id, node_id] = 1
-    assigned_devices.add(device_id)
-\end{lstlisting}
-
-VCG-платеж интерпретируется как внешний эффект, который участник оказывает на остальных участников системы. Для каждого размещенного устройства система пересчитывает оптимальное распределение без этого устройства и сравнивает социальное благосостояние с текущим состоянием.
-
-\begin{lstlisting}[language=Python,caption={Расчет VCG-платежа как внешнего эффекта},label={lst:vcg-payment}]
+\begin{lstlisting}[language=Python,caption={Расчёт VCG-платежа как внешнего эффекта},label={lst:vcg-payment}]
 for i in range(m):
     if allocation[i].sum() == 0:
         continue
@@ -310,18 +285,45 @@ for i in range(m):
         allocation_without_i,
     )
 
-    current_contribution = np.sum(allocation[i] * utility_matrix[i])
+    current_contribution = float(
+        np.sum(allocation[i] * (utility_matrix[i] - cost_matrix[i]))
+    )
     payments[i] = max(
         0.0,
         sw_without_i - (current_sw - current_contribution),
     )
 \end{lstlisting}
 
+\section{Расширенные наблюдения и действия агентов}
+
+Многоагентный слой использует не только базовые характеристики локального состояния узла, но и аукционный контекст. Базовая часть наблюдения включает долю доступного CPU, долю доступной памяти, нормированную длину очереди, среднюю загрузку соседних узлов и индикатор отказа. Дополнительно в наблюдение включаются четыре аукционных признака: нормированное число задач, рекомендованных аукционом данному узлу, средний уровень платежа по этим задачам, относительная нагрузка по CPU и отношение ожидаемого времени обслуживания к дедлайнам.
+
+В конец вектора наблюдения добавляется маска допустимых действий. Тем самым агент получает уже не абстрактное локальное состояние, а расширенное наблюдение, соответствующее гибридной Dec-POMDP-модели главы~4. При текущей конфигурации размер локального наблюдения составляет $13$ признаков: $5$ базовых, $4$ аукционных и $4$ бинарных индикатора допустимых действий.
+
+Набор действий агента включает четыре варианта: принять рекомендованное назначение, отклонить его, повысить приоритет принятой задачи и понизить приоритет. Маска допустимости задаёт подмножество действий, не нарушающих текущих ограничений. Например, для отказавшего узла допустимым остаётся только отклонение, а при отсутствии назначенных задач допустимым остаётся нейтральное действие.
+
+\begin{lstlisting}[language=Python,caption={Формирование расширенного наблюдения},label={lst:observations}]
+obs = np.concatenate(
+    [
+        np.array(
+            [
+                node.cpu_available / max(node.cpu_capacity, 1),
+                node.memory_available / max(node.memory_capacity, 1),
+                min(len(node.task_queue) / 10.0, 1.0),
+                neighbor_load,
+                1.0 if node.is_failed else 0.0,
+            ],
+            dtype=np.float32,
+        ),
+        auction_features[node.id],
+        action_masks[node.id],
+    ]
+)
+\end{lstlisting}
+
 \section{Интеграция QMIX}
 
-Многоагентная часть построена в парадигме CTDE: в момент выбора действия каждый агент использует свое локальное наблюдение, а при обучении локальные Q-значения объединяются в глобальную Q-функцию через mixing network.
-
-Локальная сеть агента основана на GRU. Это позволяет учитывать историю наблюдений, что важно для частично наблюдаемой среды: отдельный узел не знает полное состояние всей edge-системы.
+Обучаемая часть построена в парадигме CTDE. Каждый агент использует рекуррентную сеть \texttt{GRUAgent}, которая аппроксимирует локальную Q-функцию по последовательности наблюдений. Индивидуальные значения Q затем объединяются в mixing network, формирующую глобальную функцию $Q_{tot}$ с сохранением свойства монотонности.
 
 \begin{lstlisting}[language=Python,caption={Локальная сеть агента QMIX},label={lst:gru-agent}]
 class GRUAgent(nn.Module):
@@ -340,7 +342,6 @@ class GRUAgent(nn.Module):
                 device=obs.device,
                 dtype=obs.dtype,
             )
-
         gru_out, hidden = self.gru(obs, hidden.unsqueeze(0))
         gru_out = gru_out[:, -1, :]
         x = self.relu(self.fc1(gru_out))
@@ -348,156 +349,83 @@ class GRUAgent(nn.Module):
         return q_values, hidden.squeeze(0)
 \end{lstlisting}
 
-Mixing network объединяет индивидуальные значения $Q_a$ в глобальное значение $Q_{tot}$. Веса смешивания формируются гиперсетями по глобальному состоянию, а операция \texttt{torch.abs} обеспечивает неотрицательность весов и тем самым поддерживает монотонное свойство QMIX.
+В актуальной версии особое значение имеет выбор действий с учётом маски допустимости. Это относится как к онлайн-исполнению, так и к построению целевых действий на следующем шаге при вычислении TD-цели. Тем самым обучаемая политика не тратит опыт на действия, заранее противоречащие ресурсным или логическим ограничениям текущего раунда.
 
-\begin{lstlisting}[language=Python,caption={Mixing network для глобальной Q-функции},label={lst:mixing-network}]
-def forward(self, agent_qs: torch.Tensor, state: torch.Tensor):
-    batch_size = agent_qs.size(0)
-
-    w1 = torch.abs(self.hyper_w1(state)).view(
-        batch_size,
-        self.num_agents,
-        self.hidden_size,
-    )
-    b1 = self.hyper_b1(state).view(batch_size, 1, self.hidden_size)
-    hidden = F.elu(torch.bmm(agent_qs.unsqueeze(1), w1) + b1)
-
-    w2 = torch.abs(self.hyper_w2(state)).view(
-        batch_size,
-        self.hidden_size,
-        1,
-    )
-    b2 = self.hyper_b2(state).view(batch_size, 1, 1)
-    q_tot = torch.bmm(hidden, w2) + b2
-    return q_tot.view(batch_size)
-\end{lstlisting}
-
-Выбор действий реализован $\varepsilon$-жадной стратегией. На ранних этапах обучения агенты чаще исследуют случайные действия, а затем постепенно переходят к эксплуатации выученной политики.
-
-\begin{lstlisting}[language=Python,caption={Выбор действий агентами},label={lst:select-actions}]
+\begin{lstlisting}[language=Python,caption={Выбор действий с учётом маски допустимости},label={lst:select-actions}]
 def select_actions(self, obs: np.ndarray) -> np.ndarray:
     actions = []
     with torch.no_grad():
         for i, agent_net in enumerate(self.agent_networks):
             obs_tensor = torch.FloatTensor(obs[i:i+1]).unsqueeze(0)
             q_values, _ = agent_net(obs_tensor)
+            valid_actions = np.flatnonzero(self._extract_action_mask(obs[i]))
 
             if np.random.random() < self.epsilon:
-                action = np.random.randint(0, self.action_size)
+                action = int(np.random.choice(valid_actions))
             else:
-                action = q_values.argmax(dim=1).item()
-
+                mask_tensor = torch.BoolTensor(
+                    self._extract_action_mask(obs[i])
+                ).unsqueeze(0)
+                action = int(
+                    self._masked_argmax(q_values, mask_tensor).item()
+                )
             actions.append(action)
 
     return np.array(actions)
 \end{lstlisting}
 
-Обучение выполняется по выборкам из replay buffer. Для каждого агента извлекается Q-значение выбранного действия, затем локальные значения объединяются через mixing network и сравниваются с TD-целью.
+\section{Гибридное командное вознаграждение}
 
-\begin{lstlisting}[language=Python,caption={Расчет TD-ошибки в QMIX},label={lst:qmix-td}]
-chosen_q_values = []
-for i, agent_net in enumerate(self.agent_networks):
-    q_vals, _ = agent_net(states[:, i:i+1, :])
-    chosen_q = q_vals.gather(1, actions[:, i:i+1]).squeeze(1)
-    chosen_q_values.append(chosen_q)
-agent_qs = torch.stack(chosen_q_values, dim=1)
+Связь между аукционным и обучаемым контурами реализует класс \texttt{RewardManager}. Текущая реализация использует общий командный сигнал, одинаковый для всех агентов. Это соответствует постановке главы~3, в которой целевая функция обучения должна быть согласована с глобальной целью системы.
 
-global_q = self.mixing_network(agent_qs, state_vectors)
+Глобальная часть reward строится на основе нормированного социального благосостояния шага и дополняется штрафами за риск нарушения дедлайнов, отклонение задач, дисбаланс загрузки, а также за отклонение показателей fairness и Gini от целевых значений. Аукционная часть reward определяется по завершённым задачам и зависит от суммарных VCG-платежей и вклада этих задач в социальное благосостояние. Итоговый сигнал формируется как взвешенная комбинация глобальной и аукционной компонент и затем одинаково присваивается всем агентам.
 
-with torch.no_grad():
-    global_q_target = self.target_mixing_network(
-        target_agent_qs,
-        next_state_vectors,
-    )
-
-target = team_rewards + gamma * global_q_target * (1 - dones)
-loss = F.mse_loss(global_q, target)
-\end{lstlisting}
-
-\section{Гибридное вознаграждение}
-
-Связующим элементом между аукционным механизмом и QMIX является \texttt{RewardManager}. Он формирует reward каждого edge-узла из трех составляющих:
-\begin{itemize}
-	\item локального reward, равного разности ценности принятых задач, операционных затрат и SLA-штрафа;
-	\item VCG-компоненты, зависящей от полученных узлом платежей;
-	\item глобального сигнала, учитывающего социальное благосостояние, индекс справедливости и коэффициент Джини.
-\end{itemize}
-
-Такой reward позволяет не только максимизировать локальную выгоду узла, но и удерживать поведение агентов вблизи системной цели.
-
-\begin{lstlisting}[language=Python,caption={Формирование гибридного reward},label={lst:reward-manager}]
-def compute_local_reward(
+\begin{lstlisting}[language=Python,caption={Формирование гибридного командного reward},label={lst:reward-manager}]
+def compute_global_reward(
     self,
-    local_value: float,
-    operational_cost: float,
-    sla_penalty: float = 0.0,
-) -> float:
-    return local_value - operational_cost - sla_penalty
-
-def integrate_vcg_payments(self, local_rewards, node_revenues):
-    positive_revenue = node_revenues[node_revenues > 0]
-    if positive_revenue.size == 0:
-        return local_rewards.copy()
-
-    avg_payment = np.mean(positive_revenue)
-    integrated = local_rewards + self.vcg_weight * (
-        node_revenues / (avg_payment + 1e-8)
-    )
-    return integrated
-
-def combine_rewards(
-    self,
-    local_rewards,
-    node_revenues,
     social_welfare,
+    deadline_violation_rate,
+    drop_rate,
+    load_imbalance,
     fairness_index,
     gini_coefficient,
 ):
-    integrated = self.integrate_vcg_payments(local_rewards, node_revenues)
-    global_reward = self.compute_global_reward(
-        social_welfare=social_welfare,
-        fairness_index=fairness_index,
-        gini_coefficient=gini_coefficient,
+    sw_component = social_welfare / max(self.num_devices, 1)
+    fairness_penalty = max(0.0, self.fairness_target - fairness_index)
+    gini_penalty = max(0.0, gini_coefficient - self.gini_target)
+    raw_reward = (
+        sw_component
+        - deadline_violation_rate
+        - drop_rate
+        - load_imbalance
+        - fairness_penalty
+        - gini_penalty
     )
-    global_signal = np.tanh(global_reward / (abs(social_welfare) + 1.0))
-    return integrated + self.global_weight * global_signal
+    return float(np.tanh(raw_reward))
+
+def combine_rewards(
+    self,
+    social_welfare,
+    fairness_index,
+    gini_coefficient,
+    deadline_violation_rate,
+    drop_rate,
+    load_imbalance,
+    completed_payments,
+    completed_welfare,
+):
+    global_reward = self.compute_global_reward(...)
+    auction_reward = self.compute_auction_reward(
+        completed_payments=completed_payments,
+        completed_welfare=completed_welfare,
+    )
+    hybrid_reward = (1.0 - lambda_vcg) * global_reward + lambda_vcg * auction_reward
+    return np.full(self.num_agents, hybrid_reward, dtype=float)
 \end{lstlisting}
 
-\section{Цикл симуляции и сохранение результатов}
+\section{Конфигурация прототипа и экспериментальный контур}
 
-Класс \texttt{Simulator} связывает среду и обучающий модуль. В каждом эпизоде он последовательно получает наблюдения, выбирает действия, выполняет шаг среды, сохраняет переход в replay buffer, выполняет обучение и записывает метрики.
-
-\begin{lstlisting}[language=Python,caption={Основной цикл обучения и симуляции},label={lst:simulator-loop}]
-for step in range(self.training_config.max_steps_per_episode):
-    current_state = self.env.get_observations()
-
-    actions = self.trainer.select_actions(current_state)
-    rewards, info, metrics = self.env.step(actions)
-    next_state = self.env.get_observations()
-
-    self.trainer.add_experience(
-        state=current_state,
-        actions=actions,
-        rewards=rewards,
-        next_state=next_state,
-        done=step == self.training_config.max_steps_per_episode - 1,
-    )
-
-    td_error = self.trainer.train_step()
-\end{lstlisting}
-
-Для воспроизводимой экспериментальной проверки используется \texttt{BenchmarkRunner}. Он задает четыре сценария: стабильную нагрузку, пиковую нагрузку, разнородные ресурсы и отказы узлов. В каждом сценарии сравниваются три метода: MA-VCG, QMIX и MA-VCG-QMIX. Результаты сохраняются в CSV-файлы, после чего модуль визуализации строит таблицы и графики для экспериментальной главы.
-
-\section{Конфигурация прототипа}
-
-Все основные параметры вынесены в файл \texttt{src/config.py}. Это делает эксперименты воспроизводимыми и упрощает настройку сценариев. Ключевые группы параметров включают:
-\begin{itemize}
-	\item \textit{параметры среды}: число устройств и узлов, интенсивность поступления задач, вероятность всплесков нагрузки, параметры отказов;
-	\item \textit{параметры задач}: диапазоны CPU, памяти, пропускной способности, объема данных и дедлайна;
-	\item \textit{параметры узлов}: емкость CPU и памяти, цены ресурсов, коэффициенты задержки и передачи данных;
-	\item \textit{параметры обучения}: число эпизодов, длина эпизода, learning rate, $\gamma$, размер batch, размер replay buffer, параметры $\varepsilon$-жадной стратегии;
-	\item \textit{параметры аукциона}: вес VCG-компоненты, вес глобального reward и целевые значения fairness/Gini.
-\end{itemize}
+Все основные параметры вынесены в файл \texttt{src/config.py}. Это обеспечивает воспроизводимость экспериментов и позволяет варьировать как свойства среды, так и свойства обучения. В конфигурации задаются число устройств и узлов, параметры поступления задач, границы генерации CPU-, memory- и data-size требований, характеристики отказов, ценовые коэффициенты узлов, параметры перегрузки, а также гиперпараметры QMIX.
 
 \begin{lstlisting}[language=Python,caption={Фрагмент конфигурации среды и обучения},label={lst:config}]
 @dataclass
@@ -509,31 +437,22 @@ class EnvironmentConfig:
     arrival_amplitude: float = 0.3
     failure_fraction: float = 0.0
     failure_start_step: int = 0
+    failure_recovery_steps: int = 0
     step_duration_ms: int = 50
 
 @dataclass
-class TrainingConfig:
-    num_episodes: int = 10
-    max_steps_per_episode: int = 100
-    learning_rate: float = 0.001
-    gamma: float = 0.99
-    batch_size: int = 32
-    buffer_size: int = 10000
-    epsilon_start: float = 1.0
-    epsilon_end: float = 0.05
-    epsilon_decay: float = 0.995
+class NetworkConfig:
+    hidden_size: int = 64
+    obs_size: int = 13
+    action_size: int = 4
+    state_size: Optional[int] = None
 \end{lstlisting}
+
+Для воспроизводимой экспериментальной проверки используется класс \texttt{BenchmarkRunner}. Он задаёт фиксированный набор сценариев и сравнивает три режима: MA--VCG, QMIX и MA--VCG--QMIX. При этом все результаты сохраняются в CSV-файлы как на уровне отдельных шагов, так и на уровне эпизодов и сводной статистики, что далее позволяет строить таблицы и графики экспериментальной главы.
 
 \section{Тестирование}
 
-Для проверки корректности прототипа предусмотрены три группы тестов:
-\begin{itemize}
-	\item тесты VCG-аукциона проверяют форму матрицы распределения, неотрицательность платежей и разумность значения социального благосостояния;
-	\item тесты QMIX проверяют прямой проход локальной GRU-сети и mixing network;
-	\item интеграционный тест проверяет полный конвейер: среда, аукцион, расчет reward, сохранение опыта и один шаг обучения QMIX.
-\end{itemize}
-
-Интеграционный тест особенно важен, поскольку подтверждает согласованность интерфейсов между ключевыми подсистемами.
+Для контроля корректности реализации предусмотрены три группы тестов. Тесты аукционного слоя проверяют форму распределения, неотрицательность платежей, корректность точного распределения при ресурсных ограничениях и правильный расчёт VCG-платежа по чистому вкладу участника. Тесты QMIX проверяют прямой проход нейросетевых компонентов и соблюдение масок допустимых действий. Интеграционный тест проверяет полный конвейер: формирование наблюдений, выбор действий, аукционный шаг среды, сохранение перехода в replay buffer и один шаг обучения.
 
 \begin{lstlisting}[language=Python,caption={Интеграционный тест конвейера среды и обучения},label={lst:integration-test}]
 current_state = env.get_observations()
@@ -551,26 +470,29 @@ trainer.add_experience(
 loss = trainer.train_step()
 
 self.assertEqual(rewards.shape, (env_config.num_nodes,))
-self.assertEqual(len(actions), env_config.num_nodes)
+self.assertEqual(
+    current_state.shape,
+    (env_config.num_nodes, env.observation_size),
+)
 self.assertTrue(np.isfinite(metrics["social_welfare"]))
 self.assertIsNotNone(loss)
 \end{lstlisting}
 
 \section{Ограничения реализации}
 
-Текущая версия прототипа имеет ряд осознанных ограничений:
+Несмотря полное соответствие формальной модели, текущая версия прототипа остаётся исследовательским инструментом и сохраняет ряд ограничений:
 \begin{itemize}
-	\item оптимизация аукционного распределения реализована жадной процедурой, а не точным решением целочисленной оптимизационной задачи;
-	\item сетевые задержки моделируются весами графа и не учитывают полный стек сетевого взаимодействия;
-	\item выполнение задачи описано агрегированной моделью CPU, памяти и задержки, без моделирования контейнеризации или реального планировщика ОС;
-	\item состояние агента содержит ограниченный набор локальных признаков;
-	\item прототип ориентирован на исследовательскую валидацию, а не на промышленное развертывание в реальной edge-инфраструктуре.
+	\item точный поиск распределения ориентирован на сценарии малой и средней размерности и не претендует на промышленную масштабируемость;
+	\item сетевой слой моделируется агрегированными задержками графа и не учитывает полный стек сетевого взаимодействия;
+	\item выполнение задач описано через укрупнённую модель CPU, памяти и времени обслуживания без моделирования контейнеризации и реального системного планировщика;
+	\item пространство локальных действий остаётся дискретным и включает только четыре интерпретируемых режима;
+	\item аукционный контекст в наблюдениях представлен компактным набором агрегированных признаков, а не полной структурой глобального состояния.
 \end{itemize}
 
-Тем не менее перечисленные ограничения не противоречат цели прототипа. Напротив, они позволяют сфокусироваться на проверке центральной гипотезы: может ли комбинация VCG-механизма и многоагентного обучения улучшить управление ресурсами по сравнению с использованием только аукциона или только QMIX.
+Эти ограничения являются осознанными. Они позволяют сосредоточиться на главной исследовательской задаче: проверить, даёт ли объединение аукционного механизма и кооперативного MARL-подхода измеримый эффект по сравнению с использованием только одного из этих контуров.
 
-\section{Выводы}
+\section{Выводы по главе}
 
-Разработанный прототип реализует полный цикл работы гибридного метода MA-VCG-QMIX: от генерации задач и построения сетевой топологии до аукционного распределения, расчета VCG-платежей, формирования гибридного reward и обучения многоагентной политики. Архитектура прототипа модульна: модель среды, экономический механизм, нейросетевые компоненты и экспериментальный контур вынесены в отдельные подсистемы.
+Разработанный программный прототип реализует полный цикл работы метода MA--VCG--QMIX: от генерации задач и построения сетевой топологии до точного аукционного распределения, расчёта VCG-платежей, формирования расширенных наблюдений, выбора локальных действий и обучения кооперативной политики. Архитектура реализации непосредственно следует построенной в диссертации двухконтурной схеме, в которой аукционный слой формирует экономический контекст, а обучаемый слой использует его для адаптивного управления.
 
-Наличие benchmark-сценариев, автоматического сохранения метрик, средств визуализации и тестов делает прототип пригодным для воспроизводимой экспериментальной проверки. В результате программная реализация выступает не только иллюстрацией предложенного метода, но и инструментом для анализа его сильных сторон, ограничений и направлений дальнейшего развития.
+Наличие сценариев benchmark-запуска, автоматического сохранения результатов, средств визуализации и тестов делает прототип пригодным для воспроизводимой экспериментальной проверки. Тем самым программная реализация выступает не только иллюстрацией теоретической модели, но и самостоятельным исследовательским инструментом, на базе которого может быть выполнена содержательная валидация предложенного метода.
