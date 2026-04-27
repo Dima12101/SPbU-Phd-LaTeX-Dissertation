@@ -1,6 +1,6 @@
 \section{Метрики и протокол агрегирования}\label{sec:metrics}
 
-Основной целевой метрикой остаётся социальное благосостояние
+Основной целевой метрикой остаётся социальное благосостояние \texttt{SW}:
 \begin{equation}
 SW = \sum_{t}\sum_{i}\sum_{j} x_{i,j}(t)\,\bigl(U_i(t,j)-C_j(t,i)\bigr),
 \end{equation}
@@ -9,23 +9,20 @@ SW = \sum_{t}\sum_{i}\sum_{j} x_{i,j}(t)\,\bigl(U_i(t,j)-C_j(t,i)\bigr),
 математической постановкой главы~2 и с логикой аукционного слоя MA--VCG.
 
 Наряду с $SW$ в экспериментах использовались следующие эксплуатационные
-метрики:
+метрики (см. подробное описание см. в табл.~\ref{tab:evaluation_metrics}):
 \begin{itemize}
-	\item \textbf{acceptance rate} --- доля задач, принятых к исполнению;
-	\item \textbf{deadline success rate} --- доля завершённых задач, уложившихся
+	\item \texttt{AcceptanceRate} --- доля задач, принятых к исполнению;
+	\item \texttt{DeadlineSuccessRate} --- доля завершённых задач, уложившихся
 	в дедлайн;
-	\item \textbf{average latency} --- средняя сквозная задержка выполнения;
-	\item \textbf{fairness index} --- индекс Джайна по реализованному
+	\item \texttt{AvgLatency} --- средняя сквозная задержка выполнения;
+	\item \texttt{FairnessIndex} --- индекс Джайна по реализованному
 	распределению нагрузки;
-	\item \textbf{gini payment} --- коэффициент Джини по VCG-платежам;
-	\item \textbf{load imbalance} --- дисбаланс загрузки узлов;
-	\item \textbf{completed tasks} и \textbf{completed before deadline} ---
-	характеристики фактической пропускной способности.
+	\item \texttt{Gini} --- коэффициент Джини по VCG-платежам;
+	\item \texttt{LoadImbalance} --- дисбаланс загрузки узлов.
 \end{itemize}
 
 Для обучаемых методов дополнительно фиксировались финальные значения
-\texttt{training social welfare}, \texttt{training reward}, TD-ошибки и
-$\varepsilon$-параметра, а также полные кривые обучения по эпизодам.
+\texttt{TrainSW}, \texttt{TrainReward} и \texttt{TD-Error}, а также полные кривые обучения по эпизодам.
 
 Внутри каждого сценария все сравниваемые методы запускались на одном и том
 же наборе seed. Это означает, что различия между MA--VCG, эвристическими
