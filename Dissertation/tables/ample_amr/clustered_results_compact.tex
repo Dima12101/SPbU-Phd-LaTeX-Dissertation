@@ -1,0 +1,20 @@
+\begin{tabular}{lllrrrrrrrr}
+\toprule
+Сценарий & Масштаб & Профиль & SW AMPLE & SW C-AMPLE & Loss vs global & Overhead AMPLE, ms & Overhead C-AMPLE, ms & Clusters & Avg size & Cut \\
+\midrule
+clustered-vs-global & Warehouse-L & default & 1944.607 & 1929.050 & 15.556 & 2.452 & 6.487 & 1.077 & 3.163 & 0.887 \\
+edge-node-failures & Warehouse-M & default & 1089.387 & 1088.840 & 0.547 & 0.609 & 1.178 & 0.863 & 1.871 & 0.029 \\
+heterogeneous-edge-nodes & Warehouse-M+ & default & 1272.106 & 1275.863 & -3.757 & 1.393 & 2.740 & 0.855 & 1.890 & 0.023 \\
+network-degradation & Warehouse-M & default & 934.574 & 924.211 & 10.363 & 0.582 & 1.163 & 0.870 & 1.851 & 0.027 \\
+peak-warehouse-load & Warehouse-M & default & 1813.659 & 1803.308 & 10.352 & 1.090 & 2.712 & 0.953 & 2.709 & 0.924 \\
+scalability-sweep & Warehouse-L & default & 1407.329 & 1399.105 & 8.225 & 2.169 & 5.666 & 1.000 & 2.908 & 0.331 \\
+scalability-sweep & Warehouse-M & default & 627.103 & 618.985 & 8.118 & 0.496 & 0.910 & 0.800 & 1.505 & 0.007 \\
+scalability-sweep & Warehouse-M+ & default & 727.212 & 740.586 & -13.374 & 1.034 & 2.426 & 0.797 & 1.513 & 0.015 \\
+scalability-sweep & Warehouse-S & default & 461.803 & 462.873 & -1.070 & 0.177 & 0.261 & 0.633 & 0.910 & 0.000 \\
+scalability-sweep & Warehouse-XL & default & 2980.238 & 2933.527 & 46.712 & 78.142 & 43.322 & 1.530 & 4.228 & 5.728 \\
+sensitivity-operation-modes & Warehouse-M & aggressive-bias & 943.295 & 943.132 & 0.163 & 0.579 & 1.214 & 0.866 & 1.853 & 0.033 \\
+sensitivity-operation-modes & Warehouse-M & conservative & 926.520 & 910.703 & 15.818 & 0.569 & 1.455 & 0.866 & 1.853 & 0.032 \\
+sensitivity-operation-modes & Warehouse-M & default & 933.983 & 931.508 & 2.474 & 0.600 & 1.118 & 0.866 & 1.853 & 0.032 \\
+stable-warehouse-load & Warehouse-M & default & 1196.309 & 1193.692 & 2.617 & 0.703 & 1.479 & 0.905 & 2.083 & 0.021 \\
+\bottomrule
+\end{tabular}
