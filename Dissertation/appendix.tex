@@ -1,50 +1,146 @@
-\chapter{Метрики эффективности системы}\label{app:А}
+\chapter{Параметры роботизированной складской среды}\label{app:А}
 
 \begin{table}[h]
 	\centering
-	\caption{Метрики оценки эффективности системы}
-	\label{tab:evaluation_metrics}
-	\small
-	\begin{tabular}{p{2.5cm}p{4cm}p{7.5cm}}
-		\toprule
-		\multicolumn{2}{l}{\textbf{Метрика}} & \textbf{Формула и интерпретация} \\
-		\midrule
-		Процент принятых задач & 
-		AcceptanceRate & 
-		$\text{AcceptanceRate} = \frac{N_{\text{accepted}}}{N_{\text{total}}} \cdot 100\%$ \\
-		& & \textit{Доля задач, принятых системой; важен при высокой нагрузке;} \\
-		& & \textit{Выше -- лучше (цель: $>90\%$)} \\
-		\midrule
-		Выполнение дедлайна & 
-		DeadlineRate & 
-		$\text{DeadlineRate} = \frac{N_{\text{accepted}}}{N_{\text{total}}} \cdot 100\%$ \\
-		& & \textit{Доля завершённых задач, уложившихся
-			в дедлайн;} \\
-		& & \textit{Выше -- лучше (цель: $>90\%$)} \\
-		\midrule
-		Средняя задержка & 
-		AvgLatency & 
-		$\text{AvgLatency} = \frac{1}{T} \sum_{t=1}^{T} \text{Latency}(t)$ \\
-		& & \textit{Среднее время от прихода задачи до завершения;} \\
-		& & \textit{Меньше -- лучше (цель: $<150$ мс)} \\
-		\midrule
-		Джини платежей & 
-		Gini$(p)$ & 
-		$\text{Gini}(p) = \frac{\sum_{i=1}^{m} \sum_{j=1}^{m} |p_i - p_j|}{2 m^2 \bar{p}}$ \\
-		& & 
-		\textit{Справедливо: $<0.3$} \\
-		\midrule
-		Индекс справедливости & 
-		FairnessIndex & 
-		$\text{FairnessIndex} = \frac{(\sum_{i=1}^{n} x_i)^2}{n \sum_{i=1}^{n} x_i^2}$ \\
-		& & \textit{Индекс Джини для распределения нагрузки или ресурсов между узлами;} \\
-		& & \textit{Справедливо: $>0.85$} \\
-		\midrule
-		Дисбаланс загрузки узлов $i$ & 
-		LoadImbalance$_i$ & 
-		$\text{LoadImbalance}_i = \frac{\sum_{t=1}^{T} \text{Load}_i(t)}{T \cdot \text{Capacity}_i}$ \\
-		& & \textit{Средняя дисбаланс загрузки вычислительных ресурсов узла $i$;} \\
-		& & \textit{Оптимально: $0.8$--$0.9$} \\
-		\bottomrule
+	\caption{Параметры AMR, используемые для калибровки симуляции}
+	\label{tab:amr_real_params}
+	\begin{tabular}{|p{0.20\textwidth}|p{0.22\textwidth}|p{0.45\textwidth}|}
+		\hline
+		\textbf{Параметр} &
+		\textbf{Значение в симуляции} &
+		\textbf{Обоснование} \\
+		\hline
+		Тип робота &
+		Малый/средний складской AMR &
+		Соответствует классу MiR100 и OTTO 100
+		\cite{MiR100Spec2023,OTTO100Spec2026} \\
+		\hline
+		Максимальная скорость &
+		1.5--2.0 м/с &
+		MiR100: 1.5 м/с; для OTTO 100 в спецификациях и описаниях класса указывается
+		скорость порядка 2.0 м/с \cite{MiR100Spec2023,OTTO100Spec2026} \\
+		\hline
+		Рабочая скорость в модели &
+		0.5--1.5 м/с &
+		Модельное ограничение ниже максимальной скорости, учитывающее движение в
+		проходах, повороты, зоны безопасности и взаимодействие с другими роботами \\
+		\hline
+		Полезная нагрузка &
+		100--150 кг &
+		MiR100: до 100 кг; OTTO 100: до 150 кг
+		\cite{MiR100Spec2023,OTTO100Spec2026} \\
+		\hline
+		Время автономной работы &
+		6--10.5 часов &
+		Диапазон соответствует спецификациям MiR100 и OTTO 100
+		\cite{MiR100Spec2023,OTTO100Spec2026} \\
+		\hline
+		Типовые датчики &
+		Лидар, камеры, инерциальные датчики, датчики безопасности &
+		Типичный набор сенсоров AMR в складской робототехнике
+		\cite{Keith2024WarehouseAMRReview} \\
+		\hline
+		Сеть &
+		Wi-Fi 2.4/5 ГГц; в стресс-сценариях моделируется ухудшенная связь &
+		Для складского AMR-сценария предполагается локальная беспроводная сеть; в
+		стресс-сценариях используются параметры задержки и пропускной способности из
+		работ по offloading мобильных роботов \cite{Baruffa2025AMRResourceAssignment} \\
+		\hline
 	\end{tabular}
 \end{table}
+
+\chapter{Метрики качества}\label{app:Б}
+
+\textbf{Общественное благосостояние:}
+\[
+SW(t)=
+\sum_{\tau}
+\sum_j
+x_{\tau j}(t)
+\left[
+U_{i(\tau)}(\tau,n_j,t)
+-
+C_j(\tau,r_{i(\tau)},t)
+\right].
+\]
+
+\textbf{Доля обслуженных задач:}
+\[
+CompletionRate =
+\frac{N_{completed}}{N_{generated}}.
+\]
+
+\textbf{Доля отклонённых задач:}
+\[
+DropRate =
+\frac{N_{dropped}}{N_{generated}}.
+\]
+
+\textbf{Доля нарушений сроков:}
+\[
+ViolationRate =
+\frac{N_{violated}}{N_{completed}}.
+\]
+
+\textbf{Средняя задержка обработки:}
+\[
+AvgLatency =
+\frac{1}{N_{completed}}
+\sum_{\tau\in Completed}
+T_{\tau}.
+\]
+
+\textbf{95-й квантиль задержки:}
+\[
+P95Latency =
+\mathrm{quantile}_{0.95}
+\left(
+\{T_{\tau}: \tau\in Completed\}
+\right).
+\]
+
+\textbf{Средняя загрузка узлов:}
+\[
+AvgUtilization =
+\frac{1}{k}
+\sum_{j=1}^{k}
+u_j.
+\]
+
+\textbf{Дисбаланс загрузки:}
+\[
+LoadImbalance =
+\frac{1}{k}
+\sum_{j=1}^{k}
+(u_j-\bar{u})^2.
+\]
+
+\textbf{Накладные расходы распределения:}
+\[
+AllocationOverhead =
+T^{auction}
++
+T^{comm}
++
+T^{policy}.
+\]
+
+\textbf{Доля управляющего слота, занятая распределением:}
+\[
+SlotShare =
+\frac{
+	T^{auction}+T^{comm}+T^{policy}
+}{
+	\Delta^{slot}
+}.
+\]
+
+Для C-AMPLE-AMR дополнительно оцениваются:
+\begin{enumerate}
+	\item число кластеров;
+	\item средний размер кластера;
+	\item время локальных распределений;
+	\item оценка потери общественного благосостояния относительно глобального
+	AMPLE-AMR;
+	\item величина межкластерного среза графа.
+\end{enumerate}

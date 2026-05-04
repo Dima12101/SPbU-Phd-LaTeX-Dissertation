@@ -1,518 +1,842 @@
-\chapter{ОПИСАНИЕ ПРОГРАММНОГО ПРОТОТИПА}\label{ch:ch5}
+\chapter{ГИБРИДНЫЙ МЕТОД AMPLE-AMR}\label{sec:ch5}
 
-\section{Назначение прототипа}
+Во второй главе была построена доменная и математическая модель системы
+автономных мобильных роботов с поддержкой периферийных вычислений. В третьей
+главе был разработан VCG-подобный аукционный слой распределения задач при
+фиксированных операционных режимах периферийных узлов. В четвёртой главе
+задача выбора этих режимов была формализована как децентрализованный
+частично наблюдаемый марковский процесс принятия решений и обосновано
+применение алгоритма QMIX.
 
-Разработанный программный прототип предназначен для экспериментальной проверки гибридного метода управления ресурсами в распределённой edge-среде. Его задача состоит не в воспроизведении промышленной платформы исполнения задач, а в построении исследовательской симуляционной среды, в которой могут быть реализованы и сопоставлены все ключевые элементы модели, введённой в главах~2--4: поток задач от устройств, сеть периферийных узлов, аукционное распределение, VCG-платежи, локальные действия агентов и обучение координированной политики.
+Настоящая глава объединяет эти компоненты в единый гибридный метод
+\textbf{AMPLE-AMR} (\textit{Adaptive Multi-agent Policy Learning with Edge Auctions for
+Autonomous Mobile Robots}). Метод предназначен для адаптивного распределения вычислительных
+задач автономных мобильных роботов между периферийными вычислительными
+узлами. Его ключевая идея состоит в разделении функций между двумя слоями:
+\begin{enumerate}
+	\item обучаемый многоагентный слой выбирает операционные режимы
+	периферийных узлов;
+	\item VCG-подобный аукционный слой распределяет задачи между узлами в
+	рамках выбранных ресурсных ограничений.
+\end{enumerate}
 
-Прототип реализует двухконтурную архитектуру метода MA--VCG--QMIX. Первый контур отвечает за экономически интерпретируемое распределение задач на основе максимизации социального благосостояния в отдельном раунде~\cite{patent_ma_vcg}. Второй контур реализует многоагентную адаптивную политику, которая использует аукционный контекст при выборе локальных действий и обучается в условиях изменяющейся нагрузки, неоднородности ресурсов и возможных отказов узлов.
+Такое разделение позволяет избежать методологической ошибки, при которой
+обучаемая политика начинает управлять ставками или оценками ценности задач.
+В предлагаемом методе ставки и оценки ценности не обучаются. Обучается только
+политика выбора режимов периферийных узлов: допуска, резервирования,
+приоритизации и защиты от перегрузки.
 
-\section{Архитектура программной реализации}
+В главе также вводится масштабируемая версия метода \textbf{C-AMPLE-AMR} (\textit{Clustered Adaptive Multi-agent Policy Learning with Edge Auctions
+for Autonomous Mobile Robots}). Она предназначена для случаев, когда глобальный аукционный раунд становится
+слишком дорогим по времени вычислений или по объёму коммуникации. В этой
+версии граф периферийной инфраструктуры разбивается на локальные кластеры,
+внутри которых проводятся локальные аукционы.
 
-Программная реализация построена модульно и разделена на несколько логических подсистем:
-\begin{itemize}
-	\item \texttt{src/environment} --- симуляционная среда: устройства, задачи, edge-узлы и основной класс среды;
-	\item \texttt{src/mechanisms} --- аукционный слой: функции полезности и стоимости, вычисление распределения и VCG-платежей;
-	\item \texttt{src/agents} --- нейросетевые компоненты QMIX;
-	\item \texttt{src/learning} --- обучение, формирование вознаграждения, выполнение симуляционного цикла и многосидовый benchmark-контур;
-	\item \texttt{main\_run\_all\_scenarios.py} --- воспроизводимая точка входа для полного набора вычислительных экспериментов;
-	\item \texttt{experiments/results} --- сохраняемые артефакты вычислительных экспериментов: пошаговые логи, сводные таблицы и агрегированные метрики;
-	\item \texttt{visualization} --- построение таблиц и графиков по сохранённым результатам;
-	\item \texttt{tests} --- модульные и интеграционные тесты.
-\end{itemize}
+\section{Концепция метода}
 
-Такое разделение соответствует структуре самого метода. Среда отвечает за динамику состояния, аукционный модуль --- за статическое распределение задач в пределах одного слота, а обучаемый контур --- за последовательное принятие решений. В результате отдельные части системы могут анализироваться и модифицироваться независимо, что особенно важно для экспериментальной валидации.
+\subsection{Общие принципы}
 
-\begin{table}[htbp]
+Метод AMPLE-AMR строится на следующих принципах.
+
+Первый принцип --- разделение адаптации и распределения. Адаптация к
+динамике среды выполняется обучаемой многоагентной политикой, а собственно
+распределение задач выполняется аукционным механизмом. Это позволяет
+использовать обучение для управления режимами узлов, не разрушая смысл
+VCG-подобного механизма как правила распределения при фиксированных
+ограничениях \cite{Vickrey1961,Clarke1971,Groves1973}.
+
+Второй принцип --- локальность исполнения. На этапе исполнения каждый
+периферийный узел принимает решение о своём режиме на основе локального
+наблюдения и собственной истории. Это соответствует парадигме
+централизованного обучения и децентрализованного исполнения, используемой в
+кооперативном многоагентном обучении \cite{Rashid2018QMIX}.
+
+Третий принцип --- экономическая интерпретируемость распределения. Аукционный
+слой формирует не только назначение задач, но и показатели внешнего эффекта,
+платежей, дефицита ресурсов и вклада в общественное благосостояние. Эти
+величины используются как признаки и компоненты вознаграждения, но не как
+обучаемые ставки.
+
+Четвёртый принцип --- масштабируемость через локализацию распределения. При
+росте числа роботов, задач и периферийных узлов один глобальный аукцион может
+стать узким местом. Поэтому в методе C-AMPLE-AMR вводится разбиение графа
+инфраструктуры на кластеры и проведение локальных аукционов внутри них.
+
+Пятый принцип --- явное указание границ гарантий. VCG-подобные свойства
+стратегической совместимости и эффективности рассматриваются только для
+отдельного аукционного раунда при выполнении стандартных предпосылок. Они не
+переносятся автоматически на всю повторяющуюся систему с обучением.
+
+\subsection{Схема метода}
+
+Пусть в момент времени $t$ имеется множество задач $\mathcal{T}(t)$,
+порожденных роботами, и множество периферийных узлов $\mathcal{N}$. Один шаг
+метода AMPLE-AMR состоит из следующих этапов:
+\begin{enumerate}
+	\item сбор локальных наблюдений периферийных узлов;
+	\item выбор операционных режимов узлов обучаемой многоагентной политикой;
+	\item вычисление экспонируемой ёмкости каждого узла;
+	\item формирование заявок роботов и параметров узлов для аукционного
+	слоя;
+	\item решение задачи выбора победителей;
+	\item вычисление VCG-подобных платежей и внутренних показателей внешнего
+	эффекта;
+	\item исполнение назначений, обновление очередей и загрузки;
+	\item формирование командного вознаграждения;
+	\item сохранение перехода для последующего обучения.
+\end{enumerate}
+
+Формально обучаемая политика задаёт вектор режимов
+\[
+\kappa_t =
+\left(
+\kappa_1(t),\ldots,\kappa_k(t)
+\right),
+\]
+где $\kappa_j(t)$ --- режим периферийного узла $n_j$.
+
+После выбора режима определяется экспонируемая ёмкость:
+\[
+\bar{A}^{r}_j(t,\kappa_j)
+=
+\eta^{r}_j(\kappa_j)
+\left(
+C^{r}_j - L^{r}_j(t)
+\right),
+\quad
+r \in \{cpu,mem,gpu\}.
+\]
+
+Затем аукционный слой решает задачу:
+\[
+x^*(t)
+\in
+\arg\max_{x \in \mathcal{X}(t,\kappa(t))}
+SW(x,t),
+\]
+где $\mathcal{X}(t,\kappa(t))$ --- множество допустимых назначений с учётом
+достижимости, отказов, сроков обработки и экспонируемой ёмкости узлов.
+
+Именно такая последовательность является основной архитектурной идеей метода:
+обучаемая политика меняет не ставки и не ценности задач, а допустимые ресурсные
+условия, в которых проводится аукцион.
+
+\subsection{Роли участников и поток данных}
+
+В методе AMPLE-AMR участвуют три логических уровня.
+
+\textbf{Первый уровень} --- автономные мобильные роботы. Они формируют вычислительные
+задачи, указывают класс задачи, приоритет, допустимый срок обработки, объём
+данных и ресурсные требования. На основе этих параметров вычисляется оценка
+ценности задачи. Роботы не являются обучаемыми агентами в MARL-контуре.
+
+\textbf{Второй уровень} --- периферийные вычислительные узлы. Каждый узел является
+обучаемым агентом, который выбирает операционный режим. Узел не назначает
+задачи напрямую, а определяет, какую часть ресурсов предоставить для текущего
+аукционного распределения.
+
+\textbf{Третий уровень} --- аукционный слой. Он получает задачи, оценки ценности,
+состояние достижимости, стоимости обслуживания и экспонируемую ёмкость
+узлов. На этой основе он вычисляет распределение задач и VCG-подобные
+платежи.
+
+\begin{figure}[h]
 	\centering
-	\caption{Основные компоненты программного прототипа}
-	\label{tab:prototype-components}
-	\begin{tabular}{|p{0.30\textwidth}|p{0.63\textwidth}|}
-		\hline
-		\textbf{Компонент} & \textbf{Назначение} \\
-		\hline
-		\texttt{EdgeSystem} & Центральная симуляционная среда. Генерирует задачи, рассчитывает матрицы полезности и стоимости, запускает аукционный раунд, строит расширенные наблюдения и собирает метрики. \\
-		\hline
-		\texttt{Device}, \texttt{Task}, \texttt{EdgeNode} & Доменная модель: источник задач, вычислительная задача и периферийный узел с ресурсами, очередью, выполняемыми задачами и состоянием отказа. \\
-		\hline
-		\texttt{VCGAuctioneer} & Реализует распределение задач по критерию максимизации социального благосостояния и рассчитывает VCG-платежи. \\
-		\hline
-		\texttt{GRUAgent}, \texttt{MixingNetwork} & Нейросетевые блоки QMIX: локальные рекуррентные Q-сети агентов и mixing network для построения глобальной функции $Q_{tot}$. \\
-		\hline
-		\texttt{QMIXTrainer} & Выбор действий, replay buffer, TD-обновление, целевые сети и $\varepsilon$-жадная стратегия с учётом масок допустимых действий. \\
-		\hline
-		\texttt{RewardManager} & Формирование общего командного вознаграждения на основе социального благосостояния, штрафов за нарушения и аукционного сигнала. \\
-		\hline
-		\texttt{BenchmarkRunner} & Запуск фиксированного набора сценариев и сравнение методов MA--VCG, Heuristic-LoadAware, Random, QMIX и MA--VCG--QMIX в многосидовом режиме с агрегацией результатов по seed. \\
-		\hline
-		\texttt{ResultsVisualizer} & Построение итоговых таблиц и графиков по файлам \texttt{summary.csv} и \texttt{summary\_by\_seed.csv}, а также экспорт артефактов в формат, пригодный для включения в диссертацию. \\
-		\hline
-	\end{tabular}
-\end{table}
-
-\section{Модель предметной области}
-
-Базовой сущностью симуляции является задача \texttt{Task}. Она содержит идентификатор устройства-источника, требования к CPU и памяти, объём входных данных, дедлайн, приоритет и важность устройства. В актуальной реализации в задаче дополнительно хранятся коэффициенты базовой ценности, а также служебные поля, заполняемые в аукционном контуре: назначенный узел, рассчитанный платёж, вклад в социальное благосостояние и оценка сетевой задержки.
-
-\begin{lstlisting}[language=Python,caption={Модель вычислительной задачи},label={lst:task-model}]
-@dataclasses.dataclass
-class Task:
-    id: int
-    device_id: int
-    cpu_required: int
-    memory_required: int
-    data_size: int
-
-    arrival_time: int = 0
-    priority: TaskPriority = TaskPriority.MEDIUM
-    deadline: int = 5000
-    importance: float = 1.0
-    utility_scale: float = 1.0
-    utility_cpu_weight: float = 1.0
-    utility_memory_weight: float = 1.0
-
-    assigned_node_id: Optional[int] = None
-    allocated_payment: float = 0.0
-    welfare_contribution: float = 0.0
-    allocation_latency_ms: float = 0.0
-\end{lstlisting}
-
-Периферийный узел \texttt{EdgeNode} хранит доступные ресурсы, очередь ожидающих задач, множество исполняемых задач и состояние отказа. На каждом шаге узел сначала обновляет время выполнения уже запущенных задач, освобождает ресурсы для завершённых задач, а затем выбирает из очереди новые задачи в порядке приоритета и дедлайна.
-
-\begin{lstlisting}[language=Python,caption={Обновление состояния edge-узла},label={lst:edge-node-step}]
-def step(self, current_time: int, step_duration_ms: int):
-    self.update_failure_state(current_time)
-    if self.is_failed:
-        return [], []
-
-    completed_tasks = []
-    latencies_ms = []
-    for task_id in list(self.task_executed.keys()):
-        self.task_executed_time[task_id] -= 1
-        if self.task_executed_time[task_id] <= 0:
-            completed_task = self.task_executed[task_id]
-            latency_ms = max(
-                0.0,
-                (current_time - completed_task.arrival_time + 1)
-                * step_duration_ms,
-            )
-            latencies_ms.append(latency_ms)
-            completed_tasks.append(completed_task)
-            self._completed_task(completed_task)
-
-    sorted_queue = sorted(
-        self.task_queue.values(),
-        key=lambda task: (-task.priority.value, task.deadline, task.id),
-    )
-    for task in sorted_queue:
-        if self._can_allocate_task(task):
-            self._allocate_task(task, step_duration_ms)
-
-    return completed_tasks, latencies_ms
-\end{lstlisting}
-
-\section{Симуляционная среда}
-
-Центральным классом прототипа является \texttt{EdgeComputingSystem}. При инициализации он создаёт множество устройств, множество edge-узлов и граф сетевой топологии. В графе присутствуют вершины двух типов --- устройства и вычислительные узлы --- а веса рёбер интерпретируются как сетевые задержки. Задачи генерируются по пуассоновскому потоку, интенсивность которого может дополнительно модулироваться во времени и усиливаться кратковременными всплесками.
-
-Важной особенностью текущей реализации является двухфазная организация одного шага симуляции. Сначала среда подготавливает аукционный раунд: обновляет состояние отказов, формирует пул задач, вычисляет матрицы полезности и стоимости, запускает MA--VCG и строит расширенные наблюдения агентов вместе с масками допустимых действий. Только после этого агенты выбирают действия, и среда применяет их к уже подготовленному раунду.
-
-\begin{lstlisting}[language=Python,caption={Подготовка аукционного раунда},label={lst:prepare-round}]
-def _ensure_round_prepared(self):
-    if self._pending_round is not None:
-        return
-
-    self.current_time += 1
-    self._update_node_failures()
-    self.tasks = {}
-
-    self._generate_tasks()
-    utility_matrix, cost_matrix = self._evaluate_tasks()
-    task_vector = self._build_task_vector()
-
-    auction_result = self.auctioneer.run_auction(
-        utility_matrix,
-        cost_matrix,
-        tasks=task_vector,
-        nodes=self.nodes,
-    )
-    action_masks = self._build_action_masks(auction_result.allocation)
-    auction_features = self._build_auction_features(
-        allocation=auction_result.allocation,
-        payments=auction_result.payments,
-    )
-    observations = self._compose_observations(
-        action_masks,
-        auction_features,
-    )
-\end{lstlisting}
-
-После выбора действий агентами среда исполняет шаг: задачи либо принимаются к исполнению, либо отклоняются, затем обновляются очереди, фиксируются завершённые задачи и рассчитываются итоговые метрики.
-
-\begin{lstlisting}[language=Python,caption={Основной шаг симуляционной среды},label={lst:environment-step}]
-def step(self, actions: List[int]):
-    self._ensure_round_prepared()
-    pending_round = self._pending_round
-
-    accepted_tasks, rejected_tasks, assignments, \
-    realized_allocation, realized_payments = self._distribute_tasks(
-        pending_round["auction_result"].allocation,
-        pending_round["auction_result"].payments,
-        pending_round["utility_matrix"],
-        pending_round["cost_matrix"],
-        actions,
-    )
-
-    completed_tasks, latencies = self._execute_tasks()
-    rewards = self._compute_rewards(
-        accepted_tasks=accepted_tasks,
-        rejected_tasks=rejected_tasks,
-        completed_tasks=completed_tasks,
-        realized_payments=realized_payments,
-        utility_matrix=pending_round["utility_matrix"],
-        cost_matrix=pending_round["cost_matrix"],
-        realized_allocation=realized_allocation,
-    )
-\end{lstlisting}
-
-\section{Оценка полезности и стоимости}
-
-Для каждой допустимой пары <<задача--узел>> среда строит две матрицы: матрицу полезности $U$ и матрицу стоимости $C$. Полезность рассчитывается как базовая ценность задачи, умноженная на дисконт по задержке, за вычетом затрат энергии на передачу данных. Базовая ценность представлена как взвешенная линейная функция требований к CPU и памяти, умноженная на приоритет и важность устройства. Задержка учитывает как ожидаемое время обработки на узле, так и сетевой путь между устройством и узлом.
-
-Стоимость узла складывается из трёх частей: вычислительной стоимости, коммуникационной стоимости и нелинейной перегрузочной компоненты. Последняя отражает рост издержек при приближении узла к насыщению по CPU и памяти и реализована в квадратичной форме.
-
-\begin{lstlisting}[language=Python,caption={Расчёт полезности и стоимости задачи},label={lst:evaluation}]
-def evaluate_utility(task, edge_node, network_latency_ms=0.0):
-    weighted_demand = (
-        task.utility_cpu_weight * task.cpu_required
-        + task.utility_memory_weight * task.memory_required
-    )
-    base = (
-        task.utility_scale
-        * task.priority.value
-        * task.importance
-        * weighted_demand
-    )
-
-    estimated_time_ms = (
-        task.processing_time_ms(edge_node.cpu_capacity)
-        + max(network_latency_ms, 0.0)
-    )
-    time_penalty = math.exp(
-        -edge_node.delay_sensitivity
-        * estimated_time_ms
-        / max(task.deadline, 1.0)
-    )
-
-    energy_cost = (
-        task.data_size
-        * max(network_latency_ms, 0.0)
-        * edge_node.transmission_energy_coeff
-    )
-    return max(base * time_penalty - energy_cost, 0.0)
-
-def evaluate_cost(task, edge_node, network_latency_ms=0.0, direct_connection=True):
-    computation_cost = (
-        task.cpu_required * edge_node.base_price["CPU"]
-        + task.memory_required * edge_node.base_price["MEM"]
-    )
-    path_penalty = 1.0 if direct_connection else edge_node.indirect_link_penalty
-    communication_cost = (
-        network_latency_ms
-        * task.data_size
-        * edge_node.base_price["NET"]
-        * path_penalty
-    )
-    overload_cost = (
-        edge_node.overload_cpu_weight
-        * (
-            (edge_node.cpu_used + task.cpu_required)
-            / (edge_node.cpu_capacity + edge_node.overload_epsilon)
-        ) ** 2
-        + edge_node.overload_memory_weight
-        * (
-            (edge_node.memory_used + task.memory_required)
-            / (edge_node.memory_capacity + edge_node.overload_epsilon)
-        ) ** 2
-    )
-    return computation_cost + communication_cost + overload_cost
-\end{lstlisting}
-
-\section{Аукционный механизм MA--VCG}
-
-Аукционный слой реализован классом \texttt{VCGAuctioneer}. На вход он получает матрицы полезности и стоимости, а также состояние задач и доступных ресурсов узлов. На выходе формируются бинарная матрица распределения, вектор платежей и значение социального благосостояния.
-
-В актуальной версии прототипа распределение задач строится не жадной эвристикой, а точной процедурой поиска типа branch-and-bound с допустимой верхней оценкой для отсечения нерентабельных ветвей. Такой выбор важен для исследовательских сценариев малой и средней размерности, поскольку позволяет сделать программную реализацию согласованной с теоретическими утверждениями главы~2 о статической эффективности раунда при точном решении задачи выбора победителей. В ходе подготовки экспериментальной главы именно этот фрагмент был дополнительно оптимизирован: поиск упорядочивает устройства по их наилучшему чистому вкладу и сначала рассматривает наиболее перспективные размещения, что заметно сокращает время полного benchmark-прогона.
-
-\begin{lstlisting}[language=Python,caption={Точное распределение задач с ограничениями ресурсов},label={lst:exact-allocation}]
-best_score = 0.0
-best_choices = np.full(m, -1, dtype=int)
-current_choices = np.full(m, -1, dtype=int)
-cpu_state = list(remaining_cpu)
-memory_state = list(remaining_memory)
-
-def search(idx: int, current_score: float) -> None:
-    nonlocal best_score, best_choices
-    if idx >= len(ordered_devices):
-        if current_score > best_score + 1e-9:
-            best_score = current_score
-            best_choices = current_choices.copy()
-        return
-
-    if current_score + best_future_gain[idx] <= best_score + 1e-9:
-        return
-
-    device_id = ordered_devices[idx]
-    for node_id, net_value, cpu_req, mem_req in device_options[device_id]:
-        if cpu_state[node_id] < cpu_req or memory_state[node_id] < mem_req:
-            continue
-        current_choices[device_id] = node_id
-        cpu_state[node_id] -= cpu_req
-        memory_state[node_id] -= mem_req
-        search(idx + 1, current_score + net_value)
-        memory_state[node_id] += mem_req
-        cpu_state[node_id] += cpu_req
-        current_choices[device_id] = -1
-
-    search(idx + 1, current_score)
-\end{lstlisting}
-
-VCG-платёж интерпретируется как внешний эффект присутствия участника на остальных агентах системы. 
-
-\begin{lstlisting}[language=Python,caption={Расчёт VCG-платежа как внешнего эффекта},label={lst:vcg-payment}]
-for i in range(m):
-    if allocation[i].sum() == 0:
-        continue
-
-    allocation_without_i = self._compute_optimal_allocation(
-        utility_matrix,
-        cost_matrix,
-        tasks=tasks,
-        nodes=nodes,
-        excluded_device=i,
-    )
-    sw_without_i = self.compute_social_welfare(
-        utility_matrix,
-        cost_matrix,
-        allocation_without_i,
-    )
-
-    chosen_nodes = allocation[i].astype(bool)
-    current_contribution = float(
-        np.sum(
-            np.asarray(utility_matrix[i], dtype=float)[chosen_nodes]
-            - np.asarray(cost_matrix[i], dtype=float)[chosen_nodes]
-        )
-    )
-    payments[i] = max(
-        0.0,
-        sw_without_i - (current_sw - current_contribution),
-    )
-\end{lstlisting}
-
-\section{Расширенные наблюдения и действия агентов}
-
-Многоагентный слой использует не только базовые характеристики локального состояния узла, но и аукционный контекст. Базовая часть наблюдения включает долю доступного CPU, долю доступной памяти, нормированную длину очереди, среднюю загрузку соседних узлов и индикатор отказа. Дополнительно в наблюдение включаются четыре аукционных признака: нормированное число задач, рекомендованных аукционом данному узлу, средний уровень платежа по этим задачам, относительная нагрузка по CPU и отношение ожидаемого времени обслуживания к дедлайнам.
-
-В конец вектора наблюдения добавляется маска допустимых действий. Тем самым агент получает уже не абстрактное локальное состояние, а расширенное наблюдение, соответствующее гибридной Dec-POMDP-модели главы~4. При текущей конфигурации размер локального наблюдения составляет $13$ признаков: $5$ базовых, $4$ аукционных и $4$ бинарных индикатора допустимых действий.
-
-Набор действий агента включает четыре варианта: принять рекомендованное назначение, отклонить его, повысить приоритет принятой задачи и понизить приоритет. Маска допустимости задаёт подмножество действий, не нарушающих текущих ограничений. Например, для отказавшего узла допустимым остаётся только отклонение, а при отсутствии назначенных задач допустимым остаётся нейтральное действие.
-
-\begin{lstlisting}[language=Python,caption={Формирование расширенного наблюдения},label={lst:observations}]
-obs = np.concatenate(
-    [
-        np.array(
-            [
-                node.cpu_available / max(node.cpu_capacity, 1),
-                node.memory_available / max(node.memory_capacity, 1),
-                min(len(node.task_queue) / 10.0, 1.0),
-                neighbor_load,
-                1.0 if node.is_failed else 0.0,
-            ],
-            dtype=np.float32,
-        ),
-        auction_features[node.id],
-        action_masks[node.id],
-    ]
-)
-\end{lstlisting}
-
-\section{Интеграция QMIX}
-
-Обучаемая часть построена в парадигме CTDE. Каждый агент использует рекуррентную сеть \texttt{GRUAgent}, которая аппроксимирует локальную Q-функцию по последовательности наблюдений. Индивидуальные значения Q затем объединяются в mixing network, формирующую глобальную функцию $Q_{tot}$ с сохранением свойства монотонности.
-
-\begin{lstlisting}[language=Python,caption={Локальная сеть агента QMIX},label={lst:gru-agent}]
-class GRUAgent(nn.Module):
-    def __init__(self, obs_size: int, hidden_size: int, action_size: int):
-        super().__init__()
-        self.gru = nn.GRU(obs_size, hidden_size, batch_first=True)
-        self.fc1 = nn.Linear(hidden_size, 64)
-        self.fc2 = nn.Linear(64, action_size)
-        self.relu = nn.ReLU()
-
-    def forward(self, obs: torch.Tensor, hidden: torch.Tensor = None):
-        if hidden is None:
-            hidden = torch.zeros(
-                obs.size(0),
-                self.hidden_size,
-                device=obs.device,
-                dtype=obs.dtype,
-            )
-        gru_out, hidden = self.gru(obs, hidden.unsqueeze(0))
-        gru_out = gru_out[:, -1, :]
-        x = self.relu(self.fc1(gru_out))
-        q_values = self.fc2(x)
-        return q_values, hidden.squeeze(0)
-\end{lstlisting}
-
-В актуальной версии особое значение имеет выбор действий с учётом маски допустимости. Это относится как к онлайн-исполнению, так и к построению целевых действий на следующем шаге при вычислении TD-цели. Тем самым обучаемая политика не тратит опыт на действия, заранее противоречащие ресурсным или логическим ограничениям текущего раунда.
-
-\begin{lstlisting}[language=Python,caption={Выбор действий с учётом маски допустимости},label={lst:select-actions}]
-def select_actions(self, obs: np.ndarray) -> np.ndarray:
-    actions = []
-    with torch.no_grad():
-        for i, agent_net in enumerate(self.agent_networks):
-            obs_tensor = torch.FloatTensor(obs[i:i+1]).unsqueeze(0)
-            q_values, _ = agent_net(obs_tensor)
-            valid_actions = np.flatnonzero(self._extract_action_mask(obs[i]))
-
-            if np.random.random() < self.epsilon:
-                action = int(np.random.choice(valid_actions))
-            else:
-                mask_tensor = torch.BoolTensor(
-                    self._extract_action_mask(obs[i])
-                ).unsqueeze(0)
-                action = int(
-                    self._masked_argmax(q_values, mask_tensor).item()
-                )
-            actions.append(action)
-
-    return np.array(actions)
-\end{lstlisting}
-
-\section{Гибридное командное вознаграждение}
-
-Связь между аукционным и обучаемым контурами реализует класс \texttt{RewardManager}. Текущая реализация использует общий командный сигнал, одинаковый для всех агентов. Это соответствует постановке главы~3, в которой целевая функция обучения должна быть согласована с глобальной целью системы.
-
-Глобальная часть reward строится на основе нормированного социального благосостояния шага и дополняется штрафами за риск нарушения дедлайнов, отклонение задач, дисбаланс загрузки, а также за отклонение показателей fairness и Gini от целевых значений. Аукционная часть reward определяется по завершённым задачам и зависит от суммарных VCG-платежей и вклада этих задач в социальное благосостояние. Итоговый сигнал формируется как взвешенная комбинация глобальной и аукционной компонент и затем одинаково присваивается всем агентам.
-
-\begin{lstlisting}[language=Python,caption={Формирование гибридного командного reward},label={lst:reward-manager}]
-def compute_global_reward(
-    self,
-    social_welfare,
-    deadline_violation_rate,
-    drop_rate,
-    load_imbalance,
-    fairness_index,
-    gini_coefficient,
-):
-    sw_component = social_welfare / max(self.num_devices, 1)
-    fairness_penalty = max(0.0, self.fairness_target - fairness_index)
-    gini_penalty = max(0.0, gini_coefficient - self.gini_target)
-    raw_reward = (
-        sw_component
-        - deadline_violation_rate
-        - drop_rate
-        - load_imbalance
-        - fairness_penalty
-        - gini_penalty
-    )
-    return float(np.tanh(raw_reward))
-
-def combine_rewards(
-    self,
-    social_welfare,
-    fairness_index,
-    gini_coefficient,
-    deadline_violation_rate,
-    drop_rate,
-    load_imbalance,
-    completed_payments,
-    completed_welfare,
-):
-    global_reward = self.compute_global_reward(...)
-    auction_reward = self.compute_auction_reward(
-        completed_payments=completed_payments,
-        completed_welfare=completed_welfare,
-    )
-    hybrid_reward = (1.0 - lambda_vcg) * global_reward + lambda_vcg * auction_reward
-    return np.full(self.num_agents, hybrid_reward, dtype=float)
-\end{lstlisting}
-
-\section{Конфигурация прототипа и экспериментальный контур}
-
-Все основные параметры вынесены в файл \texttt{src/config.py}. Это обеспечивает воспроизводимость экспериментов и позволяет варьировать как свойства среды, так и свойства обучения. В конфигурации задаются число устройств и узлов, параметры поступления задач, границы генерации CPU-, memory- и data-size требований, характеристики отказов, ценовые коэффициенты узлов, параметры перегрузки, а также гиперпараметры QMIX.
-
-\begin{lstlisting}[language=Python,caption={Фрагмент конфигурации среды и обучения},label={lst:config}]
-@dataclass
-class EnvironmentConfig:
-    num_nodes: int = 10
-    num_devices: int = 20
-    task_lambda_arrival: float = 2.5
-    arrival_cycle: int = 100
-    arrival_amplitude: float = 0.3
-    load_spike_probability: float = 0.0
-    load_spike_multiplier: float = 2.5
-    load_spike_windows: Tuple[Tuple[int, int], ...] = field(default_factory=tuple)
-    failure_fraction: float = 0.0
-    failure_start_step: int = 0
-    failure_recovery_steps: int = 0
-    step_duration_ms: int = 50
-
-@dataclass
-class NetworkConfig:
-    hidden_size: int = 64
-    obs_size: int = 13
-    action_size: int = 4
-    state_size: Optional[int] = None
-\end{lstlisting}
-
-В ходе подготовки экспериментальной главы прототип был дополнен отдельным воспроизводимым benchmark-контуром. Класс \texttt{BenchmarkRunner} задаёт фиксированный набор из четырёх сценариев --- стабильная нагрузка, пиковая нагрузка, разнородные ресурсы и отказы узлов --- и сравнивает пять методов: MA--VCG, Heuristic-LoadAware, Random, QMIX и MA--VCG--QMIX. Для каждого сочетания сценария и метода выполняется несколько независимых прогонов с различными seed, а результаты агрегируются на двух уровнях: \texttt{summary\_by\_seed.csv} хранит данные по отдельным запускам, а \texttt{summary.csv} содержит усреднение, стандартное отклонение и доверительные интервалы.
-
-Отдельная точка входа \texttt{main\_run\_all\_scenarios.py} объединяет запуск benchmark-контура и последующий экспорт результатов. После завершения вычислений класс \texttt{ResultsVisualizer} строит таблицы в формате \LaTeX\ и набор графиков для экспериментальной главы, сохраняет их в каталог \texttt{experiments/results} и при необходимости синхронизирует с деревом файлов диссертации. Благодаря этому глава~6 опирается не на вручную подготовленные таблицы, а на автоматически воспроизводимую цепочку получения артефактов.
-
-\section{Тестирование}
-
-Для контроля корректности реализации предусмотрены четыре группы тестов. Тесты аукционного слоя проверяют форму распределения, неотрицательность платежей, корректность точного распределения при ресурсных ограничениях и правильный расчёт VCG-платежа по чистому вкладу участника. Тесты QMIX проверяют прямой проход нейросетевых компонентов и соблюдение масок допустимых действий. Интеграционный тест проверяет полный конвейер: формирование наблюдений, выбор действий, аукционный шаг среды, сохранение перехода в replay buffer и один шаг обучения. Дополнительно smoke-тест benchmark-контура контролирует, что многосидовый запуск действительно формирует ожидаемый набор итоговых артефактов, включая файлы \texttt{summary.csv} и \texttt{summary\_by\_seed.csv}.
-
-\begin{lstlisting}[language=Python,caption={Интеграционный тест конвейера среды и обучения},label={lst:integration-test}]
-current_state = env.get_observations()
-actions = trainer.select_actions(current_state)
-rewards, info, metrics = env.step(actions)
-next_state = env.get_observations()
-
-trainer.add_experience(
-    state=current_state,
-    actions=actions,
-    rewards=rewards,
-    next_state=next_state,
-    done=False,
-)
-loss = trainer.train_step()
-
-self.assertEqual(rewards.shape, (env_config.num_nodes,))
-self.assertEqual(
-    current_state.shape,
-    (env_config.num_nodes, env.observation_size),
-)
-self.assertTrue(np.isfinite(metrics["social_welfare"]))
-self.assertIsNotNone(loss)
-\end{lstlisting}
-
-\section{Ограничения реализации}
-
-Несмотря на более полное соответствие формальной модели, текущая версия прототипа остаётся исследовательским инструментом и сохраняет ряд ограничений:
-\begin{itemize}
-	\item точный поиск распределения ориентирован на сценарии малой и средней размерности и не претендует на промышленную масштабируемость;
-	\item сетевой слой моделируется агрегированными задержками графа и не учитывает полный стек сетевого взаимодействия;
-	\item выполнение задач описано через укрупнённую модель CPU, памяти и времени обслуживания без моделирования контейнеризации и реального системного планировщика;
-	\item пространство локальных действий остаётся дискретным и включает только четыре интерпретируемых режима;
-	\item аукционный контекст в наблюдениях представлен компактным набором агрегированных признаков, а не полной структурой глобального состояния.
-\end{itemize}
-
-Эти ограничения являются осознанными. Они позволяют сосредоточиться на главной исследовательской задаче: проверить, даёт ли объединение аукционного механизма и кооперативного MARL-подхода измеримый эффект по сравнению с использованием только одного из этих контуров.
+	\includegraphics[width=10cm, height=10cm]{ma-vcg-qmix}
+	\caption{Архитектура AMPLE-AMR}
+	\label{img:ma-vcg-qmix}
+\end{figure}
+
+Поток данных между уровнями можно представить следующим образом:
+\[
+\text{AMR tasks}
+\rightarrow
+\text{node modes}
+\rightarrow
+\text{auction allocation}
+\rightarrow
+\text{execution}
+\rightarrow
+\text{learning experience}.
+\]
+
+В более детальной форме:
+\begin{enumerate}
+	\item роботы передают параметры задач;
+	\item периферийные узлы формируют локальные наблюдения;
+	\item локальные политики узлов выбирают режимы;
+	\item режимы определяют экспонируемые ресурсы;
+	\item аукционный слой распределяет задачи;
+	\item результаты аукциона формируют назначения и экономические признаки;
+	\item среда обновляет состояние;
+	\item обучаемый контур получает переход и командное вознаграждение.
+\end{enumerate}
+
+\subsection{Аукционные признаки}
+
+Аукционный слой для каждого узла $n_j$ формирует вектор признаков, которые используются обучаемым контуром в последующих шагах:
+\[
+g^j_t =
+\left(
+n^{alloc}_j(t),
+\overline{SW}_j(t),
+\overline{p}_j(t),
+q^N_j(t),
+\sigma^{cpu}_j(t),
+\sigma^{mem}_j(t),
+\sigma^{gpu}_j(t),
+d^{drop}_j(t)
+\right),
+\]
+где:
+\begin{enumerate}
+	\item $n^{alloc}_j(t)$ --- число задач, назначенных периферийному узлу;
+	\item  $\overline{SW}_j(t)$ --- суммарный и средний вклад назначенных задач в общественное благосостояние;
+	\item $\overline{p}_j(t)$ --- VCG-подобные платежи роботов, чьи задачи были назначены узлу;
+	\item  $q^N_j(t)$ --- внутренняя компенсация или теневая ценность узла;
+	\item $\sigma^r_j(t)$ --- доля использованной экспонируемой ёмкости по ресурсу $r$;
+	\item $d^{drop}_j(t)$ --- доля отклонённых или отложенных задач.
+\end{enumerate}
+
+Эти признаки являются экономически интерпретируемыми сигналами. Они
+отражают дефицитность ресурсов, внешний эффект и вклад узла в текущее
+распределение. 
+
+\subsection{Функция вознаграждения}
+
+Метод AMPLE-AMR использует командное вознаграждение, одинаковое для всех
+периферийных узлов. Это соответствует кооперативной постановке: узлы должны
+оптимизировать качество всей AMR-системы, а не только свои локальные
+показатели.
+
+\textbf{Базовая часть} вознаграждения $r^{base}_t$ определяется через функцию~\eqref{eq:ch4_reward_base}, куда входит нормированное общественное благосостояние и штрафы.
+
+\textbf{Аукционная часть} $r^{auc}_t$ вознаграждения задаётся через фукнцию~\eqref{eq:ch4_reward_auc} как взвешенная сумма нормированных внешних и внутренних показателей полученного распределения.
+
+Итоговое вознаграждение:
+\begin{equation}
+	\tilde{r}_t =
+	(1-\lambda_{auc}) r_t
+	+
+	\lambda_{auc} r^{auc}_t,
+	\quad
+	\lambda_{auc}\in[0,1].
+	\label{eq:ch5_reward}
+\end{equation}
+
+Параметр $\lambda_{auc}$ управляет силой влияния аукционных признаков на
+обучение. При $\lambda_{auc}=0$ метод вырождается в вариант многоагентного
+управления без экономического усиления. При слишком большом значении
+$\lambda_{auc}$ возникает риск переориентации политики на платежные показатели,
+поэтому в экспериментальной части требуется анализ чувствительности к этому
+параметру.
+
+\section{Режимы функционирования метода}
+
+Алгоритм AMPLE-AMR функционирует в двух режимах: режиме онлайн-исполнения (Online Phase) и режиме оффлайн-обучения (Offline Phase).
+
+\subsection{Режим 1: Онлайн-исполнение}
+
+В режиме онлайн-исполнения используется уже обученная политика. Один шаг
+метода выполняется следующим образом:
+
+\begin{enumerate}
+	\item \textbf{Поступление задач.} Поступают вычислительные задачи от автономных мобильных роботов.
+	\item \textbf{Сбор наблюдений.} Каждый периферийный узел $n_j$ получает локальное наблюдение $o^j_t$.
+	\item \textbf{Выбор локальных режимом.} Локальная сеть агента выбирает режим:
+	\[
+	\kappa_j(t)
+	=
+	\arg\max_{\kappa_j \in \mathcal{K}_j}
+	Q_j(h^j_t,\kappa_j).
+	\]
+	\item \textbf{Определение ёмкости узлов.} На основе выбранного режима вычисляется экспонируемая ёмкость
+	$\bar{A}_j(t,\kappa_j)$.
+	\item \textbf{Запуск аукционного раунда.} Аукционный слой решает задачу выбора победителей и формирует распределение $x^*(t)$.
+	\item \textbf{Исполнение.} Назначенные задачи передаются в очереди соответствующих узлов или запускаются на исполнение.
+	\item \textbf{Наблюдение результата.} Среда обновляет состояние: загрузку, очереди, задержки, завершённые задачи и отказовые признаки.
+	\item \textbf{Сохранение перехода.} Формируются показатели текущего шага и сохраняются журналы для последующего обучения или анализа.
+\end{enumerate}
+
+Онлайн-исполнение не требует глобального пересчёта политики. Глобальная
+информация используется аукционным слоем для текущего распределения и
+серверным контуром для анализа, но локальный выбор режима осуществляется
+каждым узлом самостоятельно.
+
+\subsection{Режим 2: Оффлайн-обучение}
+
+Оффлайн-обучение проводится в серверном контуре, облаке, цифровом двойнике
+или имитационной среде. В отличие от онлайн-исполнения, здесь допускается
+использование глобального состояния системы, совместных действий всех агентов,
+полных результатов аукционных раундов и командного вознаграждения.
+
+Обучающий цикл включает:
+\begin{enumerate}
+	\item генерацию или воспроизведение сценария работы AMR-системы;
+	\item выполнение последовательности шагов AMPLE-AMR;
+	\item накопление переходов в буфере опыта;
+	\item выбор мини-пакетов переходов;
+	\item расчёт временно-разностных целей;
+	\item обновление локальных сетей агентов и сети смешивания QMIX;
+	\item периодическое обновление целевых сетей;
+	\item проверку качества политики на отложенных сценариях.
+\end{enumerate}
+
+Переход, сохраняемый в буфере опыта, имеет вид:
+\[
+e_t =
+\left(
+s_t,
+\{o^j_t\}_{j=1}^{k},
+\kappa_t,
+r_t,
+s_{t+1},
+\{o^j_{t+1}\}_{j=1}^{k},
+done_t
+\right).
+\]
+
+Сеть QMIX обучается минимизацией функции потерь:
+\[
+\mathcal{L}(\theta)
+=
+\mathbb{E}_{e_t\sim\mathcal{B}}
+\left[
+\left(
+y_t -
+Q_{tot}(s_t,\kappa_t;\theta)
+\right)^2
+\right],
+\]
+где
+\[
+y_t =
+r_t
++
+\gamma(1-done_t)
+Q^{-}_{tot}(s_{t+1},\kappa'_{t+1}).
+\]
+
+После завершения обучения параметры локальных сетей распространяются на
+периферийные узлы. Повторное обучение может запускаться периодически, при
+существенном изменении нагрузки или после обновления конфигурации
+инфраструктуры.
+
+\section{Псевдокод метода AMPLE-AMR}
+
+Ниже приведена алгоритмическая схема метода.
+
+\textbf{Алгоритм 5.1. Метод AMPLE-AMR}
+
+\begin{enumerate}
+	\item Инициализировать локальные сети агентов, сеть смешивания QMIX,
+	целевые сети и буфер опыта.
+	\item Для каждого эпизода обучения выполнить последовательность шагов.
+	\item На шаге $t$ получить множество задач $\mathcal{T}(t)$ от роботов.
+	\item Для каждого периферийного узла $n_j$ сформировать локальное
+	наблюдение $o^j_t$.
+	\item Для каждого узла выбрать режим $\kappa_j(t)$ с помощью локальной
+	политики.
+	\item Вычислить экспонируемую ёмкость $\bar{A}_j(t,\kappa_j)$.
+	\item Сформировать вход аукционного слоя: задачи, оценки ценности,
+	стоимости обслуживания, достижимость и экспонируемую ёмкость.
+	\item Решить задачу выбора победителей и получить распределение $x^*(t)$.
+	\item Вычислить VCG-подобные платежи и агрегированные аукционные признаки.
+	\item Исполнить назначение задач в среде.
+	\item Обновить очереди, загрузку, сетевые задержки и состояние отказов.
+	\item Рассчитать командное вознаграждение $r_t$.
+	\item Сохранить переход $e_t$ в буфер опыта.
+	\item Если выполняется условие обновления, выполнить шаг обучения QMIX.
+	\item После завершения обучения использовать локальные политики для
+	онлайн-выбора режимов узлов.
+\end{enumerate}
+
+\section{Редукции метода к базовым вариантам}
+
+Метод AMPLE-AMR содержит несколько базовых вариантов, которые используются
+для последующей экспериментальной проверки вклада отдельных компонентов.
+Важно подчеркнуть, что в предлагаемой архитектуре обучаемая многоагентная
+политика не выполняет непосредственное назначение задач на узлы. Она выбирает
+операционные режимы периферийных узлов, а само распределение задач выполняет
+отдельный слой назначения. Поэтому при исключении аукционного слоя необходимо
+явно задать альтернативное правило распределения.
+
+Если отключить обучаемый контур и зафиксировать режимы периферийных узлов,
+метод вырождается в повторяющееся аукционное распределение:
+\[
+\text{AMPLE-AMR}
+\rightarrow
+\text{Repeated VCG-like allocation}.
+\]
+В этом варианте периферийные узлы всегда используют заранее заданные
+режимы, например нормальный или консервативный, а распределение задач в
+каждом раунде выполняется VCG-подобным механизмом.
+
+Если сохранить обучаемый выбор режимов, но заменить VCG-подобный аукционный
+слой эвристическим правилом назначения, получается вариант:
+\[
+\text{AMPLE-AMR}
+\rightarrow
+\text{QMIX + heuristic allocation}.
+\]
+В этом случае многоагентная политика по-прежнему выбирает режимы допуска,
+резервирования и обслуживания периферийных узлов, но задачи назначаются не
+через максимизацию общественного благосостояния и VCG-платежи, а с помощью
+заданной эвристики. Такой эвристикой может быть выбор наименее загруженного
+доступного узла, выбор узла с минимальной оценкой задержки, жадное назначение
+по максимальному чистому вкладу или комбинированное правило, учитывающее
+задержку, загрузку и дедлайн задачи.
+
+Если сохранить и обучаемый выбор режимов, и VCG-подобный аукционный слой,
+получается полный метод:
+\[
+\text{AMPLE-AMR}
+=
+\text{QMIX-based node mode control}
++
+\text{VCG-like task allocation}.
+\]
+Именно этот вариант является основным в диссертации: обучаемая политика
+адаптирует ресурсные режимы периферийных узлов к динамике среды, а
+аукционный слой выполняет экономически интерпретируемое распределение задач
+в рамках выбранных ограничений.
+
+Наконец, если в полном методе дополнительно включить кластеризацию графа
+периферийной инфраструктуры и проводить локальные аукционы внутри кластеров,
+получается масштабируемый вариант:
+\[
+\text{C-AMPLE-AMR} = \text{clustered AMPLE-AMR}.
+\]
+
+Таким образом, для экспериментального сравнения целесообразно использовать
+следующие варианты:
+\begin{enumerate}
+	\item фиксированные режимы узлов и VCG-подобное распределение;
+	\item фиксированные режимы узлов и эвристическое распределение;
+	\item обучаемые режимы узлов и эвристическое распределение;
+	\item обучаемые режимы узлов и VCG-подобное распределение, то есть
+	полный AMPLE-AMR;
+	\item кластерный вариант C-AMPLE-AMR.
+\end{enumerate}
+
+\section{Проблема масштабируемости глобального аукциона}
+
+Глобальный вариант AMPLE-AMR предполагает, что аукционный слой распределяет
+задачи по всей системе. При малом и среднем числе роботов такой подход
+приемлем. Однако при увеличении масштаба системы растут:
+\begin{enumerate}
+	\item число заявок;
+	\item число допустимых пар задача--узел;
+	\item размер задачи выбора победителей;
+	\item число повторных решений для вычисления платежей;
+	\item объём коммуникации для сбора состояния;
+	\item задержка между поступлением задачи и принятием решения.
+\end{enumerate}
+
+Обозначим число задач текущего раунда через $d_t$, число узлов через $k$, а
+число роботов через $m$. Пусть $T^{WDP}(d_t,k)$ --- время решения задачи выбора
+победителей. Тогда прямое вычисление VCG-подобных платежей имеет порядок
+\[
+T^{VCG}(t)
+=
+\mathcal{O}
+\left(
+(m+k+1)T^{WDP}(d_t,k)
+\right).
+\]
+
+К этой величине добавляется коммуникационная составляющая:
+\[
+T^{comm}(t)
+=
+T^{uplink}(m,d_t)
++
+T^{state}(k)
++
+T^{downlink}(m,k),
+\]
+где учитываются передача заявок, сбор состояния узлов и рассылка результатов
+назначения.
+
+Глобальный режим становится проблемным, если
+\[
+T^{VCG}(t)+T^{comm}(t)
+>
+\rho \Delta^{slot},
+\]
+где $\Delta^{slot}$ --- допустимая длительность управляющего слота, а
+$\rho \in (0,1)$ --- максимально допустимая доля времени, отводимая на
+служебное распределение.
+
+Это условие используется как один из критериев перехода к кластерному
+варианту C-AMPLE-AMR.
+
+\section{Кластерная версия C-AMPLE-AMR}
+
+Метод C-AMPLE-AMR предназначен для повышения масштабируемости за счёт
+локализации аукционного распределения. Основная идея состоит в том, чтобы
+разбить граф инфраструктуры на кластеры и проводить распределение задач внутри
+каждого кластера отдельно.
+
+Пусть граф инфраструктуры задан как~\eqref{eq:ch2_graph}
+\[
+G(t)=(\mathcal{V},\mathcal{E},w(t)),
+\quad
+\mathcal{V}=\mathcal{R}\cup\mathcal{N}.
+\]
+
+Для целей кластеризации вводится \textbf{аффинный вес}:
+\begin{equation}
+	\alpha_{uv}(t) = \frac{\nu_{uv}(t)}{\varepsilon + w_{uv}(t)},
+	\label{eq:ch5_affine_value}
+\end{equation}
+где $w_{uv}(t)$ --- стоимость или задержка связи, $\nu_{uv}(t)$ --- частота или важность взаимодействия между вершинами, а $\varepsilon>0$ --- малый стабилизирующий коэффициент (предотвращает деление на ноль). 
+
+Большое значение $\alpha_{uv}(t)$ означает, что вершины $u$ и $v$ сильно
+связаны и предпочтительно должны попадать в один кластер. Это важно, поскольку
+во многих алгоритмах выделения сообществ веса рёбер трактуются как сила связи,
+а не как стоимость взаимодействия. Поэтому исходные задержки или стоимости
+нельзя напрямую использовать как аффинные веса без преобразования.
+
+Разбиение графа имеет вид:
+\begin{equation}
+	\mathcal{P}(t) = \{P_1(t),P_2(t),\ldots,P_s(t)\},
+	\label{eq:ch5_clusters}
+\end{equation}
+где каждый кластер $P_\ell(t)$ содержит подмножество роботов и периферийных
+узлов:
+\begin{equation}
+	P_\ell(t)
+	=
+	\mathcal{R}_\ell(t)
+	\cup
+	\mathcal{N}_\ell(t).
+	\label{eq:ch5_cluster_nodes}
+\end{equation}
+
+\textbf{Цель кластеризации} состоит в том, чтобы:
+\begin{enumerate}
+	\item сохранить сильносвязанные пары робот--узел внутри одного кластера;
+	\item уменьшить число межкластерных назначений;
+	\item сбалансировать нагрузку между кластерами;
+	\item ограничить размер локальных аукционов;
+	\item снизить коммуникационные и вычислительные накладные расходы.
+\end{enumerate}
+
+Для построения разбиения могут использоваться методы разбиения графов и
+выделения сообществ, включая METIS-подобные алгоритмы и методы модульности
+\cite{Karypis1998Metis,Blondel2008Louvain}. Выбор конкретного алгоритма
+зависит от требований реализации: необходимости баланса размеров кластеров,
+скорости обновления разбиения и устойчивости к малым изменениям графа.
+
+\subsection{Локальные аукционы внутри кластеров}
+
+После получения разбиения $\mathcal{P}(t)$ глобальная задача распределения
+заменяется набором локальных задач. Для кластера $P_\ell$ обозначим множество
+роботов через $\mathcal{R}_\ell$, множество узлов через $\mathcal{N}_\ell$, а
+множество задач через
+\begin{equation}
+	\mathcal{T}_\ell(t)
+	=
+	\bigcup_{r_i\in\mathcal{R}_\ell}
+	\mathcal{T}_i(t).
+	\label{eq:ch5_cluster_tasks}
+\end{equation}
+
+Локальный аукцион решает:
+\begin{equation}
+	x^*_\ell(t)
+	\in
+	\arg\max_{x_\ell \in \mathcal{X}_\ell(t,\kappa(t))}
+	SW_\ell(x_\ell,t),
+	\label{eq:ch5_cluster_alloc}
+\end{equation}
+где
+\begin{equation}
+	SW_\ell(x_\ell,t)
+	=
+	\sum_{\tau\in\mathcal{T}_\ell(t)}
+	\sum_{n_j\in\mathcal{N}_\ell}
+	x_{\tau j}(t)
+	\left[
+	U_{i(\tau)}(\tau,n_j,t)
+	-
+	C_j(\tau,r_{i(\tau)},t)
+	\right].
+	\label{eq:ch5_cluster_sw}
+\end{equation}
+
+Итоговое распределение в кластерном режиме:
+\begin{equation}
+	x^{C}(t)
+	=
+	\bigcup_{\ell=1}^{s}
+	x^*_\ell(t).
+	\label{eq:ch5_final_alloc}
+\end{equation}
+
+Такое распределение в общем случае может уступать глобальному оптимуму по
+общественному благосостоянию, поскольку часть межкластерных назначений
+исключается или ограничивается. Поэтому C-AMPLE-AMR должен использоваться
+тогда, когда выигрыш по накладным расходам превышает возможную потерю
+качества распределения.
+
+\subsection{Межкластерные назначения}
+
+В базовом варианте C-AMPLE-AMR задачи распределяются только внутри своих
+кластеров. Однако в некоторых случаях это может приводить к потере качества:
+например, если в кластере нет свободного узла, а соседний кластер имеет
+избыточную ёмкость.
+
+Для таких ситуаций можно ввести ограниченный механизм межкластерного
+резерва. Пусть $\mathcal{B}_\ell(t)$ --- множество соседних кластеров,
+доступных для кластера $P_\ell$. Тогда задача $\tau\in\mathcal{T}_\ell(t)$
+может быть назначена не только на узлы $\mathcal{N}_\ell$, но и на ограниченное
+число узлов из соседних кластеров:
+\[
+\mathcal{N}^{cand}_\ell(t)
+=
+\mathcal{N}_\ell(t)
+\cup
+\bigcup_{P_b\in\mathcal{B}_\ell(t)}
+\mathcal{N}^{border}_b(t),
+\]
+где $\mathcal{N}^{border}_b(t)$ --- подмножество пограничных или резервных
+узлов соседнего кластера.
+
+Межкластерное назначение штрафуется дополнительной сетевой стоимостью:
+\[
+C^{cross}_{\tau j}(t)
+=
+C_j(\tau,r_{i(\tau)},t)
++
+\rho^{cross} d_{\ell b}(t),
+\]
+где $d_{\ell b}(t)$ --- стоимость взаимодействия между кластерами, а
+$\rho^{cross}$ --- коэффициент штрафа.
+
+Такой механизм позволяет сохранить локальность распределения, но не блокирует
+редкие выгодные межкластерные назначения.
+
+\subsection{Критерий перехода к кластерному режиму}
+
+Кластерный режим не должен использоваться всегда. Если система мала, один
+глобальный аукцион может давать лучшее качество распределения без существенных
+накладных расходов. Поэтому в методе вводится критерий перехода.
+
+Пусть
+\[
+H^{global}(t)
+=
+T^{auction}_{global}(t)
++
+T^{comm}_{global}(t)
+\]
+--- накладные расходы глобального режима.
+
+Пусть
+\[
+H^{cluster}(t)
+=
+\max_{\ell}
+\left(
+T^{auction}_{\ell}(t)
++
+T^{comm}_{\ell}(t)
+\right)
++
+T^{partition}(t)
++
+T^{sync}(t)
+\]
+--- накладные расходы кластерного режима, где учитываются локальные аукционы,
+разбиение графа и межкластерная синхронизация.
+
+Переход к кластерному режиму целесообразен, если выполняются два условия:
+\[
+H^{global}(t)
+>
+\rho \Delta^{slot},
+\]
+и
+\[
+H^{cluster}(t)
++
+\lambda_{loss} \widehat{L}^{welfare}(t)
+<
+H^{global}(t),
+\]
+где $\widehat{L}^{welfare}(t)$ --- оценка потери общественного благосостояния
+из-за локализации распределения, а $\lambda_{loss}$ --- коэффициент приведения
+потерь качества к шкале накладных расходов.
+
+На практике $\widehat{L}^{welfare}(t)$ может оцениваться по малому числу
+контрольных глобальных аукционов, по исторической статистике или по величине
+межкластерного среза графа:
+\[
+Cut(\mathcal{P}(t))
+=
+\sum_{\ell\neq b}
+\sum_{u\in P_\ell,\,v\in P_b}
+\alpha_{uv}(t).
+\]
+
+Чем больше межкластерный срез, тем выше риск потери качества при локальных
+аукционах. Поэтому кластеризация должна не только уменьшать размер локальных
+задач, но и сохранять сильные связи внутри кластеров.
+
+\subsection{Псевдокод C-AMPLE-AMR}
+
+\textbf{Алгоритм 5.2. Кластерная версия C-AMPLE-AMR}
+
+\begin{enumerate}
+	\item Получить текущий граф инфраструктуры $G(t)$.
+	\item Вычислить аффинные веса $\alpha_{uv}(t)$.
+	\item Оценить накладные расходы глобального режима $H^{global}(t)$.
+	\item Если глобальный режим допустим по времени, выполнить AMPLE-AMR без
+	кластеризации.
+	\item Иначе построить разбиение $\mathcal{P}(t)$.
+	\item Для каждого периферийного узла выбрать операционный режим с помощью
+	локальной политики.
+	\item В каждом кластере вычислить экспонируемую ёмкость узлов.
+	\item Провести локальный VCG-подобный аукцион внутри каждого кластера.
+	\item При необходимости обработать ограниченное число межкластерных
+	назначений через пограничные узлы.
+	\item Исполнить полученные назначения.
+	\item Обновить состояние среды, аукционные признаки и командное
+	вознаграждение.
+	\item Сохранить переход для последующего обучения.
+\end{enumerate}
+
+\section{Анализ вычислительной сложности}
+
+В глобальном варианте AMPLE-AMR стоимость аукционного слоя определяется
+числом задач $d_t$ и числом узлов $k$:
+\[
+T^{global}_{auction}(t)
+=
+T^{WDP}(d_t,k).
+\]
+С учётом вычисления платежей:
+\[
+T^{global}_{VCG}(t)
+=
+\mathcal{O}
+\left(
+(m+k+1)T^{WDP}(d_t,k)
+\right).
+\]
+
+В кластерном варианте пусть система разбита на $s$ кластеров, а в кластере
+$P_\ell$ имеется $d_\ell$ задач и $k_\ell$ узлов. Тогда стоимость локальных
+аукционов:
+\[
+T^{cluster}_{auction}(t)
+=
+\max_{\ell=1,\ldots,s}
+T^{WDP}(d_\ell,k_\ell)
+\]
+при параллельном выполнении локальных аукционов или
+\[
+T^{cluster}_{auction}(t)
+=
+\sum_{\ell=1}^{s}
+T^{WDP}(d_\ell,k_\ell)
+\]
+при последовательном выполнении.
+
+Если кластеры сбалансированы, то приблизительно
+\[
+d_\ell \approx \frac{d_t}{s},
+\quad
+k_\ell \approx \frac{k}{s}.
+\]
+Для комбинаторной задачи выбора победителей это может дать существенное
+снижение времени расчёта, поскольку $T^{WDP}$ обычно растёт сверхлинейно по
+размеру задачи.
+
+Стоимость обучаемого контура для выбора режимов имеет порядок
+\[
+T^{QMIX}_{infer}(t)
+=
+\mathcal{O}(k|\mathcal{K}|),
+\]
+если размер локального пространства режимов равен $|\mathcal{K}|$. При
+фиксированном числе режимов этот компонент растёт линейно по числу узлов и
+обычно не является основным узким местом.
+
+Следовательно, главный выигрыш C-AMPLE-AMR связан именно с уменьшением
+размерности аукционного слоя, а не с ускорением локального вывода
+многоагентной политики.
+
+\section{Свойства метода AMPLE-AMR}
+
+Метод AMPLE-AMR обладает следующими свойствами.
+
+Во-первых, он сохраняет интерпретируемость распределения. Назначение задач
+строится через явную задачу максимизации общественного благосостояния, а
+платежи имеют смысл внешнего эффекта.
+
+Во-вторых, он допускает адаптацию к динамике среды. Периферийные узлы
+обучаются выбирать режимы, учитывая очереди, загрузку, задержки, результаты
+предыдущих аукционов и штрафы за нарушения сроков.
+
+В-третьих, он поддерживает децентрализованное исполнение обучаемой политики.
+Каждый узел выбирает свой режим по локальному наблюдению, а централизованное
+обучение может выполняться отдельно в серверном контуре или цифровом
+двойнике.
+
+В-четвёртых, метод не обучает стратегию заявок. Это принципиально отделяет
+его от подходов, где обучение используется для изменения ставок участников.
+
+В-пятых, метод допускает масштабируемое расширение. C-AMPLE-AMR позволяет
+заменить один глобальный аукцион набором локальных аукционов в кластерах.
+
+В-шестых, метод имеет контролируемые частные случаи: только аукцион, только
+многоагентное управление, эвристическое распределение и полный гибридный
+вариант. Это удобно для экспериментальной проверки вклада каждого компонента.
+
+\section{Ограничения метода}
+
+Несмотря на преимущества, метод AMPLE-AMR имеет ряд ограничений.
+
+Во-первых, VCG-подобные свойства относятся только к локальному аукционному
+раунду при фиксированных режимах узлов. Вся повторяющаяся система с
+обучением не является классическим VCG-механизмом.
+
+Во-вторых, точное вычисление платежей может быть дорогим. Для больших систем
+необходимы приближённые расчёты, ограничение числа кандидатов или кластерный
+режим.
+
+В-третьих, качество обучаемой политики зависит от репрезентативности
+обучающих сценариев. Если реальные потоки задач и сетевые задержки сильно
+отличаются от симуляционной среды, требуется дообучение.
+
+В-четвёртых, кластеризация снижает накладные расходы, но может ухудшать
+качество распределения, если сильные межкластерные связи оказываются
+разорванными.
 
 \section{Выводы по главе}
 
-Разработанный программный прототип реализует полный цикл работы метода MA--VCG--QMIX: от генерации задач и построения сетевой топологии до точного аукционного распределения, расчёта VCG-платежей, формирования расширенных наблюдений, выбора локальных действий и обучения кооперативной политики. Архитектура реализации непосредственно следует построенной в диссертации двухконтурной схеме, в которой аукционный слой формирует экономический контекст, а обучаемый слой использует его для адаптивного управления.
+В главе предложен гибридный метод AMPLE-AMR для адаптивного распределения
+вычислительных задач автономных мобильных роботов между периферийными
+вычислительными узлами. Метод объединяет обучаемую многоагентную политику
+выбора операционных режимов узлов и VCG-подобный аукционный слой
+распределения задач.
 
-Наличие многосидового benchmark-запуска, автоматического сохранения результатов, средств визуализации и тестов делает прототип пригодным для воспроизводимой экспериментальной проверки. 
+Ключевым результатом является строгое разделение ролей: обучаемый контур
+управляет режимами допуска, резервирования и обслуживания задач, а
+аукционный контур распределяет задачи в рамках выбранных ресурсных
+ограничений. Это позволяет не обучать ставки и оценки ценности задач,
+сохраняя экономическую интерпретируемость аукционного слоя.
+
+Также предложена масштабируемая версия C-AMPLE-AMR, основанная на
+кластеризации графа периферийной инфраструктуры и
+проведении локальных аукционов. Введён критерий перехода от глобального
+распределения к кластерному режиму на основе сравнения накладных расходов и
+оценки возможной потери общественного благосостояния.
+
+Полученные результаты образуют центральный методический вклад диссертации.
+В следующей главе описывается программный прототип, реализующий основные
+компоненты AMPLE-AMR и C-AMPLE-AMR для последующей экспериментальной
+валидации.
