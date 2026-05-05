@@ -73,6 +73,20 @@
 Во всех экспериментах решение о режиме узла и решение о назначении задач
 разделены архитектурно.
 
+\section{Сценарии}
+
+Для проведения экспериментальной валидации задаётся набор сценариев:
+\begin{itemize}
+	\item \texttt{stable\_warehouse\_load} --- стабильная складская нагрузка;
+	\item \texttt{peak\_warehouse\_load} --- пиковая нагрузка;
+	\item \texttt{heterogeneous\_edge\_nodes} --- разнородная инфраструктура;
+	\item \texttt{network\_degradation} --- деградация связи;
+	\item \texttt{edge\_node\_failures} --- отказы периферийных узлов;
+	\item \texttt{scalability\_sweep} --- масштабирование;
+	\item \texttt{clustered\_vs\_global} --- глобальное и кластерное распределение;
+	\item \texttt{sensitivity\_operation\_modes} --- чувствительность к коэффициентам режимов.
+\end{itemize}
+
 \section{Метрики}
 
 В таблицах и на графиках анализируются следующие показатели.
