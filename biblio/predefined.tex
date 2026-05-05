@@ -37,6 +37,19 @@
 
 \newcommand*{\autocite}[1]{}  % Чтобы примеры цитирования, рассчитанные на biblatex, не вызывали ошибок при компиляции в bibtex
 
+% При переключении с biblatex/biber на bibtex8 в .aux могут остаться служебные
+% команды \abx@aux@... . Делаем их no-op, чтобы первый прогон pdflatex не падал
+% и успевал переписать aux в формате bibtex.
+\makeatletter
+\providecommand\abx@aux@refcontext[1]{}
+\providecommand\abx@aux@cite[2]{}
+\providecommand\abx@aux@segm[3]{}
+\providecommand\abx@aux@defaultrefcontext[3]{}
+\providecommand\abx@aux@nociteall{}
+\providecommand\abx@aux@read@bbl@mdfivesum[1]{}
+\providecommand\abx@aux@read@bblrerun{}
+\makeatother
+
 %%% Создание команд для вывода списка литературы %%%
 \newcommand*{\insertbibliofull}{
 \bibliography{biblio/external,biblio/author,biblio/registered}         % Подключаем BibTeX-базы % После запятых не должно быть лишних пробелов — он "думает", что это тоже имя пути
