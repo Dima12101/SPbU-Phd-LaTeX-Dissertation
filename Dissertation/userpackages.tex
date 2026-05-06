@@ -41,39 +41,3 @@
       \renewcommand{\gitMarkFormat}{\rmfamily\color{Gray}\small\bfseries}
    }{}
 }{}
-
-\usepackage{tikz}
-\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,shapes.misc,shapes.symbols,backgrounds,matrix,decorations.pathreplacing}
-
-\definecolor{dissBlue}{HTML}{1F4E79}
-\definecolor{dissBlueLight}{HTML}{DCEAF7}
-\definecolor{dissGreen}{HTML}{4F8A5B}
-\definecolor{dissGreenLight}{HTML}{E2F0E5}
-\definecolor{dissAmber}{HTML}{D69C2F}
-\definecolor{dissAmberLight}{HTML}{FAEBC8}
-\definecolor{dissViolet}{HTML}{6A5D8F}
-\definecolor{dissVioletLight}{HTML}{E9E4F3}
-\definecolor{dissGray}{HTML}{4D4D4D}
-\definecolor{dissGrayLight}{HTML}{F2F4F7}
-\definecolor{dissRed}{HTML}{B65A5A}
-\definecolor{dissRedLight}{HTML}{F5DFDF}
-
-\tikzset{
-	diss/.style={font=\sffamily, line cap=round, line join=round, >=Latex},
-	layer/.style={draw=dissBlue, fill=dissBlueLight, rounded corners=3pt, line width=0.7pt, align=center, inner sep=5pt, minimum height=9mm},
-	process/.style={draw=dissBlue, fill=dissGrayLight, rounded corners=3pt, line width=0.7pt, align=center, inner sep=5pt, minimum height=9mm},
-	agent/.style={draw=dissGreen, fill=dissGreenLight, rounded corners=3pt, line width=0.7pt, align=center, inner sep=5pt, minimum height=9mm},
-	auction/.style={draw=dissAmber, fill=dissAmberLight, rounded corners=3pt, line width=0.7pt, align=center, inner sep=5pt, minimum height=9mm},
-	qmix/.style={draw=dissViolet, fill=dissVioletLight, rounded corners=3pt, line width=0.7pt, align=center, inner sep=5pt, minimum height=9mm},
-	danger/.style={draw=dissRed, fill=dissRedLight, rounded corners=3pt, line width=0.7pt, align=center, inner sep=5pt, minimum height=9mm},
-	store/.style={draw=dissGray, fill=white, rounded corners=2pt, line width=0.7pt, align=center, inner sep=4pt},
-	smallnote/.style={font=\sffamily\scriptsize, align=center, text=dissGray},
-	title/.style={font=\sffamily\bfseries\small, align=center},
-	arr/.style={->, line width=0.7pt, draw=dissGray},
-	dataarr/.style={->, line width=0.7pt, draw=dissBlue},
-	ctlarr/.style={->, line width=0.8pt, draw=dissGreen},
-	aucarr/.style={->, line width=0.8pt, draw=dissAmber},
-	learnarr/.style={->, line width=0.8pt, draw=dissViolet},
-	dashedbox/.style={draw=dissGray, dashed, rounded corners=3pt, inner sep=6pt},
-	legendbox/.style={draw=dissGray!55, fill=white, rounded corners=2pt, inner sep=4pt, font=\sffamily\scriptsize}
-}
