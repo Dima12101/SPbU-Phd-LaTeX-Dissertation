@@ -1,0 +1,82 @@
+<mxfile host="Electron" agent="ChatGPT">
+  <diagram name="ch6_warehouse_scenario" id="ch6_warehouse_scenario">
+    <mxGraphModel dx="1118" dy="761" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="warehouse" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8f9fa;strokeColor=#343a40;fontStyle=1;fontSize=16;" value="Роботизированный склад" vertex="1">
+          <mxGeometry height="650" width="1000" x="60" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_storage" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e7f5ff;strokeColor=#1c7ed6;fontSize=13;" value="&lt;b&gt;Зона хранения&lt;br&gt;&lt;/b&gt;стабильная нагрузка" vertex="1">
+          <mxGeometry height="200" width="260" x="100" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_pick" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3bf;strokeColor=#f08c00;fontSize=13;" value="&lt;b&gt;Зона комплектации&lt;br&gt;&lt;/b&gt;пиковые задачи" vertex="1">
+          <mxGeometry height="200" width="260" x="420" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_bad" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe3e3;strokeColor=#c92a2a;fontSize=13;" value="&lt;b&gt;Зона ухудшенной связи&lt;br&gt;&lt;/b&gt;рост задержки и потерь" vertex="1">
+          <mxGeometry height="200" width="260" x="740" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_charge" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6fcf5;strokeColor=#087f5b;fontSize=13;" value="&lt;b&gt;Зона зарядки и обслуживания&lt;/b&gt;" vertex="1">
+          <mxGeometry height="160" width="260" x="100" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_ship" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f3f0ff;strokeColor=#5f3dc4;fontSize=13;" value="&lt;b&gt;Зона отгрузки&lt;br&gt;&lt;/b&gt;смешанный поток задач" vertex="1">
+          <mxGeometry height="160" width="260" x="420" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="zone_fail" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f1f3f5;strokeColor=#495057;fontSize=13;" value="&lt;b&gt;Узел на обслуживании&lt;br&gt;&lt;/b&gt;сценарий отказа" vertex="1">
+          <mxGeometry height="160" width="260" x="740" y="480" as="geometry" />
+        </mxCell>
+        <mxCell id="amr1" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1c7ed6;fontSize=12;fontStyle=1;" value="AMR" vertex="1">
+          <mxGeometry height="40" width="60" x="140" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="amr2" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1c7ed6;fontSize=12;fontStyle=1;" value="AMR" vertex="1">
+          <mxGeometry height="40" width="60" x="250" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="amr3" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f08c00;fontSize=12;fontStyle=1;" value="AMR" vertex="1">
+          <mxGeometry height="40" width="60" x="455" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="amr4" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f08c00;fontSize=12;fontStyle=1;" value="AMR" vertex="1">
+          <mxGeometry height="40" width="60" x="570" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="amr5" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c92a2a;fontSize=12;fontStyle=1;" value="AMR" vertex="1">
+          <mxGeometry height="40" width="60" x="840" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="ap1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0ebff;strokeColor=#1971c2;fontSize=12;" value="точка доступа" vertex="1">
+          <mxGeometry height="40" width="110" x="200" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ap2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0ebff;strokeColor=#1971c2;fontSize=12;" value="точка доступа" vertex="1">
+          <mxGeometry height="40" width="110" x="495" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="ap3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d0ebff;strokeColor=#1971c2;fontSize=12;" value="точка доступа" vertex="1">
+          <mxGeometry height="40" width="110" x="810" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="edge1" parent="1" style="shape=process;whiteSpace=wrap;html=1;fillColor=#d3f9d8;strokeColor=#2b8a3e;fontSize=12;" value="&lt;b&gt;Edge-S&lt;br&gt;&lt;/b&gt;локальный узел" vertex="1">
+          <mxGeometry height="55" width="130" x="155" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" parent="1" style="shape=process;whiteSpace=wrap;html=1;fillColor=#d3f9d8;strokeColor=#2b8a3e;fontSize=12;" value="&lt;b&gt;Edge-M&lt;br&gt;&lt;/b&gt;общий узел" vertex="1">
+          <mxGeometry height="55" width="130" x="455" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" parent="1" style="shape=process;whiteSpace=wrap;html=1;fillColor=#d3f9d8;strokeColor=#2b8a3e;fontSize=12;" value="&lt;b&gt;Edge-G&lt;br&gt;&lt;/b&gt;узел с ускорителем" vertex="1">
+          <mxGeometry height="55" width="130" x="755" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="cloud" parent="1" style="cloud;whiteSpace=wrap;html=1;fillColor=#edf2ff;strokeColor=#4263eb;fontSize=12;" value="&lt;b&gt;Облако / сервер обучения&lt;br&gt;&lt;/b&gt;журналы, моделирование, обучение" vertex="1">
+          <mxGeometry height="90" width="120" x="940" y="350" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#868e96;align=left;spacingLeft=10;fontSize=12;" value="Проверяемые факторы: 1) общий дефицитный ресурс; 2) внешний эффект назначения; 3) пиковая нагрузка; 4) ухудшение связи; 5) отказ узла; 6) масштабирование." vertex="1">
+          <mxGeometry height="40" width="520" x="310" y="660" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="amr1" style="endArrow=block;html=1;rounded=0;strokeColor=#495057;" target="ap1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="amr5" style="endArrow=block;html=1;rounded=0;dashed=1;strokeColor=#c92a2a;" target="ap3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="ap1" style="endArrow=block;html=1;rounded=0;strokeColor=#2b8a3e;" target="edge1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="edge3" style="endArrow=block;html=1;rounded=0;strokeColor=#4263eb;" target="cloud">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

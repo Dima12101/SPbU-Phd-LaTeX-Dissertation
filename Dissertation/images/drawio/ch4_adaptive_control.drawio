@@ -1,0 +1,119 @@
+<mxfile host="Electron" agent="ChatGPT">
+  <diagram id="ch4_adaptive_control" name="ch4_adaptive_control">
+    <mxGraphModel dx="1118" dy="761" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="d_oJJjqOXd91v5eQXrEt-2" edge="1" parent="1" source="state" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="training">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="30" y="163" />
+              <mxPoint x="30" y="610" />
+              <mxPoint x="950" y="610" />
+            </Array>
+            <mxPoint x="950" y="600" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="state" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Глобальное состояние&lt;br&gt;&lt;/b&gt;&lt;i&gt;s_t&lt;/i&gt;&lt;br&gt;очереди, загрузка, связь,&lt;br&gt;задачи, отказы" vertex="1">
+          <mxGeometry height="105" width="220" x="60" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="obs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Локальные наблюдения&lt;br&gt;&lt;/b&gt;&lt;i&gt;o_t^j&lt;br&gt;&lt;/i&gt;технические признаки +&lt;br&gt;аукционные признаки" vertex="1">
+          <mxGeometry height="105" width="240" x="350" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="agents" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;align=center;verticalAlign=middle" value="Периферийные узлы как &lt;b&gt;агенты&lt;/b&gt;&lt;br&gt;&lt;i&gt;π_j(κ_j | h_t^j)&lt;br&gt;&lt;/i&gt;локальный выбор режима" vertex="1">
+          <mxGeometry height="105" width="250" x="660" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="modes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Операционные режимы&lt;br&gt;&lt;/b&gt;защитный, штатный,&lt;br&gt;открытый, резервный,&lt;br&gt;критический" vertex="1">
+          <mxGeometry height="105" width="210" x="950" y="110" as="geometry" />
+        </mxCell>
+        <mxCell id="capacity" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Экспонируемая ёмкость&lt;br&gt;&lt;/b&gt;&lt;i&gt;Ā_j(t, κ_j)&lt;br&gt;&lt;/i&gt;ресурсные ограничения&lt;br&gt;для текущего раунда" vertex="1">
+          <mxGeometry height="105" width="210" x="950" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="tasks" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=15;align=center;verticalAlign=middle" value="Поток задач роботов&lt;br&gt;заявки, сроки,&lt;br&gt;приоритеты, требования" vertex="1">
+          <mxGeometry height="105" width="220" x="200" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="auction" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Аукционный слой&lt;br&gt;&lt;/b&gt;задача выбора распределения&lt;br&gt;&lt;i&gt;x*(t) = arg max SW(x,t)&lt;br&gt;VCG-платежи&lt;/i&gt;" vertex="1">
+          <mxGeometry height="125" width="320" x="510" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="exec" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Исполнение задач&lt;br&gt;&lt;/b&gt;обновление очередей,&lt;br&gt;загрузки, задержек,&lt;br&gt;состояний отказов" vertex="1">
+          <mxGeometry height="115" width="320" x="400" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="reward" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Командное вознаграждение&lt;br&gt;&lt;/b&gt;общественное благосостояние,&lt;br&gt;нарушения сроков, отказы,&lt;br&gt;перегрузка, внешний эффект" vertex="1">
+          <mxGeometry height="115" width="260" x="60" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="training" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=15;align=center;verticalAlign=middle" value="&lt;b&gt;Централизованное обучение&lt;br&gt;&lt;/b&gt;используется &lt;i&gt;s_t&lt;/i&gt;,&lt;br&gt;совместные действия,&lt;br&gt;общее вознаграждение" vertex="1">
+          <mxGeometry height="115" width="260" x="820" y="475" as="geometry" />
+        </mxCell>
+        <mxCell id="inv" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#666666;dashed=1;fontSize=14;align=center;verticalAlign=middle" value="&lt;u&gt;Инварианты&lt;/u&gt;&lt;br&gt;не обучаются заявки роботов;&lt;br&gt;не меняются функции полезности;&lt;br&gt;не меняется правило VCG" vertex="1">
+          <mxGeometry height="80" width="380" x="820" y="620" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="state" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="obs" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="obs" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="agents" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="agents" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="modes" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="modes" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="capacity" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="capacity" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="auction" value="ограничения">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="tasks" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="auction" value="заявки">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="auction" style="endArrow=block;html=1;rounded=0;strokeWidth=2;edgeStyle=orthogonalEdgeStyle;" target="exec" value="назначения">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="exec" style="endArrow=block;html=1;rounded=0;strokeWidth=2" target="reward" value="метрики">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="reward" style="endArrow=block;html=1;rounded=0;strokeWidth=2;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" target="training" value="опыт + вознаграждение">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="610" />
+              <mxPoint x="950" y="610" />
+            </Array>
+            <mxPoint x="190" y="660" as="sourcePoint" />
+            <mxPoint x="1000" y="610" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e10" edge="1" parent="1" source="training" style="endArrow=block;html=1;rounded=0;strokeWidth=2;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" target="agents" value="">
+          <mxGeometry relative="1" x="0.129" y="20" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1200" y="533" />
+              <mxPoint x="1200" y="70" />
+              <mxPoint x="785" y="70" />
+            </Array>
+            <mxPoint x="800" y="400" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="d_oJJjqOXd91v5eQXrEt-1" connectable="0" parent="e10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="параметры локальных политик" vertex="1">
+          <mxGeometry relative="1" x="0.6183" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e11" edge="1" parent="1" source="auction" style="endArrow=block;html=1;rounded=0;strokeWidth=2;dashed=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;edgeStyle=orthogonalEdgeStyle;" target="obs" value="аукционные признаки">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="540" y="270" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e12" edge="1" parent="1" source="exec" style="endArrow=block;html=1;rounded=0;strokeWidth=2;dashed=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;edgeStyle=orthogonalEdgeStyle;exitX=0.25;exitY=0;exitDx=0;exitDy=0;" target="state" value="новое состояние">
+          <mxGeometry relative="1" x="-0.1951" y="-4" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="480" y="430" />
+              <mxPoint x="170" y="430" />
+            </Array>
+            <mxPoint x="550" y="610" as="sourcePoint" />
+            <mxPoint x="220" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
