@@ -16,7 +16,7 @@
         <mxCell id="modes" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=13;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Обучаемый контур&lt;br&gt;&lt;/b&gt;&lt;br&gt;выбирает операционные режимы периферийных узлов &lt;i&gt;κj(t)&lt;/i&gt;: допуск, резервирование, защита от перегрузки" vertex="1">
           <mxGeometry height="150" width="300" x="760" y="360" as="geometry" />
         </mxCell>
-        <mxCell id="auction" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Аукционный слой распределения&lt;br&gt;&lt;/b&gt;&lt;br&gt;при фиксированных режимах решает задачу выбора распределения: &lt;i&gt;max W(x,t)&lt;/i&gt;" vertex="1">
+        <mxCell id="auction" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Аукционный слой распределения&lt;br&gt;&lt;/b&gt;&lt;br&gt;при фиксированных режимах решает задачу выбора распределения: &lt;i&gt;max SW(x,t)&lt;/i&gt;" vertex="1">
           <mxGeometry height="150" width="300" x="420" y="360" as="geometry" />
         </mxCell>
         <mxCell id="welfare" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;fillColor=#f5f5f5;strokeColor=#666666;fontSize=13;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Общественное благосостояние &lt;br&gt;&lt;/b&gt;&lt;i&gt;SW(x,t) = сумма [полезностей задач &lt;br&gt;- стоимости узлов]&lt;/i&gt;&lt;br&gt;&lt;br&gt;внешний эффект задачи" vertex="1">
@@ -43,7 +43,7 @@
         <mxCell id="arr6" edge="1" parent="1" source="auction" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="result">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="arr7" edge="1" parent="1" source="result" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;dashed=1;" target="modes" value="аукционные показатели предыдущих раундов">
+        <mxCell id="arr7" edge="1" parent="1" source="result" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;dashed=1;" target="modes" value="аукционные показатели&lt;br&gt;предыдущих раундов">
           <mxGeometry relative="1" as="geometry">
             <Array as="points">
               <mxPoint x="880" y="675" />
