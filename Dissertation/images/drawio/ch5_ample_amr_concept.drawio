@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="ChatGPT">
   <diagram name="Page-1" id="0">
-    <mxGraphModel dx="915" dy="623" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1006" dy="685" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -205,8 +205,35 @@
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-117" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(150, 115, 166);&quot;&gt;&lt;b&gt;Робот&lt;/b&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="60" x="767" y="787.49" as="geometry" />
         </mxCell>
-        <mxCell id="HFuZhV7l0WeXkSoI9iHk-118" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(108, 142, 191);&quot;&gt;&lt;b style=&quot;&quot;&gt;Edge-узел&lt;/b&gt;&lt;/font&gt;" vertex="1">
-          <mxGeometry height="30" width="75" x="773.75" y="642.49" as="geometry" />
+        <mxCell id="HFuZhV7l0WeXkSoI9iHk-118" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(108, 142, 191);&quot;&gt;&lt;b style=&quot;&quot;&gt;Периферийный-узел&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="156.25" x="718.88" y="642.49" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-16" connectable="0" parent="1" style="group" value="" vertex="1">
+          <mxGeometry height="212.49000000000007" width="230" x="1040" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-8" parent="ye_jUpcWjck2F-0Eg645-16" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.extract_or_measurement;whiteSpace=wrap;fillColor=#e1d5e7;strokeColor=#9673a6;rotation=-180;" value="" vertex="1">
+          <mxGeometry height="209" width="230" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-9" parent="ye_jUpcWjck2F-0Eg645-16" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.extract_or_measurement;whiteSpace=wrap;fillColor=#ffe6cc;strokeColor=#d79b00;rotation=-180;" value="" vertex="1">
+          <mxGeometry height="168.53" width="185.16" x="22.339999999999918" y="40.47000000000003" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-10" parent="ye_jUpcWjck2F-0Eg645-16" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.extract_or_measurement;whiteSpace=wrap;fillColor=#dae8fc;strokeColor=#6c8ebf;rotation=-180;" value="" vertex="1">
+          <mxGeometry height="124.53" width="134.96" x="47.52000000000021" y="87.95999999999998" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-11" parent="ye_jUpcWjck2F-0Eg645-16" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.extract_or_measurement;whiteSpace=wrap;fillColor=#d5e8d4;strokeColor=#82b366;rotation=-180;" value="" vertex="1">
+          <mxGeometry height="77.06" width="83.68" x="73.07999999999993" y="135.43" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-12" parent="ye_jUpcWjck2F-0Eg645-16" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(150, 115, 166);&quot;&gt;&lt;b&gt;Уровень роботов&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="120" x="54.92000000000007" y="6.240000000000009" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-13" parent="ye_jUpcWjck2F-0Eg645-16" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;&lt;b style=&quot;&quot;&gt;Аукционный слой&lt;/b&gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="30" width="120" x="55" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-14" parent="ye_jUpcWjck2F-0Eg645-16" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;color: rgb(108, 142, 191);&quot;&gt;Уровень периферийных&lt;/font&gt;&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;font style=&quot;color: rgb(108, 142, 191);&quot;&gt;узлов&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="130" x="50" y="96.24000000000001" as="geometry" />
+        </mxCell>
+        <mxCell id="ye_jUpcWjck2F-0Eg645-15" parent="ye_jUpcWjck2F-0Eg645-16" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;b&gt;&lt;font style=&quot;color: rgb(130, 179, 102);&quot;&gt;Обучение&lt;/font&gt;&lt;/b&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="85" y="137.49" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
