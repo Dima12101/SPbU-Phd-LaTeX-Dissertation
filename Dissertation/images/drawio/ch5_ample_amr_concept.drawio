@@ -205,7 +205,7 @@
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-117" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(150, 115, 166);&quot;&gt;&lt;b&gt;Робот&lt;/b&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="60" x="767" y="787.49" as="geometry" />
         </mxCell>
-        <mxCell id="HFuZhV7l0WeXkSoI9iHk-118" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(108, 142, 191);&quot;&gt;&lt;b style=&quot;&quot;&gt;Периферийный-узел&lt;/b&gt;&lt;/font&gt;" vertex="1">
+        <mxCell id="HFuZhV7l0WeXkSoI9iHk-118" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(108, 142, 191);&quot;&gt;&lt;b style=&quot;&quot;&gt;Периферийный узел&lt;/b&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="156.25" x="718.88" y="642.49" as="geometry" />
         </mxCell>
         <mxCell id="ye_jUpcWjck2F-0Eg645-16" connectable="0" parent="1" style="group" value="" vertex="1">
