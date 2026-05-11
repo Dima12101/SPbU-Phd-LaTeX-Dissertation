@@ -1,305 +1,666 @@
-\section{Списки}
-\begin{frame}[plain, noframenumbering]
+\section{Проблема и постановка задачи}
+
+\begin{frame}[plain,noframenumbering]
     \begin{center}
-        \Huge
-        Списки
+        \Huge Проблема и постановка задачи
     \end{center}
 \end{frame}
 
-\subsection{Нумерованные}
+\begin{frame}
+	\frametitle{Домен исследования: AMR-система}
+	\small
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.52\textwidth}
+			 \begin{center}
+				\maybeincludegraphics[width=0.86\linewidth,height=0.32\textheight,keepaspectratio]{Dissertation/images/ch1_warehouse_robotics}
+			\end{center}
+			\begin{itemize}
+				\item Множество автономных мобильных роботов формирует поток вычислительных задач.
+				\item Задачи различаются по ресурсоёмкости, критичности, приоритету и допустимой задержке.
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.44\textwidth}
+			\begin{block}{Типовые задачи}
+				\begin{itemize}
+					\item локализация и построение карты;
+					\item обработка лидаров и камер;
+					\item обнаружение препятствий;
+					\item перепланирование маршрута;
+					\item инвентаризация и диагностика.
+				\end{itemize}
+			\end{block}
+		\end{column}
+	\end{columns}
+	\small
+	\begin{block}{Проблема}
+		Где выполнять неоднородный поток вычислительных задач?
+	\end{block}
+\end{frame}
 
 \begin{frame}
-    \frametitle{Нумерованные списки}
-    \begin{enumerate}
-        \item один
-        \item два
-        \item три
-    \end{enumerate}
-\end{frame}
-\note{
-    Этот текст будет виден только если его отображение включено
-    в~файле \textbf{Presentation/setup}.
-    Для раздельного вывода презентации и заметок на~разные экраны (как
-    в~impress или powerpoint) можно использовать программу
-    \textit{pdf-presenter-console}.
-}
-
-\subsection{Не нумерованные}
-
-
-\begin{frame}
-    \frametitle{Перечисления}
-    \begin{itemize}
-        \item Проблема 1
-        \item Проблема 2
-        \item Проблема 3
-    \end{itemize}
-\end{frame}
-\note[itemize]{
-    \item Тезис 1
-    \item Тезис 2
-    \item Тезис 3
-}
-
-\subsection{Комбинированные}
-
-\begin{frame}
-    \frametitle{Комбинация списков}
-    \begin{enumerate}
-        \item \textbf{Задача 1}
-              \begin{itemize}
-                  \item Подзадача 1-1
-                  \item Подзадача 1-2
-              \end{itemize}
-        \item \textbf{Задача 2}
-              \begin{itemize}
-                  \item Подзадача 2-1
-                  \item Подзадача 2-2
-                  \item Подзадача 2-3
-              \end{itemize}
-        \item \textbf{Задача 3}
-              \begin{itemize}
-                  \item Подзадача 3-1
-                  \item Подзадача 3-2
-                  \item Подзадача 3-3
-              \end{itemize}
-    \end{enumerate}
-\end{frame}
-\note[itemize]{
-    \item Задача 1
-    \item Задача 2
-    \item Задача 3
-}
-
-\begin{frame}[allowframebreaks]
-    \frametitle{Разделение слайда}
-    Поясняющий текст
-    \begin{itemize}
-        \item Один
-        \item Два
-        \item Три
-    \end{itemize}
-    \framebreak
-    Продолжение предыдущего слайда
-\end{frame}
-
-\section{Графика}
-\begin{frame}[plain, noframenumbering]
+    \frametitle{Почему edge computing требуется для AMR-систем}
     \begin{center}
-        \Huge
-        Графика
+    	\maybeincludegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch1_edge_need_concept}
+    \end{center}
+   \small
+    \begin{block}{Проблема}
+    	Как распределять общий ограниченный ресурс на периферии сети?
+    \end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Управление ресурсами}
+	\begin{enumerate}
+		\item вычислительную разгрузку (\textit{offloading}) --- выбор места выполнения задачи;
+		\item управление допуском задач (\textit{admission control}) ---  решение о принятии, отклонении или откладывании задачи;
+		\item планирование (\textit{scheduling}) --- определение порядка обслуживания задач;
+		\item распределение вычислительных ресурсов (\textit{resource allocation}) --- назначение задачам вычислительной мощности, памяти и сетевой ёмкости;
+		\item балансировку нагрузки (\textit{load balancing}) --- перераспределение нагрузки между периферийными узлами;
+		\item отказоустойчивость (\textit{fault tolerance}) --- поддержание устойчивости при перегрузках, отказах и ухудшении связи.
+	\end{enumerate}
+	\small
+	\begin{block}{Проблема}
+		Как построить локально обоснованное правило распределение и оценить внешний эффект назначения?
+	\end{block}
+\end{frame}
+\note{Имеется внешний эффект --- влияние на остальные задачи, очереди и доступность периферийных ресурсов. Требуется формальное правило координации, которое связывает локальные сообщения участников с общим критерием качества системы.}
+
+\begin{frame}
+	\frametitle{Миопичность распределения}
+	AMR-система с периферийными вычислениями является \textbf{последовательной динамической системой}. На каждом шаге требуется знать:
+	\begin{enumerate}
+		\item Какую часть ресурсов узел может предоставить новым задачам?
+		\item Какую часть резервирует под критические классы?
+		\item Когда переходит в режим защиты от перегрузки?
+		\item Как реагирует на ухудшение связи или отказ соседних узлов?
+	\end{enumerate}
+	Эти решения имеют долгосрочный характер и должны вырабатываться на основе опыта взаимодействия со средой.
+	\small
+	\begin{block}{Проблема}
+		Требуется отдельный контур адаптации. Его задача состоит не в замене механизма распределения, а в изменении условий, в которых проводится это распределение. 
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Цель и исследовательская идея}
+	\small
+	\textbf{Цель:} разработать модели и гибридный метод адаптивного распределения вычислительных задач автономных мобильных роботов между периферийными узлами.
+	\medskip
+	
+	\begin{block}{Основная идея}
+		Разделить две функции управления:
+		\begin{enumerate}
+			\item аукционный слой выбирает распределение задач и оценивает внешний эффект использования общего ресурса;
+			\item обучаемый многоагентный слой меняет операционные режимы edge-узлов, адаптируя условия распределения к динамике нагрузки.
+		\end{enumerate}
+	\end{block}
+	
+	\begin{center}
+		\small
+		\textbf{Роботы не обучают заявки. MARL не подменяет правило распределения.}
+	\end{center}
+\end{frame}
+\note{Ключевая формулировка: обучение не меняет смысл заявок и не заменяет аукцион. Оно управляет режимами узлов, то есть параметрами доступной ёмкости и политики допуска задач.}
+
+\section{Предложенное решение}
+
+\begin{frame}[plain,noframenumbering]
+    \begin{center}
+        \Huge Предложенное решение
     \end{center}
 \end{frame}
 
-
 \begin{frame}
-    \frametitle{Одиночное изображение}
-    \centering
-    \includegraphics[width=0.8\linewidth]{latex} % окружение figure не требуется
+	\frametitle{Синтез подхода}
+	\begin{center}
+		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_method_logic}
+	\end{center}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Векторная графика}
-    \begin{figure}
-        \centering
-        \ifdefmacro{\tikzsetnextfilename}{\tikzsetnextfilename{tikz_presentation}}{}% присваиваемое предкомпилированному pdf имя файла (не обязательно)
-        \input{Presentation/images/tikz_plot.tikz}
-    \end{figure}
+	\frametitle{AMPLE-AMR}
+	\small
+	Архитектура метода AMPLE--AMR (\textit{Adaptive Multi-agent Policy Learning with Edge Auctions for Autonomous Mobile Robots}) построена как двухуровневый контур принятия решений.
+	\begin{center}
+		\maybeincludegraphics[width=0.8\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ch5_ample_amr_concept}
+	\end{center}
 \end{frame}
-
-\subsection{Расположение}
 
 \begin{frame}
-    \frametitle{Изображения по-вертикали}
-    \centering
-    \vfill
-    \includegraphics[width=0.8\linewidth,height=0.1\textheight]{latex} \\
-    \TeX
-    \vfill
-    \includegraphics[width=0.8\linewidth,height=0.2\textheight]{latex} \\
-    \LaTeX
-    \vfill
-    \includegraphics[scale=0.2]{latex} \\
-    \vfill
+	\frametitle{AMPLE-AMR: гибридный цикл управления}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=0.94\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch5_ample_architecture}
+	\end{center}
+	\begin{enumerate}
+		\item Роботы формируют поток вычислительных задач.
+		\item Периферийные узлы наблюдают локальное состояние и выбирают операционные режимы через QMIX-политику.
+		\item Выбранные режимы определяют доступную ёмкость, правила допуска и ограничения распределения.
+		\item VCG-подобный слой решает задачу выбора победителей и вычисляет внутренние теневые цены.
+		\item Среда обновляет очереди, задержки, загрузку узлов и метрики качества обслуживания.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{C-AMPLE-AMR: масштабируемая версия}
+	\small
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.48\textwidth}
+			\textbf{Проблема глобального раунда}
+			\begin{itemize}
+				\item с ростом числа роботов и задач увеличивается задача выбора победителей;
+				\item время распределения начинает занимать значимую долю управляющего слота;
+				\item глобальный аукцион становится потенциальным узким местом.
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\textbf{Идея C-AMPLE-AMR}
+			\begin{itemize}
+				\item построить граф периферийной инфраструктуры;
+				\item провести локальные аукционы внутри кластеров;
+				\item использовать кластеризацию только при достаточном масштабе.
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\section{Математическая формализация}
+
+\begin{frame}[plain,noframenumbering]
+	\begin{center}
+		\Huge Математическая формализация
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Модели}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch2_model_mapping}
+	\end{center}
 \end{frame}
 
 
 \begin{frame}
-    \frametitle{Изображения по-горизонтали}
-    \begin{minipage}[t]{0.47\linewidth}
-        \textbf{Составная \\ подпись 1}
-        \center{\includegraphics[width=1\linewidth]{knuth1}}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.47\linewidth}
-        \textbf{Составная \\ подпись 2}
-        \center{\includegraphics[width=1\linewidth]{knuth2}}
-    \end{minipage}
+	\frametitle{Графовая модель инфраструктуры}
+	\footnotesize
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.48\textwidth}
+			Система может быть представлена в виде графа:
+			\begin{align*}
+				G(t)&=(\mathcal{V},a(t),w(t)) & \mathcal{V}&=\mathcal{R}\cup\mathcal{N},
+			\end{align*}
+			\begin{center}
+				\maybeincludegraphics[width=0.94\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch2_system_graph}
+			\end{center}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\small
+			\begin{itemize}
+				\item дискретное время $t=0,1,2,\ldots$;
+				\item роботы $\mathcal{R}=\{r_1,\ldots,r_m\}$;
+				\item периферийные узлы $\mathcal{N}=\{n_1,\ldots,n_k\}$;
+				\item индикатор достижимости $a_{uv}(t)$;
+				\item сетевые задержки $w_{uv}(t)$.
+			\end{itemize}
+		\end{column}
+	\end{columns}
 \end{frame}
-
-\subsection{Линии}
 
 \begin{frame}
-    \frametitle{Разделяющие линии}
-    \begin{minipage}[c]{0.47\linewidth}
-        \center{\includegraphics[width=1\linewidth]{latex}}
-        \bigskip
-        \hrule{}
-        \bigskip
-        \textbf{Составная \\ подпись 1}
-    \end{minipage}
-    \hfill
-    \vrule{}
-    \hfill
-    \begin{minipage}[c]{0.47\linewidth}
-        \flushright
-        \textbf{Составная \\ подпись 2}
-        \center{\includegraphics[width=1\linewidth]{knuth2}}
-    \end{minipage}
+	\frametitle{Модель ресурсов и задач}
+	\footnotesize
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.52\textwidth}
+			\textbf{Поток задач}
+			\begin{align*}
+				\mathcal{T}(t)&=\bigcup_{i=1}^{m}\mathcal{T}_i(t) &
+				\mathcal{T}_i(t)&=\{\tau_{i1}(t),\tau_{i2}(t),\ldots\}
+			\end{align*}
+			\begin{itemize}
+				\item $c_{\tau}$ --- класс задачи,
+				\item $b^{in}_{\tau}$ и $b^{out}_{\tau}$ --- объёмы входных и выходных данных,
+				\item $q^{cpu}_{\tau}$, $q^{mem}_{\tau}$ и $q^{gpu}_{\tau}$ --- требования к вычислительным ресурсам,
+				\item $\Delta_{\tau}$ --- допустимый срок обработки,
+				\item $\pi_{\tau}$ --- приоритет.
+			\end{itemize}
+			\textbf{Характеристики узла}
+			\begin{itemize}
+				\item $A_j(t) = (A^{cpu}_j(t),A^{mem}_j(t),A^{gpu}_j(t)) $ --- ёмкость узла,
+				\item $Q_j(t)$ --- очередь обслуживания;
+				\item $f_j(t)$ --- индикатор отказа;
+				\item $x_{\tau j}(t)$ --- переменная назначения;
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.44\textwidth}
+			\textbf{Допустимое распределение}  $\mathcal{X}(t)$
+			
+			\textit{Единственность назначения}:
+			\begin{align*}
+				\sum_{j=1}^{k}x_{\tau j}(t)&\leq 1, && \forall \tau\in\mathcal{T}(t)
+			\end{align*}
+			
+			\textit{Ëмкость узла}:
+			\begin{align*}
+				\sum_{\tau\in\mathcal{T}(t)}x_{\tau j}(t)q^{r}_{\tau}&\leq A^{r}_j(t,\kappa_j), && \forall j
+			\end{align*}
+			
+			\textit{Сетевая достижимость}:
+			\begin{align*}
+				x_{\tau j}(t)&\leq a_{i(\tau)j}(t)
+			\end{align*}
+			
+			\textit{Отказ узла}:
+			\begin{align*}
+				x_{\tau j}(t)\leq 1-f_j(t)
+			\end{align*}
+			
+			\textit{Срок выполнения}:
+			\begin{align*}
+				x_{\tau j}(t)T_{\tau j}(t)&\leq \Delta_{\tau}, && \forall \tau:c_{\tau}\in\mathcal{C}^{hard}
+			\end{align*}
+		\end{column}
+	\end{columns}
 \end{frame}
 
-\section{Остальное}
-\begin{frame}[plain, noframenumbering]
+\begin{frame}
+	\frametitle{Модель полезности назначения}
+	\small
+	\begin{align*}
+		U_i(\tau,n_j,t) &= V_i(\tau)\psi_{c_{\tau}}(T_{\tau j}(t),\Delta_{\tau})-E^{tx}_{i\tau j}(t)-P^{viol}_{\tau j}(t)
+	\end{align*}
+	
+	Базовая ценность задачи для робота-источника
+	\begin{align*}
+		V_i(\tau) &= \beta_i v_{c_{\tau}}\pi_{\tau}\left(1+\theta_{c_{\tau}}\log\left(1+\frac{W_{\tau}}{W_0}\right)\right),\\[-1mm]
+		W_{\tau} &= \omega_{cpu}q^{cpu}_{\tau}+\omega_{mem}q^{mem}_{\tau}+\omega_{gpu}q^{gpu}_{\tau}+\omega_{data}b^{in}_{\tau}
+	\end{align*}
+	
+	Функция деградации полезности при задержке
+	\begin{align*}
+		\psi_{c_{\tau}}(T_{\tau j}(t),\Delta_{\tau}) &=
+		\exp\left(-\lambda_{c_{\tau}}\frac{T_{\tau j}(t)}{\Delta_{\tau}+\varepsilon}\right)
+	\end{align*}
+	
+	Энергетические затраты передачи
+	\begin{align*}
+		E^{tx}_{i\tau j}(t)=e^{tx}_i b^{in}_{\tau} T^{net}_{ij,\tau}(t)
+	\end{align*}
+	
+	Штраф за нарушение срока
+	\begin{align*}
+		P^{viol}_{\tau j}(t) &= \rho^{viol}_{c_{\tau}}
+		\left[\frac{T_{\tau j}(t)-\Delta_{\tau}}{\Delta_{\tau}+\varepsilon}\right]_+
+	\end{align*}
+\end{frame}
+\note{Назначение оценивается не только по вычислительной близости узла, а по системной полезности с учётом задержки, энергии передачи и риска нарушения срока.}
+
+\begin{frame}
+	\frametitle{Модель стоимости узла}
+	\small
+	\begin{align*}
+		C_j(\tau,r_i,t)&=C^{comp}_j(\tau)+C^{net}_j(\tau,r_i,t)+C^{over}_j(\tau,t)+C^{rel}_j(t)
+	\end{align*}
+	\textit{Вычислительная стоимость}
+	\begin{align*}
+		C^{comp}_j(\tau)&=\rho^{cpu}_j q^{cpu}_{\tau}+\rho^{mem}_j q^{mem}_{\tau}+\rho^{gpu}_j q^{gpu}_{\tau}
+	\end{align*}
+	\textit{Сетевая стоимость}
+	\begin{align*}
+		C^{net}_j(\tau,r_i,t)&=\rho^{net}_j\left(b^{in}_{\tau}+b^{out}_{\tau}\right)w_{ij}(t)
+	\end{align*}
+	\textit{Стоимость перегрузки}
+	\begin{align*}
+		C^{over}_j(\tau,t)&=\mu^{cpu}_j\left(\frac{L^{cpu}_j(t)+q^{cpu}_{\tau}}{C^{cpu}_j+\varepsilon}\right)^2+
+		\mu^{mem}_j\left(\frac{L^{mem}_j(t)+q^{mem}_{\tau}}{C^{mem}_j+\varepsilon}\right)^2+{}\\[-1mm]
+		&\quad{}+\mu^{gpu}_j\left(\frac{L^{gpu}_j(t)+q^{gpu}_{\tau}}{C^{gpu}_j+\varepsilon}\right)^2
+	\end{align*}
+	\textit{Компонент надёжности}
+	\begin{align*}
+		C^{rel}_j(t)&=\rho^{fail}_j f_j(t)
+	\end{align*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Проектирование экономических механизмов}
+	\small
+	\textbf{Механизм} -- задает критерий выбора исхода, а также правило, позволяющее количественно оценить влияние участника на остальных:
+	\begin{align*}
+		M &= (g,p) &
+		g &: \Theta_1 \times \ldots \times \Theta_{|\mathcal{H}|} \rightarrow X & p_h : \Theta_1 \times \ldots \times \Theta_{|\mathcal{H}|} \rightarrow \mathbb{R}
+	\end{align*}
+	где $\mathcal{H}$ -- множество участников механизма, $X$ -- множество допустимых исходов (назначение задач на узлы), $g$ -- правило выбора исхода, а $p_h$ -- платёж или внутренняя компенсация участника $h$.
+	
+	\textbf{Тип участника} $h \in \mathcal{H}$ задаёт его локальную информацию $\theta_h$:
+	\begin{itemize}
+		\item \textit{Для робота} -- класс задачи, ценность результата, срок выполнения и требования к ресурсам;
+		\item \textit{Для периферийного узла} -- доступная ёмкость, очередь, стоимость обслуживания и состояние каналов связи.
+	\end{itemize}
+	
+	\textbf{Удовлетворенность участника}
+	\begin{align*}
+		u_h(\theta_h,\widehat{\theta}) = v_h(g(\widehat{\theta}),\theta_h) - p_h(\widehat{\theta})
+	\end{align*}
+	
+	\textbf{Общественное благосостояние}:
+	\begin{align*}
+		SW(x) &= \sum_{h \in \mathcal{H}} v_h(x) & v_{r_i}(x) &= U_i(x) & v_{n_j}(x) &= - C_j(x)
+	\end{align*}
+\end{frame}
+\note{Вместо анализа поведения участников при заданных правилах оно строит такие правила взаимодействия, при которых локальные сообщения участников приводят к требуемому системному результату. Для настоящей работы это означает задание множества допустимых распределений задач, формата заявок, правила выбора распределения и правила вычисления внутренних компенсаций.}
+
+\begin{frame}
+	\frametitle{VCG-подобный аукционный слой}
+	\small
+	\begin{block}{Общественное благосостояние}
+		Определяется как сумма чистых вкладов назначений:
+		\begin{align*}
+			SW(x,t)&=\sum_{\tau\in\mathcal{T}(t)}\sum_{j=1}^{k}x_{\tau j}(t)g_{\tau j}(t) & g_{\tau j}(t)=U_{i(\tau)}(\tau,n_j,t)-C_j(\tau,r_{i(\tau)},t)
+		\end{align*}
+	\end{block}
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.48\textwidth}
+			\begin{block}{Определение победителей}
+				\begin{align*}
+					x^*(t)\in\arg\max_{x\in\mathcal{X}(t,\kappa(t))}SW(x,t).
+				\end{align*}
+			\end{block}
+			Максимизирует качество текущего распределения, но не отвечает за долговременное изменение очередей, отказов и будущей нагрузки.
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\begin{block}{VCG-подобный платеж}
+				\begin{align*}
+					p_h(t)=SW^*_{-h}(t)-\sum_{\ell\in\mathcal{H},\ell\neq h}v_{\ell}(x^*(t),t).
+				\end{align*}
+				Рассматривается не как денежный перевод, а как внутренняя теневая цена, показывающая, какой ущерб назначение задачи создаёт для остальных задач системы.
+			\end{block}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch4_adaptive_control}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур: накопление опыта}
+	\small
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.52\textwidth}
+			\begin{block}{Глобальное состояние $s_t$}
+				\begin{itemize}
+					\item $G(t)$ --- граф текущей инфраструктуры и сетевой достижимости;
+					\item $L_j(t)$ --- вектор загрузки периферийного узла $n_j$ по видам ресурсов;
+					\item $Q_j(t)$ --- очередь задач узла $n_j$;
+					\item $F_j(t)$ --- состояние исправности, деградации или отказа узла;
+					\item $\mathcal{T}(t)$ --- множество задач, поступивших в текущем раунде;
+					\item $d_{ij}(t)$ --- оценка сетевой задержки между роботом $r_i$ и узлом $n_j$;
+					\item $Z_t$ --- агрегированные признаки предыдущих раундов.
+				\end{itemize}
+			\end{block}
+		\end{column}
+		\begin{column}{0.44\textwidth}
+			\begin{block}{Локальные наблюдения}
+				\begin{align*}
+					o^j_t &= \Omega_j(s_t) = \left(o^{j,tech}_t,g^j_t\right),
+				\end{align*}
+				\begin{itemize}
+					\item $o^{j,tech}_t$ содержит технические признаки узла;
+					\item $g^j_t$ --- агрегированные аукционные признаки предыдущего распределения.
+				\end{itemize}
+			\end{block}
+			\begin{block}{Локальная история}
+				\begin{align*}
+					h^j_t &= \left(o^j_0,\kappa_j(0),r_0, o^j_1,\kappa_j(1),r_1,\ldots,o^j_t\right)
+				\end{align*}
+			\end{block}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур: операционные режимы}
+	\small
+	MARL-контур не назначает задачи напрямую. Он выбирает режимы узлов:
+	\begin{align*}
+		o^j_t & \rightarrow \kappa_j(t) \rightarrow
+		\bar{A}^{r}_j(t,\kappa_j) \rightarrow
+		\mathcal{X}(t,\kappa(t)) \rightarrow x^*(t)
+	\end{align*}
+	
+	\textbf{Режимы узлов}:
+	\begin{itemize}
+		\item $\kappa^{safe}$: узел ограничивает приём новых задач при высокой загрузке, риске нарушения сроков или признаках деградации;
+		\item $\kappa^{normal}$: соответствует штатной работе с умеренным экспонированием свободной ёмкости;
+		\item $\kappa^{aggressive}$: соответствует расширенному приёму задач при благоприятном состоянии узла и низкой очереди;
+		\item $\kappa^{reserve}$: сохраняет часть ёмкости для возможных будущих критических задач;
+		\item  $\kappa^{critical}$: отдаёт предпочтение задачам, связанным с безопасностью, локализацией, обходом препятствий и срочным перепланированием.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур: QMIX-формализация}
+	\small
+	Для каждого узла $n_j$ локальная функция ценности оценивает режим $\kappa_j$ по локальной истории $h^j_t$:
+	\begin{align*}
+		Q_j(h^j_t,\kappa_j;\theta_j),\qquad
+		Q_{tot}(s_t,\kappa_t)=f_{mix}(Q_1,\ldots,Q_k,s_t;\theta_{mix}).
+	\end{align*}
+	Ограничение монотонности QMIX:
+	\[
+	\frac{\partial Q_{tot}}{\partial Q_j}\geq 0,\quad \forall j.
+	\]
+	Тогда локальный жадный выбор согласован с совместной функцией ценности:
+	\[
+	\kappa_j^*(t)=\operatorname*{arg\,max}_{\kappa_j\in\mathcal{K}_j}Q_j(h^j_t,\kappa_j;\theta_j).
+	\]
+	Обучение по TD-ошибке:
+	\begin{align*}
+		y_t&=\tilde{r}_t+\gamma(1-done_t)
+		\max_{\kappa'_{t+1}}Q^{-}_{tot}(s_{t+1},\kappa'_{t+1}),\\[-1mm]
+		\mathcal{L}(\theta)&=
+		\mathbb{E}_{e_t\sim\mathcal{B}}
+		\left[\left(y_t-Q_{tot}(s_t,\kappa_t;\theta)\right)^2\right].
+	\end{align*}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур: командное вознаграждение}
+	\small
+	Цель обучения совместной политики периферийных узлов:
+	\[
+	J(\pi)=\mathbb{E}_{\pi}\left[\sum_{t=0}^{\infty}\gamma^t r_t\right],
+	\qquad
+	\pi^*\in\operatorname*{arg\,max}_{\pi}J(\pi).
+	\]
+	Базовый командный сигнал:
+	\begin{align*}
+		r_t ={}& \alpha_{sw}\widetilde{SW}(t)
+		-\alpha_{viol}\mathrm{Viol}(t)
+		-\alpha_{drop}\mathrm{Drop}(t)
+		-\alpha_{wait}\mathrm{Wait}(t)
+	\end{align*}
+	С учётом аукционных признаков:
+	\[
+	\tilde{r}_t=(1-\lambda_{auc})r_t+\lambda_{auc}r^{auc}_t,
+	\quad \lambda_{auc}\in[0,1].
+	\]
+\end{frame}
+
+\section{Прототип и экспериментальная проверка}
+
+\begin{frame}[plain,noframenumbering]
     \begin{center}
-        \Huge
-        Остальное
+        \Huge Прототип и экспериментальная проверка
     \end{center}
 \end{frame}
 
-\subsection{Формулы}
-
 \begin{frame}
-    \frametitle{Формулы}
-    \[
-    \left\{
-    \begin{array}{rl}
-        \dot x = & \sigma (y-x)  \\
-        \dot y = & x (r - z) - y \\
-        \dot z = & xy - bz
-    \end{array}
-    \right.
-    \]
+	\frametitle{Складская среда}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch6_warehouse_scenario}
+	\end{center}
 \end{frame}
 
 \begin{frame}
-    \frametitle{amsmath}
-    \centering
-    \begin{minipage}[t]{0.5\linewidth}
-        \begin{multline*}
-            y = 1 x^1 + 2 x^2 + 3 x^3 + \\ + 4 x^4 + 5 x^5 + \dots
-        \end{multline*}
-    \end{minipage}
+    \frametitle{Программный прототип}
+    \small
+    \begin{columns}[T,onlytextwidth]
+        \begin{column}{0.48\textwidth}
+            \textbf{Реализованные компоненты}
+            \begin{itemize}
+                \item генератор складских сценариев;
+                \item модель AMR-задач и edge-узлов;
+                \item VCG-подобный распределитель;
+                \item QMIX-контур обучения режимов;
+                \item кластерный режим C-AMPLE-AMR;
+                \item экспорт CSV, графиков и \LaTeX-таблиц.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.48\textwidth}
+            \textbf{Сравниваемые методы}
+            \begin{enumerate}
+                \item Fixed-Heuristic;
+                \item Fixed-VCG;
+                \item QMIX-Heuristic;
+                \item AMPLE-AMR;
+                \item C-AMPLE-AMR.
+            \end{enumerate}
+            \medskip
+            \begin{block}{Принцип сравнения}
+                Все методы проверяются в одинаковой среде, на одинаковых сценариях и при одинаковых начальных значениях генератора случайных чисел.
+            \end{block}
+        \end{column}
+    \end{columns}
 \end{frame}
-
-\begin{frame}[allowframebreaks]
-    \frametitle{Уравнения Максвелла}
-    \centering{
-        \small
-        \def\arraystretch{1.8}%
-        \begin{tabular}{ll}
-            \toprule
-            Интегральная форма                                                                                                                                            & Дифференциальная форма                                                          \\ \midrule
-            \(Q_e(t) = \displaystyle\oiint_S \vec D(t) \cdot d\vec{s} = \displaystyle\iiint_V \rho_v(t) dv\)                                                              & \(\nabla \cdot \vec D(t) = \rho_v(t)\)                                          \\
-            \(\displaystyle\oiint_S \vec B(t) \cdot d\vec{s} = 0\)                                                                                                        & \(\nabla \cdot \vec B(t) = 0\)                                                  \\
-            \(V_{emf}(t) = \displaystyle\oint_L \vec E(t) \cdot d\vec{l}\) = \(- \displaystyle\iint_S \left[\frac{\partial\vec{B}(t)}{\partial t}\right] \cdot d\vec{s}\) & \(\nabla \times \vec E(t) = - \frac{\partial\vec{B}(t)}{\partial t}\)           \\
-            \(I(t) = \displaystyle\oint_L \vec H(t) \cdot d\vec{l} = \displaystyle\iint_S \left[\vec J(t) + \frac{\partial\vec{D}(t)}{\partial t}\right] \cdot d\vec{s}\) & \(\nabla \times \vec H(t) = \vec J(t) + \frac{\partial\vec{D}(t)}{\partial t}\) \\ \midrule
-            \(\displaystyle\oiint_S \vec J \cdot d\vec{s} = -\frac{\partial Q_e}{\partial t}\)                                                                            & \(\nabla \cdot \vec J = - \frac{\partial \rho_v}{\partial t}\)                  \\
-            \bottomrule
-            \multicolumn{2}{c}{\(\vec D(t) = \left[\varepsilon(t)\right] * \vec E(t)\)}                                                                                                                                                                     \\
-            \multicolumn{2}{c}{\(\vec B(t) = \left[\mu(t)\right] * \vec H(t)\)}                                                                                                                                                                             \\
-        \end{tabular}
-    }
-    \framebreak
-
-    \hspace{0.05\linewidth}
-    \centering{
-        \small
-        \def\arraystretch{1.8}%
-        \begin{tabular}{ll}
-            \toprule
-            Интегральная форма                                                                                                                & Дифференциальная форма                               \\ \midrule
-            \(Q_e = \displaystyle\oiint_S \vec D \cdot d\vec{s} = \displaystyle\iiint_V \rho_v dv\)                                           & \(\nabla \cdot \vec D = \rho_v\)                     \\
-            \(\displaystyle\oiint_S \vec B \cdot d\vec{s} = 0\)                                                                               & \(\nabla \cdot \vec B = 0\)                          \\
-            \(V_{emf} = \displaystyle\oint_L \vec E \cdot d\vec{l}\) = \(- \displaystyle\iint_S \left[j \omega \vec B\right] \cdot d\vec{s}\) & \(\nabla \times \vec E = - j \omega \vec B\)         \\
-            \(I = \displaystyle\oint_L \vec H \cdot d\vec{l} = \displaystyle\iint_S \left[\vec J + j \omega \vec D\right] \cdot d\vec{s}\)    & \(\nabla \times \vec H = \vec J + j \omega \vec{D}\) \\ \midrule
-            \(\displaystyle\oiint_S \vec J \cdot d\vec{s} = - j \omega Q_e\)                                                                  & \(\nabla \cdot \vec J = - j \omega \rho_v\)          \\
-            \bottomrule
-            \multicolumn{2}{c}{\(\vec D(t) = \left[\varepsilon\right] \vec E(t)\)}                                                                                                                   \\
-            \multicolumn{2}{c}{\(\vec B(t) = \left[\mu\right] \vec H(t)\)}                                                                                                                           \\
-        \end{tabular}
-    }
-\end{frame}
-
-\subsection{Таблицы}
 
 \begin{frame}
-    \frametitle{Таблица}
-    \centering
-    \begin{tabular}{|l|l|}
-        \hline
-        \textbf{Заголовок 1} & \textbf{Заголовок 2} \\
-        \hline
-        Сумма                & \(b+a\)              \\
-        \hline
-        Разность             & \(a-b\)              \\
-        \hline
-        Произведение         & \(a*b\)              \\
-        \hline
+    \frametitle{Сценарии валидации}
+    \small
+	\begin{tabular}{p{0.42\linewidth}p{0.56\linewidth}}
+    	\toprule
+    	\textbf{Сценарий} & \textbf{Назначение} \\
+    	\midrule
+    	Стабильная складская нагрузка & Базовое сравнение методов без искусственных возмущений \\
+    	Пиковая складская нагрузка & Проверка реакции на кратковременное увеличение интенсивности задач \\
+    	Разнородные периферийные узлы & Проверка использования развитой и неоднородной инфраструктуры \\
+    	Деградация связи & Проверка устойчивости к ухудшению сетевых условий \\
+    	Отказы периферийных узлов & Проверка перераспределения при временной потере части инфраструктуры \\
+    	Масштабирование & Проверка роста накладных расходов и границы применимости глобального распределения \\
+    	Глобальное и кластерное распределение & Сравнение AMPLE-AMR и C-AMPLE-AMR на крупных конфигурациях \\
+    	Чувствительность к режимам & Проверка устойчивости выводов к коэффициентам операционных режимов \\
     \end{tabular}
 \end{frame}
 
 \begin{frame}
-    \frametitle{Другая таблица}
-    \centering
-    \begin{tabular}{lc}
+	\frametitle{Метрики экспериментов}
+	\scriptsize
+	\begin{tabular}{p{0.31\linewidth}p{0.61\linewidth}}
+		\toprule
+		\textbf{Метрика} & \textbf{Смысл} \\
+		\midrule
+		$SW$ & общественное благосостояние: полезность выполненных задач минус стоимость обслуживания \\
+		$CompletionRate$ & доля завершённых задач среди сгенерированных \\
+		$DropRate$ & доля отклонённых задач среди сгенерированных \\
+		$DeadlineViolationRate$ & доля завершённых задач с нарушением срока \\
+		$P95Latency$ & 95-й процентиль времени выполнения задачи \\
+		$NodeUtilization$ & средняя загрузка периферийных узлов \\
+		$LoadImbalance$ & дисбаланс загрузки между узлами \\
+		$Overhead$ & время аукционного слоя, коммуникаций и вызова политики \\
+		$SlotShare$ & доля управляющего слота, занятая распределением \\
+		\bottomrule
+	\end{tabular}
+\end{frame}
+
+\section{Полученные результаты}
+
+\begin{frame}[plain,noframenumbering]
+    \begin{center}
+        \Huge Полученные результаты
+    \end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Обучение политики режимов}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_learning_curves}
+	\end{center}
+	\begin{itemize}
+		\item QMIX не вырождается в фиксированный выбор режима.
+		\item Вознаграждение возрастает для всех масштабов склада.
+		\item Для Warehouse-M: с $474.9$ до $1087.0$.
+		\item Для Warehouse-L: с $1269.6$ до $2431.4$.
+		\item Для Warehouse-XL: с $2516.0$ до $5627.7$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Поведение обученной политики}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_operation_mode_distribution}
+	\end{center}
+	\begin{itemize}
+		\item В стабильной, пиковой и деградирующей нагрузке доминируют \texttt{aggressive} и \texttt{critical}.
+		\item В разнородной инфраструктуре возрастает доля \texttt{reserve}.
+		\item В крупном сценарии глобального/кластерного сравнения возрастает роль \texttt{safe}.
+		\item Это подтверждает адаптацию к состоянию среды, а не случайное переключение.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Интегральное качество: общественное благосостояние}
+    \small
+    \begin{center}
+    	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_welfare_by_scenario}
+	\end{center}
+    \begin{itemize}
+    	\item Методы с обучаемым выбором режимов превосходят фиксированные методы в большинстве сценариев.
+    	\item В стабильной нагрузке AMPLE-AMR выше Fixed-Heuristic примерно на $12.6\%$.
+    	\item При пиковой нагрузке выигрыш AMPLE-AMR составляет около $12.8\%$.
+    	\item Основной вклад даёт адаптивное управление режимами узлов.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Масштабируемость: когда нужна кластеризация}
+    \small
+     \begin{center}
+    	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_overhead_scalability}
+    \end{center}
+    \begin{itemize}
+    	\item На Warehouse-S/M/L глобальный AMPLE-AMR остаётся практически приемлемым.
+    	\item На Warehouse-XL накладные расходы AMPLE-AMR занимают значимую долю управляющего слота.
+    	\item C-AMPLE-AMR снижает накладные расходы примерно на $44.6\%$ при потере благосостояния около $1.57\%$.
+    	\item Кластеризация полезна не всегда, а только после достижения крупного масштаба.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Проверка экспериментальных гипотез}
+    \scriptsize
+    \begin{tabular}{p{0.12\linewidth}p{0.49\linewidth}p{0.28\linewidth}}
         \toprule
-        \multicolumn{1}{c}{\textbf{Заголовок 1}} & \textbf{Заголовок 2} \\ \midrule
-        Сумма                                    & \(b+a\)              \\
-        Разность                                 & \(a-b\)              \\
-        Произведение                             & \(a*b\)              \\
+        \textbf{Гипотеза} & \textbf{Смысл} & \textbf{Итог} \\
+        \midrule
+        H1 & эффективность гибридизации & частично подтверждена \\
+        H2 & польза обучаемого выбора режимов & подтверждена \\
+        H3 & польза VCG-подобного распределения & не подтверждена в сильной форме \\
+        H4 & устойчивость к пиковой нагрузке & подтверждена \\
+        H5 & устойчивость к неоднородности ресурсов & частично подтверждена \\
+        H6 & устойчивость к деградации связи и отказам & подтверждена \\
+        H7 & масштабируемость C-AMPLE-AMR & условно подтверждена \\
         \bottomrule
     \end{tabular}
+    \medskip
+
+    \begin{block}{Интерпретация}
+        Главный практический эффект текущего прототипа связан с обучаемым выбором режимов edge-узлов. VCG-подобный слой даёт интерпретируемость, внутренние цены и формальную структуру распределения, но не всегда превосходит сильную жадную эвристику по метрикам качества.
+    \end{block}
 \end{frame}
-
-
-\subsection{Разное}
-
-\begin{frame}
-    \frametitle{Большой многоуровневый список}
-    \begin{itemize}
-        \item \textbf{Пункт 1}
-              \begin{itemize}
-                  \itemi Подпункт 1-1
-                  \itemi Подпункт 1-2
-              \end{itemize}
-        \item \textbf{Пункт 2}
-              \begin{itemize}
-                  \itemi Подпункт 2-1
-              \end{itemize}
-        \item \textbf{Пункт 3}
-              \begin{itemize}
-                  \itemi Подпункт 3-1
-                  \itemi Подпункт 3-2
-              \end{itemize}
-        \item \textbf{Пункт 4}
-              \begin{itemize}
-                  \itemi Подпункт 4-1
-              \end{itemize}
-        \item \textbf{Пункт 5}
-              \begin{itemize}
-                  \itemi Подпункт 5-1
-                  \itemi Подпункт 5-2
-                  \itemi Подпункт 5-3
-              \end{itemize}
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Четыре изображения}
-    \centering
-    \includegraphics[width=0.35\linewidth,angle=35]{latex}
-    \includegraphics[width=0.35\linewidth,angle=135]{latex}\\
-    \includegraphics[width=0.35\linewidth,angle=15]{latex}
-    \includegraphics[width=0.35\linewidth,angle=-15]{latex}
-\end{frame}
-
