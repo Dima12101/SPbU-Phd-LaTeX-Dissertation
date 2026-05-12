@@ -67,7 +67,7 @@
 		\hline
 		safe & 0.30 & 0.30 & Защитный режим с минимальным экспонированием ресурсов \\
 		\hline
-		normal & 0.60 & 0.60 & Базовый фиксированный режим \\
+		normal & 0.55 & 0.55 & Базовый фиксированный режим \\
 		\hline
 		aggressive & 0.90 & 0.90 & Максимальное использование доступной ёмкости \\
 		\hline
@@ -87,9 +87,9 @@
 	\begin{itemize}
 		\item QMIX не вырождается в фиксированный выбор режима.
 		\item Вознаграждение возрастает для всех масштабов склада.
-		\item Для Warehouse-M: с $474.9$ до $1087.0$.
-		\item Для Warehouse-L: с $1269.6$ до $2431.4$.
-		\item Для Warehouse-XL: с $2516.0$ до $5627.7$.
+		\item Для Warehouse-M: с $1066.7$ до $1427.5$.
+		\item Для Warehouse-M+: с $1032.1$ до $1826.0$.
+		\item Для Warehouse-XL: с $5286.4$ до $6388.9$.
 	\end{itemize}
 \end{frame}
 
@@ -100,9 +100,10 @@
 		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_operation_mode_distribution}
 	\end{center}
 	\begin{itemize}
-		\item В стабильной, пиковой и деградирующей нагрузке доминируют \texttt{aggressive} и \texttt{critical}.
-		\item В разнородной инфраструктуре возрастает доля \texttt{reserve}.
-		\item В крупном сценарии глобального/кластерного сравнения возрастает роль \texttt{safe}.
+		\item В стабильной нагрузке доминирует \texttt{normal} ($\approx 70\%$), а \texttt{aggressive} и \texttt{critical} используются как усилители.
+		\item При пиковой нагрузке доля \texttt{aggressive} возрастает примерно до $30\%$.
+		\item В разнородной инфраструктуре почти весь выбор смещается в \texttt{reserve} ($\approx 98\%$).
+		\item В сценарии clustered/global для Warehouse-L почти весь выбор переходит в \texttt{critical}.
 		\item Это подтверждает адаптацию к состоянию среды, а не случайное переключение.
 	\end{itemize}
 \end{frame}
@@ -114,10 +115,10 @@
 		\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_welfare_by_scenario}
 	\end{center}
 	\begin{itemize}
-		\item Методы с обучаемым выбором режимов превосходят фиксированные методы в большинстве сценариев.
-		\item В стабильной нагрузке AMPLE-AMR выше Fixed-Heuristic примерно на $12.6\%$.
-		\item При пиковой нагрузке выигрыш AMPLE-AMR составляет около $12.8\%$.
-		\item Основной вклад даёт адаптивное управление режимами узлов.
+		\item Fixed-Auction превосходит Fixed-Heuristic по $SW$ во всех сценариях и во всех сопоставлениях H1.
+		\item В стабильной нагрузке: $634.4 \rightarrow 1168.6 \rightarrow 1235.6$ для Fixed-Heuristic, Fixed-Auction и AMPLE-AMR.
+		\item При пиковой нагрузке: $957.8 \rightarrow 2315.9 \rightarrow 2516.7$.
+		\item В разнородной инфраструктуре лучшим по $SW$ оказывается Fixed-Auction ($1248.2$), а не AMPLE-AMR ($1183.1$).
 	\end{itemize}
 \end{frame}
 
@@ -128,10 +129,10 @@
 		\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_overhead_scalability}
 	\end{center}
 	\begin{itemize}
-		\item На Warehouse-S/M/L глобальный AMPLE-AMR остаётся практически приемлемым.
-		\item На Warehouse-XL накладные расходы AMPLE-AMR занимают значимую долю управляющего слота.
-		\item C-AMPLE-AMR снижает накладные расходы примерно на $44.6\%$ при потере благосостояния около $1.57\%$.
-		\item Кластеризация полезна не всегда, а только после достижения крупного масштаба.
+		\item На Warehouse-S/M/L глобальный AMPLE-AMR остаётся практически приемлемым, а кластеризация чаще невыгодна.
+		\item На Warehouse-XL накладные расходы AMPLE-AMR возрастают до $264.1$~мс и становятся узким местом управляющего слота.
+		\item C-AMPLE-AMR снижает overhead до $51.3$~мс, то есть примерно на $80.5\%$.
+		\item Потеря благосостояния на Warehouse-XL составляет $41.9$, поэтому кластеризация полезна только на экстремальном масштабе.
 	\end{itemize}
 \end{frame}
 
@@ -139,9 +140,10 @@
 	\frametitle{Приложение: качество обслуживания: задержка и отказы}
 	\small
 	\begin{itemize}
-		\item В стабильной нагрузке P95 задержки уменьшается с $69.7$ до $48.9$ мс.
-		\item При пиковой нагрузке P95 уменьшается с $75.2$ до $57.2$ мс.
-		\item В сценариях деградации связи и отказов методы с QMIX сохраняют преимущество над фиксированными режимами.
+		\item В стабильной нагрузке baseline Fixed-Heuristic остаётся сильным по throughput и хвосту задержки.
+		\item При пиковой нагрузке P95 уменьшается с $78.6$ до $66.4$~мс при переходе от Fixed-Heuristic к AMPLE-AMR.
+		\item В сценариях деградации связи и отказов P95 снижается соответственно с $70.1$ до $62.8$~мс и с $72.5$ до $58.7$~мс.
+		\item Улучшение $SW$ и хвоста задержки у аукционных методов сопровождается меньшим completion rate и большим drop rate.
 		\item Доля нарушений сроков почти во всех сценариях близка к нулю из-за фильтрации недопустимых назначений.
 	\end{itemize}
 \end{frame}
@@ -153,8 +155,9 @@
     	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_clustered_tradeoff}
     \end{center}
    	\begin{itemize}
-	    \item На Warehouse-L глобальный AMPLE-AMR предпочтительнее: меньше накладные расходы при чуть лучшем благосостоянии.
-	    \item На Warehouse-XL кластерный вариант снижает вычислительные затраты.
+	    \item На Warehouse-L глобальный AMPLE-AMR предпочтительнее: $3.29$ против $7.63$~мс при потере welfare $9.0$ у кластерного варианта.
+	    \item На Warehouse-XL кластерный вариант снижает overhead с $264.1$ до $51.3$~мс.
+	    \item Цена ускорения на Warehouse-XL составляет потерю welfare $41.9$.
 	    \item Переход к C-AMPLE-AMR должен зависеть от доли управляющего слота, занятой глобальным распределением.
     \end{itemize}
 \end{frame}
@@ -163,9 +166,9 @@
     \frametitle{Приложение: чувствительность к режимам}
     \small
     \begin{itemize}
-        \item Для AMPLE-AMR профиль \texttt{aggressive-bias} даёт наибольшее общественное благосостояние в сценарии чувствительности.
-        \item Консервативный профиль может повышать долю завершённых задач, но ухудшать хвост задержки.
-        \item C-AMPLE-AMR чувствительнее к коэффициентам режимов, чем глобальный AMPLE-AMR.
+        \item Для AMPLE-AMR профиль \texttt{aggressive\_bias} даёт наибольшее общественное благосостояние: $977.0$ против $948.7$ в default.
+        \item Для C-AMPLE-AMR картина похожа: $976.8$ в \texttt{aggressive\_bias} против $966.9$ в default.
+        \item Консервативный профиль снижает $SW$ у глобального и кластерного гибридных методов.
         \item Во всех проверенных профилях гибридные методы остаются выше фиксированных базовых методов по общественному благосостоянию.
     \end{itemize}
 \end{frame}
