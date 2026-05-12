@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="ChatGPT">
   <diagram name="Page-1" id="0">
-    <mxGraphModel dx="1006" dy="685" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="875" dy="596" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -41,7 +41,7 @@
           <mxGeometry height="30" width="30" x="887.5" y="426.24" as="geometry" />
         </mxCell>
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-64" parent="1" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;fillColor=#A9C4EB;strokeColor=#6c8ebf;" value="" vertex="1">
-          <mxGeometry height="30" width="30" x="817.5" y="382.49" as="geometry" />
+          <mxGeometry height="30" width="30" x="790" y="412.49" as="geometry" />
         </mxCell>
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-65" parent="1" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.start_2;whiteSpace=wrap;fillColor=#C3ABD0;strokeColor=#9673a6;" value="" vertex="1">
           <mxGeometry height="30" width="30" x="557.5" y="342.49" as="geometry" />
@@ -139,8 +139,8 @@
             <mxPoint x="670" y="690" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="HFuZhV7l0WeXkSoI9iHk-104" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;Назначение&lt;br&gt;&lt;/font&gt;" vertex="1">
-          <mxGeometry height="30" width="60" x="747.5" y="342.49" as="geometry" />
+        <mxCell id="HFuZhV7l0WeXkSoI9iHk-104" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;Назначение&lt;br&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;+&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;Компенсация&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="60" x="757.51" y="352.49" as="geometry" />
         </mxCell>
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-105" edge="1" parent="1" source="HFuZhV7l0WeXkSoI9iHk-86" style="endArrow=classic;html=1;rounded=0;fillColor=#ffe6cc;strokeColor=#d79b00;strokeWidth=1;exitX=0.1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.855;entryY=0.855;entryDx=0;entryDy=0;dashed=1;exitPerimeter=0;entryPerimeter=0;" target="HFuZhV7l0WeXkSoI9iHk-75" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
@@ -148,7 +148,7 @@
             <mxPoint x="760" y="420" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="HFuZhV7l0WeXkSoI9iHk-106" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;Платеж&lt;br&gt;&lt;/font&gt;" vertex="1">
+        <mxCell id="HFuZhV7l0WeXkSoI9iHk-106" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(215, 155, 0);&quot;&gt;Списание&lt;br&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="60" x="687.5" y="266.24" as="geometry" />
         </mxCell>
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-107" edge="1" parent="1" source="HFuZhV7l0WeXkSoI9iHk-91" style="endArrow=classic;html=1;rounded=0;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=1;exitX=0.1;exitY=0.5;exitDx=0;exitDy=0;dashed=1;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="HFuZhV7l0WeXkSoI9iHk-56" value="">
@@ -160,7 +160,7 @@
         <mxCell id="HFuZhV7l0WeXkSoI9iHk-108" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="&lt;font style=&quot;color: rgb(130, 179, 102);&quot;&gt;Политика&lt;/font&gt;" vertex="1">
           <mxGeometry height="30" width="60" x="692.5" y="442.49" as="geometry" />
         </mxCell>
-        <mxCell id="HFuZhV7l0WeXkSoI9iHk-109" edge="1" parent="1" source="HFuZhV7l0WeXkSoI9iHk-63" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0;exitDx=0;exitDy=0;" target="HFuZhV7l0WeXkSoI9iHk-64" value="">
+        <mxCell id="HFuZhV7l0WeXkSoI9iHk-109" edge="1" parent="1" source="HFuZhV7l0WeXkSoI9iHk-63" style="endArrow=none;dashed=1;html=1;dashPattern=1 3;strokeWidth=1;rounded=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" target="HFuZhV7l0WeXkSoI9iHk-64" value="">
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="1140" y="660" as="sourcePoint" />
             <mxPoint x="1190" y="610" as="targetPoint" />

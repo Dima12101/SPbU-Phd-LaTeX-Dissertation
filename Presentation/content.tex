@@ -7,17 +7,19 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Домен исследования: AMR-система}
+	\frametitle{Домен исследования: AMR-системы}
 	\small
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{0.52\textwidth}
-			 \begin{center}
-				\maybeincludegraphics[width=0.86\linewidth,height=0.32\textheight,keepaspectratio]{Dissertation/images/ch1_warehouse_robotics}
-			\end{center}
-			\begin{itemize}
-				\item Множество автономных мобильных роботов формирует поток вычислительных задач.
-				\item Задачи различаются по ресурсоёмкости, критичности, приоритету и допустимой задержке.
-			\end{itemize}
+			\begin{block}{AMR-система}
+				\begin{center}
+					\maybeincludegraphics[width=0.86\linewidth,height=0.32\textheight,keepaspectratio]{Dissertation/images/ch1_warehouse_robotics}
+				\end{center}
+				\begin{itemize}
+					\item Множество автономных мобильных роботов формирует поток вычислительных задач.
+					\item Задачи различаются по ресурсоёмкости, критичности, приоритету и допустимой задержке.
+				\end{itemize}
+			\end{block}
 		\end{column}
 		\begin{column}{0.44\textwidth}
 			\begin{block}{Типовые задачи}
@@ -28,13 +30,13 @@
 					\item перепланирование маршрута;
 					\item инвентаризация и диагностика.
 				\end{itemize}
+				\textbf{Цикл} <<восприятие $\rightarrow$ вычисление $\rightarrow$ действие>>
+			\end{block}
+				\begin{block}{Проблема}
+				Где выполнять неоднородный поток вычислительных задач?
 			\end{block}
 		\end{column}
 	\end{columns}
-	\small
-	\begin{block}{Проблема}
-		Где выполнять неоднородный поток вычислительных задач?
-	\end{block}
 \end{frame}
 
 \begin{frame}
@@ -49,24 +51,19 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Управление ресурсами}
-	\begin{enumerate}
-		\item вычислительную разгрузку (\textit{offloading}) --- выбор места выполнения задачи;
-		\item управление допуском задач (\textit{admission control}) ---  решение о принятии, отклонении или откладывании задачи;
-		\item планирование (\textit{scheduling}) --- определение порядка обслуживания задач;
-		\item распределение вычислительных ресурсов (\textit{resource allocation}) --- назначение задачам вычислительной мощности, памяти и сетевой ёмкости;
-		\item балансировку нагрузки (\textit{load balancing}) --- перераспределение нагрузки между периферийными узлами;
-		\item отказоустойчивость (\textit{fault tolerance}) --- поддержание устойчивости при перегрузках, отказах и ухудшении связи.
-	\end{enumerate}
+	\frametitle{Правило распределения ресурсов}
 	\small
+	Назначение одной задачи на узел изменяет доступность ресурсов для остальных задач, то есть создаёт \textbf{внешний эффект}. 
+	\begin{center}
+		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_edge_amr}
+	\end{center}
 	\begin{block}{Проблема}
 		Как построить локально обоснованное правило распределение и оценить внешний эффект назначения?
 	\end{block}
 \end{frame}
-\note{Имеется внешний эффект --- влияние на остальные задачи, очереди и доступность периферийных ресурсов. Требуется формальное правило координации, которое связывает локальные сообщения участников с общим критерием качества системы.}
 
 \begin{frame}
-	\frametitle{Миопичность распределения}
+	\frametitle{Динамичность системы}
 	AMR-система с периферийными вычислениями является \textbf{последовательной динамической системой}. На каждом шаге требуется знать:
 	\begin{enumerate}
 		\item Какую часть ресурсов узел может предоставить новым задачам?
@@ -106,15 +103,11 @@
 
 \begin{frame}[plain,noframenumbering]
     \begin{center}
-        \Huge Предложенное решение
+        \begin{center}
+        	\maybeincludegraphics[width=0.8\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ample_amr_logo}
+        	\textit{предложенное решение}
+        \end{center}
     \end{center}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Синтез подхода}
-	\begin{center}
-		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_method_logic}
-	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -124,6 +117,55 @@
 	\begin{center}
 		\maybeincludegraphics[width=0.8\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ch5_ample_amr_concept}
 	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{VCG-подобный аукционный слой}
+	\small
+	\begin{block}{Общественное благосостояние}
+		Определяется как сумма чистых вкладов назначений:
+		\begin{align*}
+			SW(x,t)&=\sum_{\tau\in\mathcal{T}(t)}\sum_{j=1}^{k}x_{\tau j}(t)g_{\tau j}(t) & g_{\tau j}(t)=U_{i(\tau)}(\tau,n_j,t)-C_j(\tau,r_{i(\tau)},t)
+		\end{align*}
+	\end{block}
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.48\textwidth}
+			\begin{block}{Определение победителей}
+				\begin{align*}
+					x^*(t)\in\arg\max_{x\in\mathcal{X}(t,\kappa(t))}SW(x,t).
+				\end{align*}
+			\end{block}
+			Максимизирует качество текущего распределения, но не отвечает за долговременное изменение очередей, отказов и будущей нагрузки.
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\begin{block}{VCG-подобный платеж}
+				\begin{align*}
+					p_h(t)=SW^*_{-h}(t)-\sum_{\ell\in\mathcal{H},\ell\neq h}v_{\ell}(x^*(t),t).
+				\end{align*}
+				Рассматривается не как денежный перевод, а как внутренняя теневая цена, показывающая, какой ущерб назначение задачи создаёт для остальных задач системы.
+			\end{block}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур}
+	\small
+	MARL-контур не назначает задачи напрямую. Он выбирает режимы узлов:
+	\begin{align*}
+		\pi_j( h^j_t)& \rightarrow \kappa_j(t) \rightarrow
+		\bar{A}^{r}_j(t,\kappa_j) \rightarrow
+		\mathcal{X}(t,\kappa(t)) \rightarrow x^*(t)
+	\end{align*}
+	
+	\textbf{Режимы узлов}:
+	\begin{itemize}
+		\item $\kappa^{safe}$: узел ограничивает приём новых задач при высокой загрузке, риске нарушения сроков или признаках деградации;
+		\item $\kappa^{normal}$: соответствует штатной работе с умеренным экспонированием свободной ёмкости;
+		\item $\kappa^{aggressive}$: соответствует расширенному приёму задач при благоприятном состоянии узла и низкой очереди;
+		\item $\kappa^{reserve}$: сохраняет часть ёмкости для возможных будущих критических задач;
+		\item  $\kappa^{critical}$: отдаёт предпочтение задачам, связанным с безопасностью, локализацией, обходом препятствий и срочным перепланированием.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -162,6 +204,13 @@
 			\end{itemize}
 		\end{column}
 	\end{columns}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Синтез подхода}
+	\begin{center}
+		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_method_logic}
+	\end{center}
 \end{frame}
 
 \section{Математическая формализация}
@@ -264,10 +313,33 @@
 \end{frame}
 
 \begin{frame}
+	\frametitle{Модель задержки выполнения задачи}
+	\small
+	\begin{align*}
+		T_{\tau j}(t)=T^{net}_{ij,\tau}(t)+T^{queue}_{j}(t)+T^{proc}_{\tau j}(t),
+	\end{align*}
+	
+	Сетевая составляющая
+	\begin{align*}
+		T^{net}_{ij,\tau}(t)=d_{ij}(t)+\frac{b^{in}_{\tau}}{B^{up}_{ij}(t)+\varepsilon}+\frac{b^{out}_{\tau}}{B^{down}_{ji}(t)+\varepsilon}
+	\end{align*}
+	
+	Время ожидания в очереди
+	\begin{align*}
+		T^{queue}_{j}(t)=\frac{\sum_{\tau'\in Q_j(t)} q^{cpu}_{\tau'}}{F^{cpu}_{j}(t)+\varepsilon},
+	\end{align*}
+	
+	Время непосредственной обработки
+	\begin{align*}
+		T^{proc}_{\tau j}(t)=\frac{q^{cpu}_{\tau}}{F^{cpu}_{j}(t)+\varepsilon}+\mathbb{I}\{q^{gpu}_{\tau}>0\}\frac{q^{gpu}_{\tau}}{F^{gpu}_{j}(t)+\varepsilon}.
+	\end{align*}
+\end{frame}
+
+\begin{frame}
 	\frametitle{Модель полезности назначения}
 	\small
 	\begin{align*}
-		U_i(\tau,n_j,t) &= V_i(\tau)\psi_{c_{\tau}}(T_{\tau j}(t),\Delta_{\tau})-E^{tx}_{i\tau j}(t)-P^{viol}_{\tau j}(t)
+		U_i(\tau,n_j,t) &= V_i(\tau)\psi_{c_{\tau}}(T_{\tau j}(t),\Delta_{\tau})-E^{tx}_{i\tau j}(t)
 	\end{align*}
 	
 	Базовая ценность задачи для робота-источника
@@ -286,12 +358,6 @@
 	\begin{align*}
 		E^{tx}_{i\tau j}(t)=e^{tx}_i b^{in}_{\tau} T^{net}_{ij,\tau}(t)
 	\end{align*}
-	
-	Штраф за нарушение срока
-	\begin{align*}
-		P^{viol}_{\tau j}(t) &= \rho^{viol}_{c_{\tau}}
-		\left[\frac{T_{\tau j}(t)-\Delta_{\tau}}{\Delta_{\tau}+\varepsilon}\right]_+
-	\end{align*}
 \end{frame}
 \note{Назначение оценивается не только по вычислительной близости узла, а по системной полезности с учётом задержки, энергии передачи и риска нарушения срока.}
 
@@ -301,28 +367,32 @@
 	\begin{align*}
 		C_j(\tau,r_i,t)&=C^{comp}_j(\tau)+C^{net}_j(\tau,r_i,t)+C^{over}_j(\tau,t)+C^{rel}_j(t)
 	\end{align*}
-	\textit{Вычислительная стоимость}
+	
+	Вычислительная стоимость
 	\begin{align*}
 		C^{comp}_j(\tau)&=\rho^{cpu}_j q^{cpu}_{\tau}+\rho^{mem}_j q^{mem}_{\tau}+\rho^{gpu}_j q^{gpu}_{\tau}
 	\end{align*}
-	\textit{Сетевая стоимость}
+	
+	Сетевая стоимость
 	\begin{align*}
 		C^{net}_j(\tau,r_i,t)&=\rho^{net}_j\left(b^{in}_{\tau}+b^{out}_{\tau}\right)w_{ij}(t)
 	\end{align*}
-	\textit{Стоимость перегрузки}
+	
+	Стоимость перегрузки
 	\begin{align*}
 		C^{over}_j(\tau,t)&=\mu^{cpu}_j\left(\frac{L^{cpu}_j(t)+q^{cpu}_{\tau}}{C^{cpu}_j+\varepsilon}\right)^2+
 		\mu^{mem}_j\left(\frac{L^{mem}_j(t)+q^{mem}_{\tau}}{C^{mem}_j+\varepsilon}\right)^2+{}\\[-1mm]
 		&\quad{}+\mu^{gpu}_j\left(\frac{L^{gpu}_j(t)+q^{gpu}_{\tau}}{C^{gpu}_j+\varepsilon}\right)^2
 	\end{align*}
-	\textit{Компонент надёжности}
+	
+	Компонент надёжности
 	\begin{align*}
 		C^{rel}_j(t)&=\rho^{fail}_j f_j(t)
 	\end{align*}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Проектирование экономических механизмов}
+	\frametitle{Дизайн экономических механизмов}
 	\small
 	\textbf{Механизм} -- задает критерий выбора исхода, а также правило, позволяющее количественно оценить влияние участника на остальных:
 	\begin{align*}
@@ -427,7 +497,7 @@
 	\small
 	MARL-контур не назначает задачи напрямую. Он выбирает режимы узлов:
 	\begin{align*}
-		o^j_t & \rightarrow \kappa_j(t) \rightarrow
+		\pi_j( h^j_t)& \rightarrow \kappa_j(t) \rightarrow
 		\bar{A}^{r}_j(t,\kappa_j) \rightarrow
 		\mathcal{X}(t,\kappa(t)) \rightarrow x^*(t)
 	\end{align*}
@@ -440,6 +510,34 @@
 		\item $\kappa^{reserve}$: сохраняет часть ёмкости для возможных будущих критических задач;
 		\item  $\kappa^{critical}$: отдаёт предпочтение задачам, связанным с безопасностью, локализацией, обходом препятствий и срочным перепланированием.
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{MARL-контур: командная цель}
+	\small
+	Совместная политика периферийных узлов
+	\begin{align*}
+		\pi &= \left(\pi_1,\ldots,\pi_k\right)
+	\end{align*}
+	
+	Цель обучения совместной политики периферийных узлов:
+	\[
+	J(\pi)=\mathbb{E}_{\pi}\left[\sum_{t=0}^{\infty}\gamma^t r_t\right],
+	\qquad
+	\pi^*\in\operatorname*{arg\,max}_{\pi}J(\pi).
+	\]
+	Базовый командный сигнал:
+	\begin{align*}
+		r_t ={}& \alpha_{sw}\widetilde{SW}(t)
+		-\alpha_{viol}\mathrm{Viol}(t)
+		-\alpha_{drop}\mathrm{Drop}(t)
+		-\alpha_{wait}\mathrm{Wait}(t)
+	\end{align*}
+	С учётом аукционных признаков:
+	\[
+	\tilde{r}_t=(1-\lambda_{auc})r_t+\lambda_{auc}r^{auc}_t,
+	\quad \lambda_{auc}\in[0,1].
+	\]
 \end{frame}
 
 \begin{frame}
@@ -469,26 +567,11 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{MARL-контур: командное вознаграждение}
+	\frametitle{MARL-контур: QMIX-сети}
 	\small
-	Цель обучения совместной политики периферийных узлов:
-	\[
-	J(\pi)=\mathbb{E}_{\pi}\left[\sum_{t=0}^{\infty}\gamma^t r_t\right],
-	\qquad
-	\pi^*\in\operatorname*{arg\,max}_{\pi}J(\pi).
-	\]
-	Базовый командный сигнал:
-	\begin{align*}
-		r_t ={}& \alpha_{sw}\widetilde{SW}(t)
-		-\alpha_{viol}\mathrm{Viol}(t)
-		-\alpha_{drop}\mathrm{Drop}(t)
-		-\alpha_{wait}\mathrm{Wait}(t)
-	\end{align*}
-	С учётом аукционных признаков:
-	\[
-	\tilde{r}_t=(1-\lambda_{auc})r_t+\lambda_{auc}r^{auc}_t,
-	\quad \lambda_{auc}\in[0,1].
-	\]
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ch4_arch_qmix}
+	\end{center}
 \end{frame}
 
 \section{Прототип и экспериментальная проверка}
@@ -497,14 +580,6 @@
     \begin{center}
         \Huge Прототип и экспериментальная проверка
     \end{center}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Складская среда}
-	\small
-	\begin{center}
-		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch6_warehouse_scenario}
-	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -540,127 +615,43 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Сценарии валидации}
-    \small
-	\begin{tabular}{p{0.42\linewidth}p{0.56\linewidth}}
-    	\toprule
-    	\textbf{Сценарий} & \textbf{Назначение} \\
-    	\midrule
-    	Стабильная складская нагрузка & Базовое сравнение методов без искусственных возмущений \\
-    	Пиковая складская нагрузка & Проверка реакции на кратковременное увеличение интенсивности задач \\
-    	Разнородные периферийные узлы & Проверка использования развитой и неоднородной инфраструктуры \\
-    	Деградация связи & Проверка устойчивости к ухудшению сетевых условий \\
-    	Отказы периферийных узлов & Проверка перераспределения при временной потере части инфраструктуры \\
-    	Масштабирование & Проверка роста накладных расходов и границы применимости глобального распределения \\
-    	Глобальное и кластерное распределение & Сравнение AMPLE-AMR и C-AMPLE-AMR на крупных конфигурациях \\
-    	Чувствительность к режимам & Проверка устойчивости выводов к коэффициентам операционных режимов \\
-    \end{tabular}
+	\frametitle{Складская среда}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch6_warehouse_scenario}
+	\end{center}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Метрики экспериментов}
+	\frametitle{Проверка экспериментальных гипотез}
 	\scriptsize
-	\begin{tabular}{p{0.31\linewidth}p{0.61\linewidth}}
+	\begin{tabular}{p{0.12\linewidth}p{0.49\linewidth}p{0.28\linewidth}}
 		\toprule
-		\textbf{Метрика} & \textbf{Смысл} \\
+		\textbf{Гипотеза} & \textbf{Смысл} & \textbf{Итог} \\
 		\midrule
-		$SW$ & общественное благосостояние: полезность выполненных задач минус стоимость обслуживания \\
-		$CompletionRate$ & доля завершённых задач среди сгенерированных \\
-		$DropRate$ & доля отклонённых задач среди сгенерированных \\
-		$DeadlineViolationRate$ & доля завершённых задач с нарушением срока \\
-		$P95Latency$ & 95-й процентиль времени выполнения задачи \\
-		$NodeUtilization$ & средняя загрузка периферийных узлов \\
-		$LoadImbalance$ & дисбаланс загрузки между узлами \\
-		$Overhead$ & время аукционного слоя, коммуникаций и вызова политики \\
-		$SlotShare$ & доля управляющего слота, занятая распределением \\
+		H1 & эффективность гибридизации & частично подтверждена \\
+		H2 & польза обучаемого выбора режимов & подтверждена \\
+		H3 & польза VCG-подобного распределения & не подтверждена в сильной форме \\
+		H4 & устойчивость к пиковой нагрузке & подтверждена \\
+		H5 & устойчивость к неоднородности ресурсов & частично подтверждена \\
+		H6 & устойчивость к деградации связи и отказам & подтверждена \\
+		H7 & масштабируемость C-AMPLE-AMR & условно подтверждена \\
 		\bottomrule
 	\end{tabular}
-\end{frame}
-
-\section{Полученные результаты}
-
-\begin{frame}[plain,noframenumbering]
-    \begin{center}
-        \Huge Полученные результаты
-    \end{center}
+	\medskip
+	
+	\begin{block}{Интерпретация}
+		Главный практический эффект текущего прототипа связан с обучаемым выбором режимов edge-узлов. VCG-подобный слой даёт интерпретируемость, внутренние цены и формальную структуру распределения, но не всегда превосходит сильную жадную эвристику по метрикам качества.
+	\end{block}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Обучение политики режимов}
+	\frametitle{Результаты валидации}
 	\small
-	\begin{center}
-		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_learning_curves}
-	\end{center}
 	\begin{itemize}
-		\item QMIX не вырождается в фиксированный выбор режима.
-		\item Вознаграждение возрастает для всех масштабов склада.
-		\item Для Warehouse-M: с $474.9$ до $1087.0$.
-		\item Для Warehouse-L: с $1269.6$ до $2431.4$.
-		\item Для Warehouse-XL: с $2516.0$ до $5627.7$.
+		\item Обучение политики не вырождается в фиксированный выбор операционного режима; 
+		\item AMPLE-AMR выигрывает по общественному благосостоянию; 
+		\item C-AMPLE-AMR нужен только на крупном масштабе;
+		\item VCG-слой полезен прежде всего как интерпретируемая структура и внутренние цены, но не как гарантированное улучшение над сильной эвристикой в каждом сценарии
 	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Поведение обученной политики}
-	\small
-	\begin{center}
-		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_operation_mode_distribution}
-	\end{center}
-	\begin{itemize}
-		\item В стабильной, пиковой и деградирующей нагрузке доминируют \texttt{aggressive} и \texttt{critical}.
-		\item В разнородной инфраструктуре возрастает доля \texttt{reserve}.
-		\item В крупном сценарии глобального/кластерного сравнения возрастает роль \texttt{safe}.
-		\item Это подтверждает адаптацию к состоянию среды, а не случайное переключение.
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Интегральное качество: общественное благосостояние}
-    \small
-    \begin{center}
-    	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_welfare_by_scenario}
-	\end{center}
-    \begin{itemize}
-    	\item Методы с обучаемым выбором режимов превосходят фиксированные методы в большинстве сценариев.
-    	\item В стабильной нагрузке AMPLE-AMR выше Fixed-Heuristic примерно на $12.6\%$.
-    	\item При пиковой нагрузке выигрыш AMPLE-AMR составляет около $12.8\%$.
-    	\item Основной вклад даёт адаптивное управление режимами узлов.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Масштабируемость: когда нужна кластеризация}
-    \small
-     \begin{center}
-    	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_overhead_scalability}
-    \end{center}
-    \begin{itemize}
-    	\item На Warehouse-S/M/L глобальный AMPLE-AMR остаётся практически приемлемым.
-    	\item На Warehouse-XL накладные расходы AMPLE-AMR занимают значимую долю управляющего слота.
-    	\item C-AMPLE-AMR снижает накладные расходы примерно на $44.6\%$ при потере благосостояния около $1.57\%$.
-    	\item Кластеризация полезна не всегда, а только после достижения крупного масштаба.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \frametitle{Проверка экспериментальных гипотез}
-    \scriptsize
-    \begin{tabular}{p{0.12\linewidth}p{0.49\linewidth}p{0.28\linewidth}}
-        \toprule
-        \textbf{Гипотеза} & \textbf{Смысл} & \textbf{Итог} \\
-        \midrule
-        H1 & эффективность гибридизации & частично подтверждена \\
-        H2 & польза обучаемого выбора режимов & подтверждена \\
-        H3 & польза VCG-подобного распределения & не подтверждена в сильной форме \\
-        H4 & устойчивость к пиковой нагрузке & подтверждена \\
-        H5 & устойчивость к неоднородности ресурсов & частично подтверждена \\
-        H6 & устойчивость к деградации связи и отказам & подтверждена \\
-        H7 & масштабируемость C-AMPLE-AMR & условно подтверждена \\
-        \bottomrule
-    \end{tabular}
-    \medskip
-
-    \begin{block}{Интерпретация}
-        Главный практический эффект текущего прототипа связан с обучаемым выбором режимов edge-узлов. VCG-подобный слой даёт интерпретируемость, внутренние цены и формальную структуру распределения, но не всегда превосходит сильную жадную эвристику по метрикам качества.
-    \end{block}
 \end{frame}

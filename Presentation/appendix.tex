@@ -1,6 +1,141 @@
 \section{Приложение}
 
 \begin{frame}
+	\frametitle{Приложение: описание сценариев валидации}
+	\small
+	\begin{tabular}{p{0.42\linewidth}p{0.56\linewidth}}
+		\toprule
+		\textbf{Сценарий} & \textbf{Назначение} \\
+		\midrule
+		Стабильная складская нагрузка & Базовое сравнение методов без искусственных возмущений \\
+		Пиковая складская нагрузка & Проверка реакции на кратковременное увеличение интенсивности задач \\
+		Разнородные периферийные узлы & Проверка использования развитой и неоднородной инфраструктуры \\
+		Деградация связи & Проверка устойчивости к ухудшению сетевых условий \\
+		Отказы периферийных узлов & Проверка перераспределения при временной потере части инфраструктуры \\
+		Масштабирование & Проверка роста накладных расходов и границы применимости глобального распределения \\
+		Глобальное и кластерное распределение & Сравнение AMPLE-AMR и C-AMPLE-AMR на крупных конфигурациях \\
+		Чувствительность к режимам & Проверка устойчивости выводов к коэффициентам операционных режимов \\
+	\end{tabular}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: метрики экспериментов}
+	\scriptsize
+	\begin{tabular}{p{0.31\linewidth}p{0.61\linewidth}}
+		\toprule
+		\textbf{Метрика} & \textbf{Смысл} \\
+		\midrule
+		$SW$ & общественное благосостояние: полезность выполненных задач минус стоимость обслуживания \\
+		$CompletionRate$ & доля завершённых задач среди сгенерированных \\
+		$DropRate$ & доля отклонённых задач среди сгенерированных \\
+		$DeadlineViolationRate$ & доля завершённых задач с нарушением срока \\
+		$P95Latency$ & 95-й процентиль времени выполнения задачи \\
+		$NodeUtilization$ & средняя загрузка периферийных узлов \\
+		$LoadImbalance$ & дисбаланс загрузки между узлами \\
+		$Overhead$ & время аукционного слоя, коммуникаций и вызова политики \\
+		$SlotShare$ & доля управляющего слота, занятая распределением \\
+		\bottomrule
+	\end{tabular}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: размеры экспериментальных стендов}
+	\scriptsize
+	\begin{tabular}{|p{0.18\textwidth}|p{0.08\textwidth}|p{0.08\textwidth}|p{0.08\textwidth}|p{0.12\textwidth}|p{0.26\textwidth}|}
+		\hline
+		\textbf{Стенд} & \textbf{Роботы} & \textbf{Точки доступа} & \textbf{Узлы} & \textbf{Область, м} & \textbf{Назначение} \\
+		\hline
+		Warehouse-S & 6 & 7 & 4 & $36 \times 24$ & Малый стенд для проверки корректности и быстрых прогонов \\
+		\hline
+		Warehouse-M & 10 & 25 & 5 & $60 \times 36$ & Основной стенд для стабильной, пиковой, сетевой и отказной нагрузки \\
+		\hline
+		Warehouse-M+ & 10 & 25 & 13 & $60 \times 36$ & Средний стенд с более развитой периферийной инфраструктурой \\
+		\hline
+		Warehouse-L & 20 & 40 & 10 & $90 \times 54$ & Крупный стенд для анализа устойчивости и начальной масштабируемости \\
+		\hline
+		Warehouse-XL & 40 & 60 & 20 & $120 \times 72$ & Стресс-стенд для проверки предельных накладных расходов и кластеризации \\
+		\hline
+	\end{tabular}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: операционные режимы периферийных узлов}
+	\scriptsize
+	\begin{tabular}{|p{0.18\textwidth}|p{0.18\textwidth}|p{0.18\textwidth}|p{0.32\textwidth}|}
+		\hline
+		\textbf{Режим} & \textbf{CPU} & \textbf{Память/GPU} & \textbf{Интерпретация} \\
+		\hline
+		safe & 0.30 & 0.30 & Защитный режим с минимальным экспонированием ресурсов \\
+		\hline
+		normal & 0.60 & 0.60 & Базовый фиксированный режим \\
+		\hline
+		aggressive & 0.90 & 0.90 & Максимальное использование доступной ёмкости \\
+		\hline
+		reserve & 0.45 & 0.45 & Резервирование под будущие критические задачи \\
+		\hline
+		critical & 0.70 & 0.70 & Приоритетное обслуживание задач обнаружения препятствий, локализации и перепланирования \\
+		\hline
+	\end{tabular}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: обучение политики режимов}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_learning_curves}
+	\end{center}
+	\begin{itemize}
+		\item QMIX не вырождается в фиксированный выбор режима.
+		\item Вознаграждение возрастает для всех масштабов склада.
+		\item Для Warehouse-M: с $474.9$ до $1087.0$.
+		\item Для Warehouse-L: с $1269.6$ до $2431.4$.
+		\item Для Warehouse-XL: с $2516.0$ до $5627.7$.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: поведение обученной политики}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_operation_mode_distribution}
+	\end{center}
+	\begin{itemize}
+		\item В стабильной, пиковой и деградирующей нагрузке доминируют \texttt{aggressive} и \texttt{critical}.
+		\item В разнородной инфраструктуре возрастает доля \texttt{reserve}.
+		\item В крупном сценарии глобального/кластерного сравнения возрастает роль \texttt{safe}.
+		\item Это подтверждает адаптацию к состоянию среды, а не случайное переключение.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: общественное благосостояние}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_welfare_by_scenario}
+	\end{center}
+	\begin{itemize}
+		\item Методы с обучаемым выбором режимов превосходят фиксированные методы в большинстве сценариев.
+		\item В стабильной нагрузке AMPLE-AMR выше Fixed-Heuristic примерно на $12.6\%$.
+		\item При пиковой нагрузке выигрыш AMPLE-AMR составляет около $12.8\%$.
+		\item Основной вклад даёт адаптивное управление режимами узлов.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: масштабируемость}
+	\small
+	\begin{center}
+		\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_overhead_scalability}
+	\end{center}
+	\begin{itemize}
+		\item На Warehouse-S/M/L глобальный AMPLE-AMR остаётся практически приемлемым.
+		\item На Warehouse-XL накладные расходы AMPLE-AMR занимают значимую долю управляющего слота.
+		\item C-AMPLE-AMR снижает накладные расходы примерно на $44.6\%$ при потере благосостояния около $1.57\%$.
+		\item Кластеризация полезна не всегда, а только после достижения крупного масштаба.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
 	\frametitle{Приложение: качество обслуживания: задержка и отказы}
 	\small
 	\begin{itemize}
