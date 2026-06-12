@@ -32,7 +32,7 @@
 				\end{itemize}
 				\textbf{Цикл} <<восприятие $\rightarrow$ вычисление $\rightarrow$ действие>>
 			\end{block}
-				\begin{block}{Проблема}
+				\begin{block}{Проблема (1)}
 				Где выполнять неоднородный поток вычислительных задач?
 			\end{block}
 		\end{column}
@@ -45,7 +45,7 @@
     	\maybeincludegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch1_edge_need_concept}
     \end{center}
    \small
-    \begin{block}{Проблема}
+    \begin{block}{Проблема (2)}
     	Как распределять общий ограниченный ресурс на периферии сети?
     \end{block}
 \end{frame}
@@ -57,7 +57,7 @@
 	\begin{center}
 		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_edge_amr}
 	\end{center}
-	\begin{block}{Проблема}
+	\begin{block}{Проблема (3)}
 		Как построить локально обоснованное правило распределение и оценить внешний эффект назначения?
 	\end{block}
 \end{frame}
@@ -73,31 +73,22 @@
 	\end{enumerate}
 	Эти решения имеют долгосрочный характер и должны вырабатываться на основе опыта взаимодействия со средой.
 	\small
-	\begin{block}{Проблема}
+	\begin{block}{Проблема (4)}
 		Требуется отдельный контур адаптации. Его задача состоит не в замене механизма распределения, а в изменении условий, в которых проводится это распределение. 
 	\end{block}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Цель и исследовательская идея}
+	\frametitle{Цель исследования}
 	\small
-	\textbf{Цель:} разработать модели и гибридный метод адаптивного распределения вычислительных задач автономных мобильных роботов между периферийными узлами.
-	\medskip
-	
-	\begin{block}{Основная идея}
-		Разделить две функции управления:
-		\begin{enumerate}
-			\item аукционный слой выбирает распределение задач и оценивает внешний эффект использования общего ресурса;
-			\item обучаемый многоагентный слой меняет операционные режимы edge-узлов, адаптируя условия распределения к динамике нагрузки.
-		\end{enumerate}
+	\begin{block}{Цель}
+		Разработать модели и гибридный метод адаптивного распределения вычислительных задач автономных мобильных роботов между периферийными узлами.
 	\end{block}
-	
+	\medskip
 	\begin{center}
-		\small
-		\textbf{Роботы не обучают заявки. MARL не подменяет правило распределения.}
+		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/intro_overall_problem}
 	\end{center}
 \end{frame}
-\note{Ключевая формулировка: обучение не меняет смысл заявок и не заменяет аукцион. Оно управляет режимами узлов, то есть параметрами доступной ёмкости и политики допуска задач.}
 
 \section{Предложенное решение}
 
@@ -113,10 +104,37 @@
 \begin{frame}
 	\frametitle{AMPLE-AMR}
 	\small
-	Архитектура метода AMPLE--AMR (\textit{Adaptive Multi-agent Policy Learning with Edge Auctions for Autonomous Mobile Robots}) построена как двухуровневый контур принятия решений.
-	\begin{center}
-		\maybeincludegraphics[width=0.8\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ch5_ample_amr_concept}
-	\end{center}
+	Архитектура метода AMPLE--AMR (\textit{Adaptive Multi-agent Policy Learning with Edge Auctions for Autonomous Mobile Robots}) включает:
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.48\textwidth}
+			\begin{block}{Аукционный слой}
+				Выбирает распределение задач и оценивает внешний эффект использования общего ресурса.
+			\end{block}
+		\end{column}
+		\begin{column}{0.50\textwidth}
+			\begin{block}{Обучаемый контур}
+				Меняет операционные режимы edge-узлов, адаптируя условия распределения к динамике нагрузки.
+			\end{block}
+		\end{column}
+	\end{columns}
+	\medskip
+	\medskip
+	\begin{columns}[T,onlytextwidth]
+		\begin{column}{0.48\textwidth}
+			\medskip
+			\medskip
+			\medskip
+			\begin{enumerate}
+				\item Формирование потока задач
+				\item Экспонирование ресурсов на основании политики
+				\item Определение назначений и расчет платежей
+				\item Обновление состояние среды
+			\end{enumerate}
+		\end{column}
+		\begin{column}{0.58\textwidth}
+			\maybeincludegraphics[width=\linewidth,height=\textheight,keepaspectratio]{Dissertation/images/ch5_ample_amr_concept}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}
@@ -166,51 +184,40 @@
 		\item $\kappa^{reserve}$: сохраняет часть ёмкости для возможных будущих критических задач;
 		\item  $\kappa^{critical}$: отдаёт предпочтение задачам, связанным с безопасностью, локализацией, обходом препятствий и срочным перепланированием.
 	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{AMPLE-AMR: гибридный цикл управления}
-	\small
+	
 	\begin{center}
-		\maybeincludegraphics[width=0.94\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch5_ample_architecture}
+		\small
+		\textbf{Роботы не обучают заявки. MARL не подменяет правило распределения.}
 	\end{center}
-	\begin{enumerate}
-		\item Роботы формируют поток вычислительных задач.
-		\item Периферийные узлы наблюдают локальное состояние и выбирают операционные режимы через QMIX-политику.
-		\item Выбранные режимы определяют доступную ёмкость, правила допуска и ограничения распределения.
-		\item VCG-подобный слой решает задачу выбора победителей и вычисляет внутренние теневые цены.
-		\item Среда обновляет очереди, задержки, загрузку узлов и метрики качества обслуживания.
-	\end{enumerate}
 \end{frame}
+\note{Ключевая формулировка: обучение не меняет смысл заявок и не заменяет аукцион. Оно управляет режимами узлов, то есть параметрами доступной ёмкости и политики допуска задач.}
 
 \begin{frame}
 	\frametitle{C-AMPLE-AMR: масштабируемая версия}
 	\small
+	\begin{block}{Проблема глобального раунда}
+		\begin{enumerate}
+			\item с ростом числа роботов и задач увеличивается задача выбора победителей;
+			\item время распределения начинает занимать значимую долю управляющего слота;
+			\item глобальный аукцион становится потенциальным узким местом.
+		\end{enumerate}
+	\end{block}
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{0.48\textwidth}
-			\textbf{Проблема глобального раунда}
-			\begin{itemize}
-				\item с ростом числа роботов и задач увеличивается задача выбора победителей;
-				\item время распределения начинает занимать значимую долю управляющего слота;
-				\item глобальный аукцион становится потенциальным узким местом.
-			\end{itemize}
+			\begin{block}{Идея C-AMPLE-AMR}
+				\begin{itemize}
+					\item построить граф периферийной инфраструктуры;
+					\item провести локальные аукционы внутри кластеров;
+					\item использовать кластеризацию только при достаточном масштабе.
+				\end{itemize}
+			\end{block}
 		\end{column}
 		\begin{column}{0.48\textwidth}
-			\textbf{Идея C-AMPLE-AMR}
-			\begin{itemize}
-				\item построить граф периферийной инфраструктуры;
-				\item провести локальные аукционы внутри кластеров;
-				\item использовать кластеризацию только при достаточном масштабе.
-			\end{itemize}
+			\begin{center}
+				\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch5_c_ample_amr_concept}
+			\end{center}
 		\end{column}
 	\end{columns}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Синтез подхода}
-	\begin{center}
-		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_method_logic}
-	\end{center}
 \end{frame}
 
 \section{Математическая формализация}
@@ -218,6 +225,13 @@
 \begin{frame}[plain,noframenumbering]
 	\begin{center}
 		\Huge Математическая формализация
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Синтез подхода}
+	\begin{center}
+		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_method_logic}
 	\end{center}
 \end{frame}
 
@@ -615,11 +629,31 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Складская среда}
+	\frametitle{Сценарии валидации}
 	\small
 	\begin{center}
 		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch6_warehouse_scenario}
 	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Метрики}
+	\scriptsize
+	\begin{tabular}{p{0.31\linewidth}p{0.61\linewidth}}
+		\toprule
+		\textbf{Метрика} & \textbf{Смысл} \\
+		\midrule
+		$SW$ & общественное благосостояние: полезность выполненных задач минус стоимость обслуживания \\
+		$CompletionRate$ & доля завершённых задач среди сгенерированных \\
+		$DropRate$ & доля отклонённых задач среди сгенерированных \\
+		$DeadlineViolationRate$ & доля завершённых задач с нарушением срока \\
+		$P95Latency$ & 95-й процентиль времени выполнения задачи \\
+		$NodeUtilization$ & средняя загрузка периферийных узлов \\
+		$LoadImbalance$ & дисбаланс загрузки между узлами \\
+		$Overhead$ & время аукционного слоя, коммуникаций и вызова политики \\
+		$SlotShare$ & доля управляющего слота, занятая распределением \\
+		\bottomrule
+	\end{tabular}
 \end{frame}
 
 \begin{frame}
@@ -641,17 +675,6 @@
 	\medskip
 	
 	\begin{block}{Интерпретация}
-		Обе составляющие гибридного метода вносят вклад в $SW$: аукционный слой оптимизирует ценность выбранного подмножества задач, а QMIX адаптирует условия распределения. При этом возникает содержательный trade-off: эвристика чаще даёт лучший throughput, а аукционные методы выигрывают по общественному благосостоянию.
+		\textbf{H1-H3}: обе составляющие гибридного метода вносят вклад в $SW$: аукционный слой оптимизирует ценность выбранного подмножества задач, а QMIX адаптирует условия распределения. \textbf{H4-H6}: при этом возникает содержательный trade-off: эвристика нередко завершает больше задач и снижает долю отклонений, тогда как аукционный слой выбирает меньше, но более ценные назначения. \textbf{H7}: кластерная версия оправдана прежде всего для крупных конфигураций.
 	\end{block}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Общие результаты валидации}
-	\small
-	\begin{itemize}
-		\item Fixed-Auction превосходит Fixed-Heuristic по $SW$ во всех 70 сопоставлениях; средний эффект составляет $+558.7$.
-		\item QMIX-Heuristic также улучшает $SW$ относительно Fixed-Heuristic; средний выигрыш составляет $+82.2$.
-		\item AMPLE-AMR в среднем превосходит одно-компонентные варианты на $+326.1$, но в разнородной инфраструктуре уступает Fixed-Auction.
-		\item C-AMPLE-AMR оправдан прежде всего на Warehouse-XL, где overhead снижается с $264.1$ до $51.3$~мс при потере welfare $41.9$.
-	\end{itemize}
 \end{frame}

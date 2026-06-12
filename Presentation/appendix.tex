@@ -19,26 +19,6 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Приложение: метрики экспериментов}
-	\scriptsize
-	\begin{tabular}{p{0.31\linewidth}p{0.61\linewidth}}
-		\toprule
-		\textbf{Метрика} & \textbf{Смысл} \\
-		\midrule
-		$SW$ & общественное благосостояние: полезность выполненных задач минус стоимость обслуживания \\
-		$CompletionRate$ & доля завершённых задач среди сгенерированных \\
-		$DropRate$ & доля отклонённых задач среди сгенерированных \\
-		$DeadlineViolationRate$ & доля завершённых задач с нарушением срока \\
-		$P95Latency$ & 95-й процентиль времени выполнения задачи \\
-		$NodeUtilization$ & средняя загрузка периферийных узлов \\
-		$LoadImbalance$ & дисбаланс загрузки между узлами \\
-		$Overhead$ & время аукционного слоя, коммуникаций и вызова политики \\
-		$SlotShare$ & доля управляющего слота, занятая распределением \\
-		\bottomrule
-	\end{tabular}
-\end{frame}
-
-\begin{frame}
 	\frametitle{Приложение: размеры экспериментальных стендов}
 	\scriptsize
 	\begin{tabular}{|p{0.18\textwidth}|p{0.08\textwidth}|p{0.08\textwidth}|p{0.08\textwidth}|p{0.12\textwidth}|p{0.26\textwidth}|}
@@ -105,6 +85,17 @@
 		\item В разнородной инфраструктуре почти весь выбор смещается в \texttt{reserve} ($\approx 98\%$).
 		\item В сценарии clustered/global для Warehouse-L почти весь выбор переходит в \texttt{critical}.
 		\item Это подтверждает адаптацию к состоянию среды, а не случайное переключение.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Приложение: общие результаты валидации}
+	\small
+	\begin{itemize}
+		\item Fixed-Auction превосходит Fixed-Heuristic по $SW$ во всех 70 сопоставлениях; средний эффект составляет $+558.7$.
+		\item QMIX-Heuristic также улучшает $SW$ относительно Fixed-Heuristic; средний выигрыш составляет $+82.2$.
+		\item AMPLE-AMR в среднем превосходит одно-компонентные варианты на $+326.1$, но в разнородной инфраструктуре уступает Fixed-Auction.
+		\item C-AMPLE-AMR оправдан прежде всего на Warehouse-XL, где overhead снижается с $264.1$ до $51.3$~мс при потере welfare $41.9$.
 	\end{itemize}
 \end{frame}
 
