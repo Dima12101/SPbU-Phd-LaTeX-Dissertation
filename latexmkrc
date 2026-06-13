@@ -31,6 +31,73 @@ $TIKZFILE //= '';
 $USEDEV = $ENV{USEDEV};
 $USEDEV //= '';
 
+my $bibliography_backend_cleanup_done = 0;
+
+sub default_bibliography_backend {
+    my $default = 0;
+    my $setup_file = 'common/setup.tex';
+
+    if (open my $fh, '<:encoding(UTF-8)', $setup_file) {
+        while (my $line = <$fh>) {
+            if ($line =~ /\\setcounter\{bibliosel\}\{([01])\}/) {
+                $default = $1;
+                last;
+            }
+        }
+        close $fh;
+    }
+
+    return $default;
+}
+
+sub uses_biber_backend {
+    return 1 if ($USEBIBER ne '') && ($USEBIBER ne '0');
+    return 0 if $USEBIBER eq '0';
+    return default_bibliography_backend() != 0;
+}
+
+sub file_starts_with {
+    my ($path, $prefix) = @_;
+
+    return 0 unless -e $path;
+    open my $fh, '<:encoding(UTF-8)', $path or return 0;
+    my $line = <$fh>;
+    close $fh;
+
+    return defined $line && index($line, $prefix) == 0;
+}
+
+sub cleanup_stale_bibliography_artifacts {
+    return if $bibliography_backend_cleanup_done;
+
+    our ($aux_dir1, $root_filename);
+    my $base = $root_filename;
+    return if !defined $base || $base eq '';
+
+    my $bbl = "${aux_dir1}${base}.bbl";
+    my $bcf = "${aux_dir1}${base}.bcf";
+    my $run_xml = "${aux_dir1}${base}.run.xml";
+    my $blg = "${aux_dir1}${base}.blg";
+    my @stale = ();
+
+    if (uses_biber_backend()) {
+        if (file_starts_with($bbl, '\begin{thebibliography}')) {
+            push @stale, $bbl, $blg;
+        }
+    } else {
+        if (-e $bcf || -e $run_xml) {
+            push @stale, $bbl, $bcf, $run_xml, $blg;
+        }
+    }
+
+    @stale = grep { defined $_ && -e $_ } @stale;
+    unlink @stale if @stale;
+
+    $bibliography_backend_cleanup_done = 1;
+}
+
+push @{$hooks{before_xlatex}}, \&cleanup_stale_bibliography_artifacts;
+
 
 $texargs = '';
 if ($DRAFTON ne '') {
