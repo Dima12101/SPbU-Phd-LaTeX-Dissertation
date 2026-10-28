@@ -92,7 +92,7 @@
             <mxPoint x="800" y="400" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="d_oJJjqOXd91v5eQXrEt-1" connectable="0" parent="e10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="параметры локальных политик" vertex="1">
+        <mxCell id="d_oJJjqOXd91v5eQXrEt-1" connectable="0" parent="e10" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" value="параметры локальных стратегий" vertex="1">
           <mxGeometry relative="1" x="0.6183" y="-2" as="geometry">
             <mxPoint as="offset" />
           </mxGeometry>

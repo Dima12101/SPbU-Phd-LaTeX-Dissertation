@@ -1,7 +1,8 @@
 \section{Приложение}
 
 \begin{frame}
-	\frametitle{Приложение: описание сценариев валидации}
+	\frametitle{Приложение: описание сценариев проверки}
+	\setlength{\tabcolsep}{1.5pt}
 	\small
 	\begin{tabular}{p{0.42\linewidth}p{0.56\linewidth}}
 		\toprule
@@ -20,6 +21,7 @@
 
 \begin{frame}
 	\frametitle{Приложение: размеры экспериментальных стендов}
+	\setlength{\tabcolsep}{1.5pt}
 	\scriptsize
 	\begin{tabular}{|p{0.18\textwidth}|p{0.08\textwidth}|p{0.08\textwidth}|p{0.08\textwidth}|p{0.12\textwidth}|p{0.26\textwidth}|}
 		\hline
@@ -33,33 +35,34 @@
 		\hline
 		Warehouse-L & 20 & 40 & 10 & $90 \times 54$ & Крупный стенд для анализа устойчивости и начальной масштабируемости \\
 		\hline
-		Warehouse-XL & 40 & 60 & 20 & $120 \times 72$ & Стресс-стенд для проверки предельных накладных расходов и кластеризации \\
+		Warehouse-XL & 40 & 60 & 20 & $120 \times 72$ & Стенд повышенной нагрузки для проверки предельных накладных расходов и кластеризации \\
 		\hline
 	\end{tabular}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Приложение: операционные режимы периферийных узлов}
+	\setlength{\tabcolsep}{1.5pt}
 	\scriptsize
 	\begin{tabular}{|p{0.18\textwidth}|p{0.18\textwidth}|p{0.18\textwidth}|p{0.32\textwidth}|}
 		\hline
-		\textbf{Режим} & \textbf{CPU} & \textbf{Память/GPU} & \textbf{Интерпретация} \\
+		\textbf{Режим} & \textbf{ЦП} & \textbf{Память/ГП} & \textbf{Интерпретация} \\
 		\hline
-		safe & 0.30 & 0.30 & Защитный режим с минимальным экспонированием ресурсов \\
+		защитный & 0.30 & 0.30 & Защитный режим с минимальным предоставлением ресурсов \\
 		\hline
-		normal & 0.55 & 0.55 & Базовый фиксированный режим \\
+		нормальный & 0.55 & 0.55 & Базовый фиксированный режим \\
 		\hline
-		aggressive & 0.90 & 0.90 & Максимальное использование доступной ёмкости \\
+		максимальной загрузки & 0.90 & 0.90 & Максимальное использование доступной ёмкости \\
 		\hline
-		reserve & 0.45 & 0.45 & Резервирование под будущие критические задачи \\
+		резервирование & 0.45 & 0.45 & Резервирование под будущие критические задачи \\
 		\hline
-		critical & 0.70 & 0.70 & Приоритетное обслуживание задач обнаружения препятствий, локализации и перепланирования \\
+		приоритет критических задач & 0.70 & 0.70 & Приоритетное обслуживание задач обнаружения препятствий, локализации и перепланирования \\
 		\hline
 	\end{tabular}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Приложение: обучение политики режимов}
+	\frametitle{Приложение: обучение стратегии режимов}
 	\small
 	\begin{center}
 		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_learning_curves}
@@ -74,28 +77,28 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Приложение: поведение обученной политики}
+	\frametitle{Приложение: поведение обученной стратегии}
 	\small
 	\begin{center}
 		\maybeincludegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{Dissertation/images/results/ch8_operation_mode_distribution}
 	\end{center}
 	\begin{itemize}
-		\item В стабильной нагрузке доминирует \texttt{normal} ($\approx 70\%$), а \texttt{aggressive} и \texttt{critical} используются как усилители.
-		\item При пиковой нагрузке доля \texttt{aggressive} возрастает примерно до $30\%$.
-		\item В разнородной инфраструктуре почти весь выбор смещается в \texttt{reserve} ($\approx 98\%$).
-		\item В сценарии clustered/global для Warehouse-L почти весь выбор переходит в \texttt{critical}.
+		\item В стабильной нагрузке доминирует \texttt{нормальный} ($\approx 70\%$), а \texttt{максимальной загрузки} и \texttt{приоритет критических задач} используются как усилители.
+		\item При пиковой нагрузке доля \texttt{максимальной загрузки} возрастает примерно до $30\%$.
+		\item В разнородной инфраструктуре почти весь выбор смещается в \texttt{резервирование} ($\approx 98\%$).
+		\item В сценарии Кластерный/Общий для Warehouse-L почти весь выбор переходит в \texttt{приоритет критических задач}.
 		\item Это подтверждает адаптацию к состоянию среды, а не случайное переключение.
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Приложение: общие результаты валидации}
+	\frametitle{Приложение: общие результаты проверки}
 	\small
 	\begin{itemize}
 		\item Fixed-Auction превосходит Fixed-Heuristic по $SW$ во всех 70 сопоставлениях; средний эффект составляет $+558.7$.
 		\item QMIX-Heuristic также улучшает $SW$ относительно Fixed-Heuristic; средний выигрыш составляет $+82.2$.
-		\item AMPLE-AMR в среднем превосходит одно-компонентные варианты на $+326.1$, но в разнородной инфраструктуре уступает Fixed-Auction.
-		\item C-AMPLE-AMR оправдан прежде всего на Warehouse-XL, где overhead снижается с $264.1$ до $51.3$~мс при потере welfare $41.9$.
+		\item AMPLE-AMR в среднем превосходит однокомпонентные варианты на $+326.1$, но в разнородной инфраструктуре уступает Fixed-Auction.
+		\item C-AMPLE-AMR оправдан прежде всего на Warehouse-XL, где накладные расходы снижается с $264.1$ до $51.3$~мс при потере благосостояния $41.9$.
 	\end{itemize}
 \end{frame}
 
@@ -120,9 +123,9 @@
 		\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_overhead_scalability}
 	\end{center}
 	\begin{itemize}
-		\item На Warehouse-S/M/L глобальный AMPLE-AMR остаётся практически приемлемым, а кластеризация чаще невыгодна.
-		\item На Warehouse-XL накладные расходы AMPLE-AMR возрастают до $264.1$~мс и становятся узким местом управляющего слота.
-		\item C-AMPLE-AMR снижает overhead до $51.3$~мс, то есть примерно на $80.5\%$.
+		\item На Warehouse-S, Warehouse-M и Warehouse-L глобальный AMPLE-AMR остаётся практически приемлемым, а кластеризация чаще невыгодна.
+		\item На Warehouse-XL накладные расходы AMPLE-AMR возрастают до $264.1$~мс и становятся узким местом управляющего интервала.
+		\item C-AMPLE-AMR снижает накладные расходы до $51.3$~мс, то есть примерно на $80.5\%$.
 		\item Потеря благосостояния на Warehouse-XL составляет $41.9$, поэтому кластеризация полезна только на экстремальном масштабе.
 	\end{itemize}
 \end{frame}
@@ -131,25 +134,25 @@
 	\frametitle{Приложение: качество обслуживания: задержка и отказы}
 	\small
 	\begin{itemize}
-		\item В стабильной нагрузке baseline Fixed-Heuristic остаётся сильным по throughput и хвосту задержки.
-		\item При пиковой нагрузке P95 уменьшается с $78.6$ до $66.4$~мс при переходе от Fixed-Heuristic к AMPLE-AMR.
-		\item В сценариях деградации связи и отказов P95 снижается соответственно с $70.1$ до $62.8$~мс и с $72.5$ до $58.7$~мс.
-		\item Улучшение $SW$ и хвоста задержки у аукционных методов сопровождается меньшим completion rate и большим drop rate.
+		\item В стабильной нагрузке базовый метод Fixed-Heuristic остаётся сильным по пропускной способности и 95-му квантилю задержки.
+		\item При пиковой нагрузке 95-й квантиль уменьшается с $78.6$ до $66.4$~мс при переходе от Fixed-Heuristic к AMPLE-AMR.
+		\item В сценариях деградации связи и отказов 95-й квантиль снижается соответственно с $70.1$ до $62.8$~мс и с $72.5$ до $58.7$~мс.
+		\item Улучшение $SW$ и 95-го квантиля задержки у аукционных методов сопровождается меньшей долей выполненных задач и большей долей отклонённых задач.
 		\item Доля нарушений сроков почти во всех сценариях близка к нулю из-за фильтрации недопустимых назначений.
 	\end{itemize}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[shrink=5]
     \frametitle{Приложение: сравнение глобального и кластерного вариантов}
     \small
     \begin{center}
-    	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_clustered_tradeoff}
+	\maybeincludegraphics[width=\linewidth,height=0.48\textheight,keepaspectratio]{Dissertation/images/results/ch8_clustered_tradeoff}
     \end{center}
-   	\begin{itemize}
-	    \item На Warehouse-L глобальный AMPLE-AMR предпочтительнее: $3.29$ против $7.63$~мс при потере welfare $9.0$ у кластерного варианта.
-	    \item На Warehouse-XL кластерный вариант снижает overhead с $264.1$ до $51.3$~мс.
-	    \item Цена ускорения на Warehouse-XL составляет потерю welfare $41.9$.
-	    \item Переход к C-AMPLE-AMR должен зависеть от доли управляющего слота, занятой глобальным распределением.
+	\begin{itemize}
+	    \item На Warehouse-L глобальный AMPLE-AMR предпочтительнее: $3.29$ против $7.63$~мс при потере благосостояния $9.0$ у кластерного варианта.
+	    \item На Warehouse-XL кластерный вариант снижает накладные расходы с $264.1$ до $51.3$~мс.
+	    \item Цена ускорения на Warehouse-XL составляет потерю благосостояния $41.9$.
+	    \item Переход к C-AMPLE-AMR должен зависеть от доли управляющего интервала, занятой глобальным распределением.
     \end{itemize}
 \end{frame}
 
@@ -157,8 +160,8 @@
     \frametitle{Приложение: чувствительность к режимам}
     \small
     \begin{itemize}
-        \item Для AMPLE-AMR профиль \texttt{aggressive\_bias} даёт наибольшее общественное благосостояние: $977.0$ против $948.7$ в default.
-        \item Для C-AMPLE-AMR картина похожа: $976.8$ в \texttt{aggressive\_bias} против $966.9$ в default.
+        \item Для AMPLE-AMR профиль \texttt{Максимальная загрузка} даёт наибольшее общественное благосостояние: $977.0$ против $948.7$ в Основной.
+        \item Для C-AMPLE-AMR картина похожа: $976.8$ в \texttt{Максимальная загрузка} против $966.9$ в Основной.
         \item Консервативный профиль снижает $SW$ у глобального и кластерного гибридных методов.
         \item Во всех проверенных профилях гибридные методы остаются выше фиксированных базовых методов по общественному благосостоянию.
     \end{itemize}

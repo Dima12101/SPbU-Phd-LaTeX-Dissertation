@@ -10,7 +10,7 @@
         <mxCell id="obs" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;strokeWidth=2;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;" value="&lt;div&gt;&lt;b&gt;Уровень периферийных узлов&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;очереди, загрузка, задержки, отказы&lt;/div&gt;" vertex="1">
           <mxGeometry height="100" width="270" x="790" y="337.5" as="geometry" />
         </mxCell>
-        <mxCell id="policy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" value="&lt;b&gt;Обучаемая политика узлов&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;выбор операционных режимов&lt;br&gt;допуск, резервирование, защита&lt;/div&gt;" vertex="1">
+        <mxCell id="policy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;strokeWidth=2;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;" value="&lt;b&gt;Обучаемая стратегия узлов&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;выбор операционных режимов&lt;br&gt;допуск, резервирование, защита&lt;/div&gt;" vertex="1">
           <mxGeometry height="105" width="270" x="405" y="337.5" as="geometry" />
         </mxCell>
         <mxCell id="capacity" parent="1" style="rounded=1;whiteSpace=wrap;html=1;arcSize=12;strokeWidth=2;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;dashed=1;" value="&lt;b&gt;Экспонируемая ёмкость&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;ресурсы, открытые для текущего раунда&lt;/div&gt;" vertex="1">

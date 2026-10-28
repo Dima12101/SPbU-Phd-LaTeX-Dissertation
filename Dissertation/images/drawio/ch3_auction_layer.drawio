@@ -13,7 +13,7 @@
         <mxCell id="edge_state" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=13;" value="Состояние периферийных узлов&lt;br&gt;очереди, отказ, доступные ресурсы" vertex="1">
           <mxGeometry height="80" width="260" x="40" y="240" as="geometry" />
         </mxCell>
-        <mxCell id="policy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="Обучаемая политика&lt;br&gt;выбор операционных режимов" vertex="1">
+        <mxCell id="policy" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="Обучаемая стратегия&lt;br&gt;выбор операционных режимов" vertex="1">
           <mxGeometry height="80" width="250" x="360" y="240" as="geometry" />
         </mxCell>
         <mxCell id="capacity" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=13;" value="Экспонируемая ёмкость&lt;br&gt;и ограничения текущего раунда" vertex="1">

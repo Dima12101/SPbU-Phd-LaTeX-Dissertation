@@ -7,11 +7,11 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Домен исследования: AMR-системы}
+	\frametitle{Предметная область исследования: АМР-системы}
 	\small
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{0.52\textwidth}
-			\begin{block}{AMR-система}
+			\begin{block}{АМР-система}
 				\begin{center}
 					\maybeincludegraphics[width=0.86\linewidth,height=0.32\textheight,keepaspectratio]{Dissertation/images/ch1_warehouse_robotics}
 				\end{center}
@@ -25,7 +25,7 @@
 			\begin{block}{Типовые задачи}
 				\begin{itemize}
 					\item локализация и построение карты;
-					\item обработка лидаров и камер;
+					\item обработка лазерных сканеров и камер;
 					\item обнаружение препятствий;
 					\item перепланирование маршрута;
 					\item инвентаризация и диагностика.
@@ -40,20 +40,20 @@
 \end{frame}
 
 \begin{frame}
-    \frametitle{Почему edge computing требуется для AMR-систем}
+    \frametitle{Почему периферийные вычисления требуется для АМР-систем}
     \begin{center}
-    	\maybeincludegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch1_edge_need_concept}
+	\maybeincludegraphics[width=0.95\linewidth,height=0.4\textheight,keepaspectratio]{Dissertation/images/ch1_edge_need_concept}
     \end{center}
    \small
     \begin{block}{Проблема (2)}
-    	Как распределять общий ограниченный ресурс на периферии сети?
+	Как распределять общий ограниченный ресурс на периферии сети?
     \end{block}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Правило распределения ресурсов}
 	\small
-	Назначение одной задачи на узел изменяет доступность ресурсов для остальных задач, то есть создаёт \textbf{внешний эффект}. 
+	Назначение одной задачи на узел изменяет доступность ресурсов для остальных задач, то есть создаёт \textbf{внешний эффект}.
 	\begin{center}
 		\maybeincludegraphics[width=0.95\linewidth,height=0.95\textheight,keepaspectratio]{Dissertation/images/ch1_edge_amr}
 	\end{center}
@@ -64,7 +64,7 @@
 
 \begin{frame}
 	\frametitle{Динамичность системы}
-	AMR-система с периферийными вычислениями является \textbf{последовательной динамической системой}. На каждом шаге требуется знать:
+	АМР-система с периферийными вычислениями является \textbf{последовательной динамической системой}. На каждом шаге требуется знать:
 	\begin{enumerate}
 		\item Какую часть ресурсов узел может предоставить новым задачам?
 		\item Какую часть резервирует под критические классы?
@@ -74,7 +74,7 @@
 	Эти решения имеют долгосрочный характер и должны вырабатываться на основе опыта взаимодействия со средой.
 	\small
 	\begin{block}{Проблема (4)}
-		Требуется отдельный контур адаптации. Его задача состоит не в замене механизма распределения, а в изменении условий, в которых проводится это распределение. 
+		Требуется отдельный контур адаптации. Его задача состоит не в замене механизма распределения, а в изменении условий, в которых проводится это распределение.
 	\end{block}
 \end{frame}
 
@@ -95,16 +95,16 @@
 \begin{frame}[plain,noframenumbering]
     \begin{center}
         \begin{center}
-        	\maybeincludegraphics[width=0.8\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ample_amr_logo}
-        	\textit{предложенное решение}
+	\maybeincludegraphics[width=0.8\linewidth,height=0.8\textheight,keepaspectratio]{Dissertation/images/ample_amr_logo}
+	\textit{предложенное решение}
         \end{center}
     \end{center}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[shrink=5]
 	\frametitle{AMPLE-AMR}
 	\small
-	Архитектура метода AMPLE--AMR (\textit{Adaptive Multi-agent Policy Learning with Edge Auctions for Autonomous Mobile Robots}) включает:
+	Архитектура метода AMPLE-AMR включает:
 	\begin{columns}[T,onlytextwidth]
 		\begin{column}{0.48\textwidth}
 			\begin{block}{Аукционный слой}
@@ -113,7 +113,7 @@
 		\end{column}
 		\begin{column}{0.50\textwidth}
 			\begin{block}{Обучаемый контур}
-				Меняет операционные режимы edge-узлов, адаптируя условия распределения к динамике нагрузки.
+				Меняет операционные режимы периферийных узлов, адаптируя условия распределения к динамике нагрузки.
 			\end{block}
 		\end{column}
 	\end{columns}
@@ -126,12 +126,12 @@
 			\medskip
 			\begin{enumerate}
 				\item Формирование потока задач
-				\item Экспонирование ресурсов на основании политики
+				\item Предоставление ресурсов на основании стратегии
 				\item Определение назначений и расчет платежей
-				\item Обновление состояние среды
+				\item Обновление состояния среды
 			\end{enumerate}
 		\end{column}
-		\begin{column}{0.58\textwidth}
+		\begin{column}{0.48\textwidth}
 			\maybeincludegraphics[width=\linewidth,height=\textheight,keepaspectratio]{Dissertation/images/ch5_ample_amr_concept}
 		\end{column}
 	\end{columns}
@@ -175,30 +175,30 @@
 		\bar{A}^{r}_j(t,\kappa_j) \rightarrow
 		\mathcal{X}(t,\kappa(t)) \rightarrow x^*(t)
 	\end{align*}
-	
+
 	\textbf{Режимы узлов}:
 	\begin{itemize}
 		\item $\kappa^{safe}$: узел ограничивает приём новых задач при высокой загрузке, риске нарушения сроков или признаках деградации;
-		\item $\kappa^{normal}$: соответствует штатной работе с умеренным экспонированием свободной ёмкости;
+		\item $\kappa^{normal}$: соответствует штатной работе с умеренным предоставлением свободной ёмкости;
 		\item $\kappa^{aggressive}$: соответствует расширенному приёму задач при благоприятном состоянии узла и низкой очереди;
 		\item $\kappa^{reserve}$: сохраняет часть ёмкости для возможных будущих критических задач;
 		\item  $\kappa^{critical}$: отдаёт предпочтение задачам, связанным с безопасностью, локализацией, обходом препятствий и срочным перепланированием.
 	\end{itemize}
-	
+
 	\begin{center}
 		\small
 		\textbf{Роботы не обучают заявки. MARL не подменяет правило распределения.}
 	\end{center}
 \end{frame}
-\note{Ключевая формулировка: обучение не меняет смысл заявок и не заменяет аукцион. Оно управляет режимами узлов, то есть параметрами доступной ёмкости и политики допуска задач.}
+\note{Ключевая формулировка: обучение не меняет смысл заявок и не заменяет аукцион. Оно управляет режимами узлов, то есть параметрами доступной ёмкости и стратегии допуска задач.}
 
-\begin{frame}
+\begin{frame}[shrink=5]
 	\frametitle{C-AMPLE-AMR: масштабируемая версия}
 	\small
 	\begin{block}{Проблема глобального раунда}
 		\begin{enumerate}
 			\item с ростом числа роботов и задач увеличивается задача выбора победителей;
-			\item время распределения начинает занимать значимую долю управляющего слота;
+			\item время распределения начинает занимать значимую долю управляющего интервала;
 			\item глобальный аукцион становится потенциальным узким местом.
 		\end{enumerate}
 	\end{block}
@@ -297,27 +297,27 @@
 		\end{column}
 		\begin{column}{0.44\textwidth}
 			\textbf{Допустимое распределение}  $\mathcal{X}(t)$
-			
+
 			\textit{Единственность назначения}:
 			\begin{align*}
 				\sum_{j=1}^{k}x_{\tau j}(t)&\leq 1, && \forall \tau\in\mathcal{T}(t)
 			\end{align*}
-			
+
 			\textit{Ëмкость узла}:
 			\begin{align*}
 				\sum_{\tau\in\mathcal{T}(t)}x_{\tau j}(t)q^{r}_{\tau}&\leq A^{r}_j(t,\kappa_j), && \forall j
 			\end{align*}
-			
+
 			\textit{Сетевая достижимость}:
 			\begin{align*}
 				x_{\tau j}(t)&\leq a_{i(\tau)j}(t)
 			\end{align*}
-			
+
 			\textit{Отказ узла}:
 			\begin{align*}
 				x_{\tau j}(t)\leq 1-f_j(t)
 			\end{align*}
-			
+
 			\textit{Срок выполнения}:
 			\begin{align*}
 				x_{\tau j}(t)T_{\tau j}(t)&\leq \Delta_{\tau}, && \forall \tau:c_{\tau}\in\mathcal{C}^{hard}
@@ -332,17 +332,17 @@
 	\begin{align*}
 		T_{\tau j}(t)=T^{net}_{ij,\tau}(t)+T^{queue}_{j}(t)+T^{proc}_{\tau j}(t),
 	\end{align*}
-	
+
 	Сетевая составляющая
 	\begin{align*}
 		T^{net}_{ij,\tau}(t)=d_{ij}(t)+\frac{b^{in}_{\tau}}{B^{up}_{ij}(t)+\varepsilon}+\frac{b^{out}_{\tau}}{B^{down}_{ji}(t)+\varepsilon}
 	\end{align*}
-	
+
 	Время ожидания в очереди
 	\begin{align*}
 		T^{queue}_{j}(t)=\frac{\sum_{\tau'\in Q_j(t)} q^{cpu}_{\tau'}}{F^{cpu}_{j}(t)+\varepsilon},
 	\end{align*}
-	
+
 	Время непосредственной обработки
 	\begin{align*}
 		T^{proc}_{\tau j}(t)=\frac{q^{cpu}_{\tau}}{F^{cpu}_{j}(t)+\varepsilon}+\mathbb{I}\{q^{gpu}_{\tau}>0\}\frac{q^{gpu}_{\tau}}{F^{gpu}_{j}(t)+\varepsilon}.
@@ -355,19 +355,19 @@
 	\begin{align*}
 		U_i(\tau,n_j,t) &= V_i(\tau)\psi_{c_{\tau}}(T_{\tau j}(t),\Delta_{\tau})-E^{tx}_{i\tau j}(t)
 	\end{align*}
-	
+
 	Базовая ценность задачи для робота-источника
 	\begin{align*}
 		V_i(\tau) &= \beta_i v_{c_{\tau}}\pi_{\tau}\left(1+\theta_{c_{\tau}}\log\left(1+\frac{W_{\tau}}{W_0}\right)\right),\\[-1mm]
 		W_{\tau} &= \omega_{cpu}q^{cpu}_{\tau}+\omega_{mem}q^{mem}_{\tau}+\omega_{gpu}q^{gpu}_{\tau}+\omega_{data}b^{in}_{\tau}
 	\end{align*}
-	
+
 	Функция деградации полезности при задержке
 	\begin{align*}
 		\psi_{c_{\tau}}(T_{\tau j}(t),\Delta_{\tau}) &=
 		\exp\left(-\lambda_{c_{\tau}}\frac{T_{\tau j}(t)}{\Delta_{\tau}+\varepsilon}\right)
 	\end{align*}
-	
+
 	Энергетические затраты передачи
 	\begin{align*}
 		E^{tx}_{i\tau j}(t)=e^{tx}_i b^{in}_{\tau} T^{net}_{ij,\tau}(t)
@@ -381,24 +381,24 @@
 	\begin{align*}
 		C_j(\tau,r_i,t)&=C^{comp}_j(\tau)+C^{net}_j(\tau,r_i,t)+C^{over}_j(\tau,t)+C^{rel}_j(t)
 	\end{align*}
-	
+
 	Вычислительная стоимость
 	\begin{align*}
 		C^{comp}_j(\tau)&=\rho^{cpu}_j q^{cpu}_{\tau}+\rho^{mem}_j q^{mem}_{\tau}+\rho^{gpu}_j q^{gpu}_{\tau}
 	\end{align*}
-	
+
 	Сетевая стоимость
 	\begin{align*}
 		C^{net}_j(\tau,r_i,t)&=\rho^{net}_j\left(b^{in}_{\tau}+b^{out}_{\tau}\right)w_{ij}(t)
 	\end{align*}
-	
+
 	Стоимость перегрузки
 	\begin{align*}
 		C^{over}_j(\tau,t)&=\mu^{cpu}_j\left(\frac{L^{cpu}_j(t)+q^{cpu}_{\tau}}{C^{cpu}_j+\varepsilon}\right)^2+
 		\mu^{mem}_j\left(\frac{L^{mem}_j(t)+q^{mem}_{\tau}}{C^{mem}_j+\varepsilon}\right)^2+{}\\[-1mm]
 		&\quad{}+\mu^{gpu}_j\left(\frac{L^{gpu}_j(t)+q^{gpu}_{\tau}}{C^{gpu}_j+\varepsilon}\right)^2
 	\end{align*}
-	
+
 	Компонент надёжности
 	\begin{align*}
 		C^{rel}_j(t)&=\rho^{fail}_j f_j(t)
@@ -414,18 +414,18 @@
 		g &: \Theta_1 \times \ldots \times \Theta_{|\mathcal{H}|} \rightarrow X & p_h : \Theta_1 \times \ldots \times \Theta_{|\mathcal{H}|} \rightarrow \mathbb{R}
 	\end{align*}
 	где $\mathcal{H}$ -- множество участников механизма, $X$ -- множество допустимых исходов (назначение задач на узлы), $g$ -- правило выбора исхода, а $p_h$ -- платёж или внутренняя компенсация участника $h$.
-	
+
 	\textbf{Тип участника} $h \in \mathcal{H}$ задаёт его локальную информацию $\theta_h$:
 	\begin{itemize}
 		\item \textit{Для робота} -- класс задачи, ценность результата, срок выполнения и требования к ресурсам;
 		\item \textit{Для периферийного узла} -- доступная ёмкость, очередь, стоимость обслуживания и состояние каналов связи.
 	\end{itemize}
-	
+
 	\textbf{Удовлетворенность участника}
 	\begin{align*}
 		u_h(\theta_h,\widehat{\theta}) = v_h(g(\widehat{\theta}),\theta_h) - p_h(\widehat{\theta})
 	\end{align*}
-	
+
 	\textbf{Общественное благосостояние}:
 	\begin{align*}
 		SW(x) &= \sum_{h \in \mathcal{H}} v_h(x) & v_{r_i}(x) &= U_i(x) & v_{n_j}(x) &= - C_j(x)
@@ -515,11 +515,11 @@
 		\bar{A}^{r}_j(t,\kappa_j) \rightarrow
 		\mathcal{X}(t,\kappa(t)) \rightarrow x^*(t)
 	\end{align*}
-	
+
 	\textbf{Режимы узлов}:
 	\begin{itemize}
 		\item $\kappa^{safe}$: узел ограничивает приём новых задач при высокой загрузке, риске нарушения сроков или признаках деградации;
-		\item $\kappa^{normal}$: соответствует штатной работе с умеренным экспонированием свободной ёмкости;
+		\item $\kappa^{normal}$: соответствует штатной работе с умеренным предоставлением свободной ёмкости;
 		\item $\kappa^{aggressive}$: соответствует расширенному приёму задач при благоприятном состоянии узла и низкой очереди;
 		\item $\kappa^{reserve}$: сохраняет часть ёмкости для возможных будущих критических задач;
 		\item  $\kappa^{critical}$: отдаёт предпочтение задачам, связанным с безопасностью, локализацией, обходом препятствий и срочным перепланированием.
@@ -529,12 +529,12 @@
 \begin{frame}
 	\frametitle{MARL-контур: командная цель}
 	\small
-	Совместная политика периферийных узлов
+	Совместная стратегия периферийных узлов
 	\begin{align*}
 		\pi &= \left(\pi_1,\ldots,\pi_k\right)
 	\end{align*}
-	
-	Цель обучения совместной политики периферийных узлов:
+
+	Цель обучения совместной стратегии периферийных узлов:
 	\[
 	J(\pi)=\mathbb{E}_{\pi}\left[\sum_{t=0}^{\infty}\gamma^t r_t\right],
 	\qquad
@@ -570,7 +570,7 @@
 	\[
 	\kappa_j^*(t)=\operatorname*{arg\,max}_{\kappa_j\in\mathcal{K}_j}Q_j(h^j_t,\kappa_j;\theta_j).
 	\]
-	Обучение по TD-ошибке:
+	Обучение по ошибке временных разностей:
 	\begin{align*}
 		y_t&=\tilde{r}_t+\gamma(1-done_t)
 		\max_{\kappa'_{t+1}}Q^{-}_{tot}(s_{t+1},\kappa'_{t+1}),\\[-1mm]
@@ -604,11 +604,11 @@
             \textbf{Реализованные компоненты}
             \begin{itemize}
                 \item генератор складских сценариев;
-                \item модель AMR-задач и edge-узлов;
+                \item модель АМР-задач и периферийных узлов;
                 \item аукционный распределитель с оптимизацией $SW$;
                 \item QMIX-контур обучения режимов;
                 \item кластерный режим C-AMPLE-AMR;
-                \item экспорт CSV, графиков и \LaTeX-таблиц.
+                \item выгрузка табличных файлов, графиков и таблиц для вёрстки.
             \end{itemize}
         \end{column}
         \begin{column}{0.48\textwidth}
@@ -629,7 +629,7 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{Сценарии валидации}
+	\frametitle{Сценарии проверки}
 	\small
 	\begin{center}
 		\maybeincludegraphics[width=\linewidth,height=0.68\textheight,keepaspectratio]{Dissertation/images/ch6_warehouse_scenario}
@@ -650,13 +650,13 @@
 		$P95Latency$ & 95-й процентиль времени выполнения задачи \\
 		$NodeUtilization$ & средняя загрузка периферийных узлов \\
 		$LoadImbalance$ & дисбаланс загрузки между узлами \\
-		$Overhead$ & время аукционного слоя, коммуникаций и вызова политики \\
-		$SlotShare$ & доля управляющего слота, занятая распределением \\
+		$Overhead$ & время аукционного слоя, коммуникаций и вызова стратегии \\
+		$SlotShare$ & доля управляющего интервала, занятая распределением \\
 		\bottomrule
 	\end{tabular}
 \end{frame}
 
-\begin{frame}
+\begin{frame}[shrink=5]
 	\frametitle{Проверка экспериментальных гипотез}
 	\scriptsize
 	\begin{tabular}{p{0.12\linewidth}p{0.49\linewidth}p{0.28\linewidth}}
@@ -673,8 +673,8 @@
 		\bottomrule
 	\end{tabular}
 	\medskip
-	
+
 	\begin{block}{Интерпретация}
-		\textbf{H1-H3}: обе составляющие гибридного метода вносят вклад в $SW$: аукционный слой оптимизирует ценность выбранного подмножества задач, а QMIX адаптирует условия распределения. \textbf{H4-H6}: при этом возникает содержательный trade-off: эвристика нередко завершает больше задач и снижает долю отклонений, тогда как аукционный слой выбирает меньше, но более ценные назначения. \textbf{H7}: кластерная версия оправдана прежде всего для крупных конфигураций.
+		\textbf{H1-H3}: обе составляющие гибридного метода вносят вклад в $SW$: аукционный слой оптимизирует ценность выбранного подмножества задач, а QMIX адаптирует условия распределения. \textbf{H4-H6}: при этом возникает содержательный компромисс: эвристика нередко завершает больше задач и снижает долю отклонений, тогда как аукционный слой выбирает меньше, но более ценные назначения. \textbf{H7}: кластерная версия оправдана прежде всего для крупных конфигураций.
 	\end{block}
 \end{frame}
