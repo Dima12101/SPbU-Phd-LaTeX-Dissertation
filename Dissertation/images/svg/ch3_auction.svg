@@ -1,1 +1,40 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 Z" fill="#9a5c18"/></marker></defs><rect width="900" height="540" fill="white"/><g font-family="DejaVu Sans, sans-serif" fill="#172635" font-size="22"><text x="155" y="40" font-size="20" text-anchor="middle">Поставщики ресурсов</text><text x="745" y="40" font-size="20" text-anchor="middle">Потребители ресурсов</text><rect x="21" y="58" width="268" height="84" rx="10" fill="#e1eddc" stroke="#59758a" stroke-width="2"/><text x="155" y="96" font-size="19" text-anchor="middle">Периферийный узел</text><text x="155" y="124" font-size="19" text-anchor="middle">1</text><rect x="611" y="58" width="268" height="84" rx="10" fill="#ddeaf7" stroke="#59758a" stroke-width="2"/><text x="745" y="96" font-size="19" text-anchor="middle">Задача робота</text><text x="745" y="124" font-size="19" text-anchor="middle">1</text><path d="M289,100 L366,228.0" stroke="#9a5c18" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M534,228.0 L611,100" stroke="#9a5c18" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/><rect x="21" y="218" width="268" height="84" rx="10" fill="#e1eddc" stroke="#59758a" stroke-width="2"/><text x="155" y="256" font-size="19" text-anchor="middle">Периферийный узел</text><text x="155" y="284" font-size="19" text-anchor="middle">2</text><rect x="611" y="218" width="268" height="84" rx="10" fill="#ddeaf7" stroke="#59758a" stroke-width="2"/><text x="745" y="256" font-size="19" text-anchor="middle">Задача робота</text><text x="745" y="284" font-size="19" text-anchor="middle">2</text><path d="M289,260 L366,260.0" stroke="#9a5c18" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M534,260.0 L611,260" stroke="#9a5c18" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/><rect x="21" y="378" width="268" height="84" rx="10" fill="#e1eddc" stroke="#59758a" stroke-width="2"/><text x="155" y="416" font-size="19" text-anchor="middle">Периферийный узел</text><text x="155" y="444" font-size="19" text-anchor="middle">3</text><rect x="611" y="378" width="268" height="84" rx="10" fill="#ddeaf7" stroke="#59758a" stroke-width="2"/><text x="745" y="416" font-size="19" text-anchor="middle">Задача робота</text><text x="745" y="444" font-size="19" text-anchor="middle">3</text><path d="M289,420 L366,292.0" stroke="#9a5c18" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M534,292.0 L611,420" stroke="#9a5c18" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)"/><rect x="366" y="180" width="168" height="160" rx="20" fill="#fff1d6" stroke="#9a5c18" stroke-width="3"/><text x="450" y="250" font-size="21" text-anchor="middle">Аукционер</text><text x="450" y="284" font-size="16" text-anchor="middle">Распределение</text><text x="450" y="310" font-size="16" text-anchor="middle">и платежи</text></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#000000" />
+    </marker>
+  </defs>
+  <rect width="900" height="540" fill="white" />
+  <g font-family="Times New Roman, serif" fill="#000000" font-size="22">
+    <text x="155" y="40" font-size="20" text-anchor="middle">Поставщики ресурсов</text>
+    <text x="745" y="40" font-size="20" text-anchor="middle">Потребители ресурсов</text>
+    <rect x="21" y="58" width="268" height="84" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" />
+    <text x="155" y="96" font-size="19" text-anchor="middle">Периферийный узел</text>
+    <text x="155" y="124" font-size="19" text-anchor="middle">1</text>
+    <rect x="611" y="58" width="268" height="84" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" />
+    <text x="745" y="96" font-size="19" text-anchor="middle">Задача робота</text>
+    <text x="745" y="124" font-size="19" text-anchor="middle">1</text>
+    <path d="M289,100 L366,228.0" stroke="#000000" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M534,228.0 L611,100" stroke="#000000" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <rect x="21" y="218" width="268" height="84" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" />
+    <text x="155" y="256" font-size="19" text-anchor="middle">Периферийный узел</text>
+    <text x="155" y="284" font-size="19" text-anchor="middle">2</text>
+    <rect x="611" y="218" width="268" height="84" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" />
+    <text x="745" y="256" font-size="19" text-anchor="middle">Задача робота</text>
+    <text x="745" y="284" font-size="19" text-anchor="middle">2</text>
+    <path d="M289,260 L366,260.0" stroke="#000000" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M534,260.0 L611,260" stroke="#000000" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <rect x="21" y="378" width="268" height="84" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" />
+    <text x="155" y="416" font-size="19" text-anchor="middle">Периферийный узел</text>
+    <text x="155" y="444" font-size="19" text-anchor="middle">3</text>
+    <rect x="611" y="378" width="268" height="84" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" />
+    <text x="745" y="416" font-size="19" text-anchor="middle">Задача робота</text>
+    <text x="745" y="444" font-size="19" text-anchor="middle">3</text>
+    <path d="M289,420 L366,292.0" stroke="#000000" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M534,292.0 L611,420" stroke="#000000" stroke-width="3" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <rect x="366" y="180" width="168" height="160" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="3" />
+    <text x="450" y="250" font-size="21" text-anchor="middle">Аукционер</text>
+    <text x="450" y="284" font-size="20" text-anchor="middle">Распределение</text>
+    <text x="450" y="310" font-size="20" text-anchor="middle">и платежи</text>
+  </g>
+</svg>

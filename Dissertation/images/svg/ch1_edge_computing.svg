@@ -1,1 +1,78 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540"><defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse"><path d="M0,0 L8,4 L0,8 Z" fill="#9a5c18"/></marker></defs><rect width="900" height="540" fill="white"/><g font-family="DejaVu Sans, sans-serif" fill="#172635" font-size="22"><rect x="12" y="12" width="876" height="117" rx="8" fill="#f2f6fa" stroke="#59758a" stroke-width="2" stroke-dasharray="8 5"/><text x="450" y="42" font-size="22" text-anchor="middle">Облачные серверы</text><rect x="140" y="54" width="48" height="62" rx="5" fill="#6e8394"/><path d="M149,68 h30" stroke="white" stroke-width="4"/><path d="M149,80 h30" stroke="white" stroke-width="4"/><path d="M149,92 h30" stroke="white" stroke-width="4"/><rect x="330" y="54" width="48" height="62" rx="5" fill="#6e8394"/><path d="M339,68 h30" stroke="white" stroke-width="4"/><path d="M339,80 h30" stroke="white" stroke-width="4"/><path d="M339,92 h30" stroke="white" stroke-width="4"/><rect x="520" y="54" width="48" height="62" rx="5" fill="#6e8394"/><path d="M529,68 h30" stroke="white" stroke-width="4"/><path d="M529,80 h30" stroke="white" stroke-width="4"/><path d="M529,92 h30" stroke="white" stroke-width="4"/><rect x="710" y="54" width="48" height="62" rx="5" fill="#6e8394"/><path d="M719,68 h30" stroke="white" stroke-width="4"/><path d="M719,80 h30" stroke="white" stroke-width="4"/><path d="M719,92 h30" stroke="white" stroke-width="4"/><rect x="12" y="145" width="876" height="117" rx="8" fill="#f8f7f3" stroke="#59758a" stroke-width="2" stroke-dasharray="8 5"/><text x="450" y="175" font-size="22" text-anchor="middle">Серверы промежуточного уровня</text><rect x="140" y="187" width="48" height="62" rx="5" fill="#6e8394"/><path d="M149,201 h30" stroke="white" stroke-width="4"/><path d="M149,213 h30" stroke="white" stroke-width="4"/><path d="M149,225 h30" stroke="white" stroke-width="4"/><rect x="330" y="187" width="48" height="62" rx="5" fill="#6e8394"/><path d="M339,201 h30" stroke="white" stroke-width="4"/><path d="M339,213 h30" stroke="white" stroke-width="4"/><path d="M339,225 h30" stroke="white" stroke-width="4"/><rect x="520" y="187" width="48" height="62" rx="5" fill="#6e8394"/><path d="M529,201 h30" stroke="white" stroke-width="4"/><path d="M529,213 h30" stroke="white" stroke-width="4"/><path d="M529,225 h30" stroke="white" stroke-width="4"/><rect x="710" y="187" width="48" height="62" rx="5" fill="#6e8394"/><path d="M719,201 h30" stroke="white" stroke-width="4"/><path d="M719,213 h30" stroke="white" stroke-width="4"/><path d="M719,225 h30" stroke="white" stroke-width="4"/><rect x="12" y="278" width="876" height="117" rx="8" fill="#f0f7fb" stroke="#59758a" stroke-width="2" stroke-dasharray="8 5"/><text x="450" y="308" font-size="22" text-anchor="middle">Периферийные серверы</text><rect x="140" y="320" width="48" height="62" rx="5" fill="#6e8394"/><path d="M149,334 h30" stroke="white" stroke-width="4"/><path d="M149,346 h30" stroke="white" stroke-width="4"/><path d="M149,358 h30" stroke="white" stroke-width="4"/><rect x="330" y="320" width="48" height="62" rx="5" fill="#6e8394"/><path d="M339,334 h30" stroke="white" stroke-width="4"/><path d="M339,346 h30" stroke="white" stroke-width="4"/><path d="M339,358 h30" stroke="white" stroke-width="4"/><rect x="520" y="320" width="48" height="62" rx="5" fill="#6e8394"/><path d="M529,334 h30" stroke="white" stroke-width="4"/><path d="M529,346 h30" stroke="white" stroke-width="4"/><path d="M529,358 h30" stroke="white" stroke-width="4"/><rect x="710" y="320" width="48" height="62" rx="5" fill="#6e8394"/><path d="M719,334 h30" stroke="white" stroke-width="4"/><path d="M719,346 h30" stroke="white" stroke-width="4"/><path d="M719,358 h30" stroke="white" stroke-width="4"/><rect x="12" y="411" width="876" height="117" rx="8" fill="#f3f8f1" stroke="#59758a" stroke-width="2" stroke-dasharray="8 5"/><text x="450" y="441" font-size="22" text-anchor="middle">Конечные устройства</text><rect x="104" y="460" width="132" height="48" rx="10" fill="#dbe9d3" stroke="#618056"/><text x="170" y="491" font-size="20" text-anchor="middle">Робот</text><rect x="384" y="460" width="132" height="48" rx="10" fill="#dbe9d3" stroke="#618056"/><text x="450" y="491" font-size="20" text-anchor="middle">Камера</text><rect x="664" y="460" width="132" height="48" rx="10" fill="#dbe9d3" stroke="#618056"/><text x="730" y="491" font-size="20" text-anchor="middle">Датчик</text><path d="M85,121 v33" stroke="#9a5c18" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M815,121 v33" stroke="#9a5c18" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M85,254 v33" stroke="#9a5c18" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M815,254 v33" stroke="#9a5c18" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M85,387 v33" stroke="#9a5c18" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/><path d="M815,387 v33" stroke="#9a5c18" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="540" viewBox="0 0 900 540">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto-start-reverse">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#000000" />
+    </marker>
+  </defs>
+  <rect width="900" height="540" fill="white" />
+  <g font-family="Times New Roman, serif" fill="#000000" font-size="22">
+    <rect x="12" y="12" width="876" height="117" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" stroke-dasharray="8 5" />
+    <text x="450" y="42" font-size="22" text-anchor="middle">Облачные серверы</text>
+    <rect x="140" y="54" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M149,68 h30" stroke="white" stroke-width="4" />
+    <path d="M149,80 h30" stroke="white" stroke-width="4" />
+    <path d="M149,92 h30" stroke="white" stroke-width="4" />
+    <rect x="330" y="54" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M339,68 h30" stroke="white" stroke-width="4" />
+    <path d="M339,80 h30" stroke="white" stroke-width="4" />
+    <path d="M339,92 h30" stroke="white" stroke-width="4" />
+    <rect x="520" y="54" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M529,68 h30" stroke="white" stroke-width="4" />
+    <path d="M529,80 h30" stroke="white" stroke-width="4" />
+    <path d="M529,92 h30" stroke="white" stroke-width="4" />
+    <rect x="710" y="54" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M719,68 h30" stroke="white" stroke-width="4" />
+    <path d="M719,80 h30" stroke="white" stroke-width="4" />
+    <path d="M719,92 h30" stroke="white" stroke-width="4" />
+    <rect x="12" y="145" width="876" height="117" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" stroke-dasharray="8 5" />
+    <text x="450" y="175" font-size="22" text-anchor="middle">Серверы промежуточного уровня</text>
+    <rect x="140" y="187" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M149,201 h30" stroke="white" stroke-width="4" />
+    <path d="M149,213 h30" stroke="white" stroke-width="4" />
+    <path d="M149,225 h30" stroke="white" stroke-width="4" />
+    <rect x="330" y="187" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M339,201 h30" stroke="white" stroke-width="4" />
+    <path d="M339,213 h30" stroke="white" stroke-width="4" />
+    <path d="M339,225 h30" stroke="white" stroke-width="4" />
+    <rect x="520" y="187" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M529,201 h30" stroke="white" stroke-width="4" />
+    <path d="M529,213 h30" stroke="white" stroke-width="4" />
+    <path d="M529,225 h30" stroke="white" stroke-width="4" />
+    <rect x="710" y="187" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M719,201 h30" stroke="white" stroke-width="4" />
+    <path d="M719,213 h30" stroke="white" stroke-width="4" />
+    <path d="M719,225 h30" stroke="white" stroke-width="4" />
+    <rect x="12" y="278" width="876" height="117" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" stroke-dasharray="8 5" />
+    <text x="450" y="308" font-size="22" text-anchor="middle">Периферийные серверы</text>
+    <rect x="140" y="320" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M149,334 h30" stroke="white" stroke-width="4" />
+    <path d="M149,346 h30" stroke="white" stroke-width="4" />
+    <path d="M149,358 h30" stroke="white" stroke-width="4" />
+    <rect x="330" y="320" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M339,334 h30" stroke="white" stroke-width="4" />
+    <path d="M339,346 h30" stroke="white" stroke-width="4" />
+    <path d="M339,358 h30" stroke="white" stroke-width="4" />
+    <rect x="520" y="320" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M529,334 h30" stroke="white" stroke-width="4" />
+    <path d="M529,346 h30" stroke="white" stroke-width="4" />
+    <path d="M529,358 h30" stroke="white" stroke-width="4" />
+    <rect x="710" y="320" width="48" height="62" rx="0" fill="#666666" />
+    <path d="M719,334 h30" stroke="white" stroke-width="4" />
+    <path d="M719,346 h30" stroke="white" stroke-width="4" />
+    <path d="M719,358 h30" stroke="white" stroke-width="4" />
+    <rect x="12" y="411" width="876" height="117" rx="0" fill="#f2f2f2" stroke="#000000" stroke-width="2" stroke-dasharray="8 5" />
+    <text x="450" y="441" font-size="22" text-anchor="middle">Конечные устройства</text>
+    <rect x="104" y="460" width="132" height="48" rx="0" fill="#f2f2f2" stroke="#000000" />
+    <text x="170" y="491" font-size="20" text-anchor="middle">Робот</text>
+    <rect x="384" y="460" width="132" height="48" rx="0" fill="#f2f2f2" stroke="#000000" />
+    <text x="450" y="491" font-size="20" text-anchor="middle">Камера</text>
+    <rect x="664" y="460" width="132" height="48" rx="0" fill="#f2f2f2" stroke="#000000" />
+    <text x="730" y="491" font-size="20" text-anchor="middle">Датчик</text>
+    <path d="M85,121 v33" stroke="#000000" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M815,121 v33" stroke="#000000" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M85,254 v33" stroke="#000000" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M815,254 v33" stroke="#000000" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M85,387 v33" stroke="#000000" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+    <path d="M815,387 v33" stroke="#000000" stroke-width="4" marker-start="url(#arrow)" marker-end="url(#arrow)" />
+  </g>
+</svg>

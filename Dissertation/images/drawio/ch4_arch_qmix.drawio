@@ -1,0 +1,64 @@
+<mxfile host="Electron">
+  <diagram id="ch4_arch_qmix" name="ch4_arch_qmix">
+    <mxGraphModel grid="1" gridSize="10" page="1" pageWidth="1000" pageHeight="1100" background="#ffffff" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="obs1" value="Наблюдение&lt;br&gt;&lt;i&gt;o&lt;sub&gt;i&lt;/sub&gt;&lt;sup&gt;t&lt;/sup&gt;&lt;/i&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#f2f2f2;shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;spacingLeft=24;spacingRight=24;">
+          <mxGeometry x="0" y="0" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="agent1" value="&lt;b&gt;Локальная Q-сеть&lt;/b&gt;&lt;br&gt;Агент 1" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#e6e6e6;">
+          <mxGeometry x="0" y="180" width="240" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="obs_agent1" source="obs1" target="agent1" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="agent_mix1" source="agent1" target="mix" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.16666666666666666;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="obs2" value="Наблюдение&lt;br&gt;&lt;i&gt;o&lt;sub&gt;i&lt;/sub&gt;&lt;sup&gt;t&lt;/sup&gt;&lt;/i&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#f2f2f2;shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;spacingLeft=24;spacingRight=24;">
+          <mxGeometry x="300" y="0" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="agent2" value="&lt;b&gt;Локальная Q-сеть&lt;/b&gt;&lt;br&gt;Агент 2" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#e6e6e6;">
+          <mxGeometry x="300" y="180" width="240" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="obs_agent2" source="obs2" target="agent2" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="agent_mix2" source="agent2" target="mix" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="obs3" value="Наблюдение&lt;br&gt;&lt;i&gt;o&lt;sub&gt;i&lt;/sub&gt;&lt;sup&gt;t&lt;/sup&gt;&lt;/i&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#f2f2f2;shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;spacingLeft=24;spacingRight=24;">
+          <mxGeometry x="600" y="0" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="agent3" value="&lt;b&gt;Локальная Q-сеть&lt;/b&gt;&lt;br&gt;Агент 3" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#e6e6e6;">
+          <mxGeometry x="600" y="180" width="240" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="obs_agent3" source="obs3" target="agent3" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="agent_mix3" source="agent3" target="mix" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.8333333333333334;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="mix" value="&lt;b&gt;Гибридная сеть смешивания&lt;/b&gt;&lt;br&gt;Гиперсеть:&lt;br&gt;&lt;i&gt;Q&lt;sub&gt;tot&lt;/sub&gt; = f&lt;sub&gt;mix&lt;/sub&gt;(s, Q&lt;sub&gt;1&lt;/sub&gt;, …, Q&lt;sub&gt;k&lt;/sub&gt;)&lt;/i&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#eeeeee;">
+          <mxGeometry x="270" y="390" width="540" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="buffer" value="&lt;b&gt;Буфер опыта&lt;/b&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#ffffff;dashed=1;dashPattern=6 4;">
+          <mxGeometry x="0" y="470" width="210" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="target" value="&lt;b&gt;Целевые сети&lt;/b&gt;&lt;br&gt;Мягкое обновление: &lt;i&gt;α = 0.01&lt;/i&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#eeeeee;">
+          <mxGeometry x="270" y="620" width="540" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="mix_target" source="mix" target="target" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;dashed=1;startArrow=block;startFill=1;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="result" value="&lt;i&gt;Q&lt;sub&gt;tot&lt;/sub&gt;(s, a)&lt;/i&gt;" parent="1" vertex="1" style="rounded=0;whiteSpace=wrap;html=1;align=center;verticalAlign=middle;fontFamily=Times New Roman;fontSize=20;fontColor=#000000;strokeColor=#000000;strokeWidth=1.5;spacing=8;fillColor=#f2f2f2;shape=parallelogram;perimeter=parallelogramPerimeter;fixedSize=1;spacingLeft=24;spacingRight=24;">
+          <mxGeometry x="420" y="830" width="240" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="target_result" source="target" target="result" parent="1" edge="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeColor=#000000;strokeWidth=1.5;endArrow=block;endFill=1;exitX=0.5;exitY=1;entryX=0.5;entryY=0;">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
